@@ -200,7 +200,7 @@ const SERVICES = [
   { title: 'Individual Therapy', desc: 'One-on-one sessions tailored to your unique story.', type: 'wide' },
   { title: 'Couples Counseling', desc: 'Rebuilding connection together.', type: 'tall' },
   { title: 'Trauma Recovery', desc: 'From surviving toward genuine healing.', type: 'dark' },
-  { title: 'Family Sessions', desc: 'Shifting patterns, strengthening bonds.', type: 'light' },
+  { title: 'Workshops', desc: 'Learn, grow, and connect in a group setting.', type: 'light' },
 ];
 
 function Capabilities() {

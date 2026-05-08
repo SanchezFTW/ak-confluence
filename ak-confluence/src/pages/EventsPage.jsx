@@ -167,7 +167,7 @@ export default function EventsPage() {
                           </span>
                         )}
                         <a
-                          href={`mailto:hello@akconfluence.com?subject=RSVP: ${event.title}`}
+                          href={`mailto:info@akconfluence.com?subject=RSVP: ${event.title}`}
                           className="inline-flex items-center gap-2 bg-[#82a396] text-white text-[10px] tracking-[0.15em] uppercase font-medium px-5 py-2.5 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all"
                         >
                           {event.spotsLeft !== null ? 'Reserve a spot' : 'Register free'}
@@ -190,7 +190,7 @@ export default function EventsPage() {
           {/* Bottom note */}
           <div className="mt-14 text-center">
             <p className="text-[#a38d7a]/60 text-sm font-light font-[var(--font-body)] max-w-lg mx-auto leading-relaxed">
-              Want to be notified about future events? <a href="mailto:hello@akconfluence.com?subject=Event Updates" className="text-[#82a396] underline underline-offset-2 hover:text-[#6b8f80] transition-colors">Get on the list</a>
+              Want to be notified about future events? <a href="mailto:info@akconfluence.com?subject=Event Updates" className="text-[#82a396] underline underline-offset-2 hover:text-[#6b8f80] transition-colors">Get on the list</a>
             </p>
           </div>
         </div>

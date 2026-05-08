@@ -73,7 +73,6 @@ function MobileNav({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   const navLinks = [
-    { label: 'Approach', href: '/#approach' },
     { label: 'Services', href: '/#services' },
     { label: 'Counselors', href: '/#counselors' },
     { label: 'Events', to: '/events' },
@@ -140,11 +139,11 @@ function Footer() {
             The first step is simply <em className="italic text-[#82a396]">reaching out.</em>
           </h2>
           <p className="font-[var(--font-body)] text-[#f5f2ed]/50 text-lg font-light mb-8 max-w-2xl">
-            Sessions available in-person in Anchorage and virtually across Alaska.<br/>Most extended health plans accepted.
+            Sessions available in-person in Anchorage and virtually across Alaska.<br/>Most private health plans accepted.
           </p>
           <div className="flex flex-col sm:flex-row items-center gap-4 font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase">
-            <a href="mailto:hello@akconfluence.com?subject=Consultation Request" className="bg-[#82a396] text-[#f5f2ed] px-8 py-4 hover:bg-[#6b8f80] active:scale-[0.98] transition-all">Book a free consultation</a>
-            <a href="mailto:hello@akconfluence.com?subject=Question" className="border border-[#f5f2ed]/20 text-[#f5f2ed]/70 px-8 py-4 hover:border-[#82a396] hover:text-[#82a396] active:scale-[0.98] transition-all">Ask a question</a>
+            <a href="mailto:info@akconfluence.com?subject=Consultation Request" className="bg-[#82a396] text-[#f5f2ed] px-8 py-4 hover:bg-[#6b8f80] active:scale-[0.98] transition-all">Book a consultation</a>
+            <a href="mailto:info@akconfluence.com?subject=Question" className="border border-[#f5f2ed]/20 text-[#f5f2ed]/70 px-8 py-4 hover:border-[#82a396] hover:text-[#82a396] active:scale-[0.98] transition-all">Ask a question</a>
           </div>
         </div>
       </div>
@@ -159,7 +158,7 @@ function Footer() {
                 <AnimatedLogo animation="flow" variant="horizontal" size={140} colorMode="dark" />
               </div>
               <p className="font-[var(--font-body)] text-[#f5f2ed]/40 text-sm font-light leading-relaxed">
-                Together Together. Making a plan for intentional change.
+                Together. Making a plan for intentional change.
               </p>
             </div>
 
@@ -176,8 +175,8 @@ function Footer() {
             <div className="md:col-span-3">
               <h4 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-4">Contact</h4>
               <div className="flex flex-col gap-2 font-[var(--font-body)] text-[#f5f2ed]/50 text-sm">
-                <a href="mailto:hello@akconfluence.com" className="hover:text-[#f5f2ed] transition-colors">hello@akconfluence.com</a>
-                <span>(907) 555-0198</span>
+                <a href="mailto:info@akconfluence.com" className="hover:text-[#f5f2ed] transition-colors">info@akconfluence.com</a>
+                <a href="tel:9073134433" className="hover:text-[#f5f2ed] transition-colors">907-313-4433</a>
               </div>
             </div>
 
@@ -185,8 +184,8 @@ function Footer() {
             <div className="md:col-span-2">
               <h4 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-4">Hours</h4>
               <div className="flex flex-col gap-2 font-[var(--font-body)] text-[#f5f2ed]/50 text-sm">
-                <span>Mon–Fri: 9am–7pm</span>
-                <span>Sat: 10am–3pm</span>
+                <span>Mon–Fri: 7am–7pm</span>
+                <span>Sat: 8am–3pm</span>
               </div>
             </div>
           </div>
@@ -302,7 +301,6 @@ function App() {
   }, { dependencies: [loading] });
 
   const desktopNavLinks = [
-    { label: 'Approach', href: '/#approach' },
     { label: 'Services', href: '/#services' },
     { label: 'Counselors', href: '/#counselors' },
     { label: 'Events', to: '/events' },
@@ -320,7 +318,7 @@ function App() {
 
       <div className={showLoader && loading ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}>
         {/* Fixed Pill Navigation */}
-        <nav className={`nav-pill fixed top-4 left-1/2 -translate-x-1/2 z-[40] w-[calc(100%-2rem)] max-w-6xl flex items-center justify-between backdrop-blur-xl border rounded-full px-8 py-3 transition-all duration-500 ${
+        <nav className={`nav-pill fixed top-4 left-1/2 -translate-x-1/2 z-[40] w-[calc(100%-2rem)] max-w-6xl flex items-center justify-between backdrop-blur-xl border rounded-full px-4 md:px-8 py-3 transition-all duration-500 ${
           navDark
             ? 'bg-[#383838]/80 border-[#f5f2ed]/10 shadow-[0_4px_20px_-6px_rgba(0,0,0,0.3)]'
             : 'bg-white/70 border-[#82a396]/20 shadow-[0_4px_20px_-6px_rgba(130,163,150,0.12)]'
@@ -333,7 +331,7 @@ function App() {
               <AnimatedLogo animation="flow" variant="mark" size={36} colorMode={navDark ? 'dark' : 'light'} />
             </span>
           </Link>
-          <div className="hidden md:flex gap-8 items-center">
+          <div className="hidden md:flex md:gap-4 lg:gap-8 items-center">
             {desktopNavLinks.map(t =>
               t.to ? (
                 <Link key={t.label} to={t.to} className={`text-[12px] tracking-widest uppercase font-medium transition-colors font-[var(--font-heading)] ${
@@ -351,7 +349,7 @@ function App() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileNavOpen(true)}
-            className="md:hidden text-[#383838] hover:text-[#82a396] transition-colors cursor-pointer"
+            className={`md:hidden transition-colors cursor-pointer ${navDark ? 'text-[#f5f2ed] hover:text-[#82a396]' : 'text-[#383838] hover:text-[#82a396]'}`}
             aria-label="Open navigation menu"
           >
             <List size={24} weight="light" />

@@ -6,9 +6,9 @@ const counselors = [
     name: "Elly Sanchez",
     title: "Licensed Professional Counselor",
     role: "Founder",
-    status: "open",
+    status: "waitlist",
     quote: "Transforming complex life experiences with laughter and purpose.",
-    specialties: ["Life Transitions", "Identity", "Purpose & Direction"],
+    specialties: ["Anxiety", "Somatic", "Life Transitions"],
     bio: "Elly brings warmth and humor to the therapeutic process, helping clients navigate major life changes with clarity and self-compassion.",
     photo: "https://www.akconfluence.com/wp-content/uploads/2021/08/Elly-Web-2.jpg",
   },
@@ -19,7 +19,7 @@ const counselors = [
     role: null,
     status: "open",
     quote: "Helping you break barriers, find fulfillment, and stay active on your journey.",
-    specialties: ["Brainspotting", "CBT", "Life Fulfillment"],
+    specialties: ["Depression", "Anxiety", "Life Fulfillment"],
     bio: "Samuel helps people who are seeking fulfillment in their lives, but feel stuck or held back by difficult events or circumstances.",
     photo: "https://www.akconfluence.com/wp-content/uploads/2021/08/Sam-Web-7.jpg",
   },
@@ -30,7 +30,7 @@ const counselors = [
     role: null,
     status: "open",
     quote: "Gottman-trained therapist helping you find your voice and build meaningful connections.",
-    specialties: ["Gottman Method", "Couples", "Adolescents & Adults"],
+    specialties: ["Couples", "Anxiety", "Adolescents & Adults"],
     bio: "Jillian supports individuals and couples in navigating their emotions and finding their true selves.",
     photo: "https://www.akconfluence.com/wp-content/uploads/2025/01/jillian202521.jpg",
   },
@@ -39,9 +39,9 @@ const counselors = [
     name: "Jessica Pretz",
     title: "Licensed Professional Counselor",
     role: null,
-    status: "waitlist",
+    status: "open",
     quote: "Feel understood. Specialized trauma support for life's toughest challenges.",
-    specialties: ["EMDR", "Accelerated Resolution Therapy", "PTSD & Trauma"],
+    specialties: ["Depression", "Grief and Loss", "PTSD & Trauma"],
     bio: "Jessica specializes in evidence-based trauma therapies, creating a safe space for healing from life's most difficult experiences.",
     photo: "https://www.akconfluence.com/wp-content/uploads/2023/06/A0100013-scaled-e1687718700873.jpg",
   },
@@ -52,7 +52,7 @@ const counselors = [
     role: null,
     status: "open",
     quote: "Down-to-earth care using breathwork and CBT to support you through life's challenges.",
-    specialties: ["Grief", "Anxiety", "Depression", "Breathwork"],
+    specialties: ["Grief and Loss", "Anxiety", "Depression"],
     bio: "Joe combines practical therapeutic techniques with genuine compassion, meeting clients exactly where they are.",
     photo: "https://www.akconfluence.com/wp-content/uploads/2023/06/A0100030-scaled-e1687718687763.jpg",
   },
@@ -63,24 +63,13 @@ const counselors = [
     role: null,
     status: "open",
     quote: "Creating a space where you're truly heard and seen.",
-    specialties: ["Grief", "Life Transitions", "Anxiety"],
+    specialties: ["Grief and Loss", "Depression", "Anxiety"],
     bio: "Katie provides a space where you feel seen and heard in a world where we sometimes feel overlooked and forgotten.",
     photo: "https://www.akconfluence.com/wp-content/uploads/2025/01/Katie2025.jpg",
   },
-  {
-    id: 7,
-    name: "Dori Slama",
-    title: "Licensed Professional Counselor",
-    role: null,
-    status: "open",
-    quote: "You're ready for change — even if you're not sure where to start.",
-    specialties: ["Chronic Pain", "Anxiety", "Depression", "Grief & Loss"],
-    bio: "Dori offers a safe, down-to-earth space to clarify what matters, name the stuck points, and build a plan you can actually use.",
-    photo: "https://www.akconfluence.com/wp-content/uploads/2026/02/Dorian.webp",
-  },
 ];
 
-const allSpecialties = [...new Set(counselors.flatMap((c) => c.specialties))];
+const FILTER_SPECIALTIES = ['Anxiety', 'Couples', 'Grief and Loss', 'Depression', 'Somatic'];
 
 export default function CounselorGrid() {
   const [activeFilters, setActiveFilters] = useState([]);
@@ -190,7 +179,7 @@ export default function CounselorGrid() {
               All
             </span>
           </button>
-          {allSpecialties.map((s) => {
+          {FILTER_SPECIALTIES.map((s) => {
             const isActive = activeFilters.includes(s);
             return (
               <button
@@ -307,7 +296,7 @@ export default function CounselorGrid() {
                           </p>
 
                           <a
-                            href={`mailto:hello@akconfluence.com?subject=Inquiry for ${expanded.name}`}
+                            href={`mailto:info@akconfluence.com?subject=Inquiry for ${expanded.name}`}
                             className="inline-flex items-center gap-2 bg-[#82a396] text-white text-[10px] tracking-[0.15em] uppercase font-medium px-5 py-2.5 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all"
                             onClick={(e) => e.stopPropagation()}
                           >

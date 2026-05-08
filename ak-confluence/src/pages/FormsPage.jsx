@@ -33,8 +33,8 @@ const FORMS = [
         <path d="M16 3.13a4 4 0 0 1 0 7.75" />
       </svg>
     ),
-    // ← Replace with your real JotForm form ID
     jotformId: null,
+    externalUrl: 'https://elly.clientsecure.me/contact-widget',
   },
   {
     id: 'consent',
@@ -156,19 +156,10 @@ export default function FormsPage() {
             {FORMS.map((form) => {
               const isActive = activeForm === form.id;
               const hasForm = form.jotformId !== null;
+              const hasExternal = !!form.externalUrl;
 
-              return (
-                <button
-                  key={form.id}
-                  onClick={() => hasForm ? handleSelectForm(form.id) : null}
-                  className={`fp-card text-left rounded-2xl p-6 border transition-all duration-500 ${
-                    isActive
-                      ? 'bg-[#82a396]/5 border-[#82a396]/30 shadow-lg shadow-[#82a396]/5'
-                      : hasForm
-                        ? 'bg-white/60 border-[#383838]/5 hover:border-[#82a396]/20 hover:shadow-md hover:shadow-[#82a396]/5 cursor-pointer'
-                        : 'bg-white/30 border-[#383838]/5 opacity-50 cursor-default'
-                  }`}
-                >
+              const cardContent = (
+                <>
                   <div className={`mb-4 transition-colors ${isActive ? 'text-[#82a396]' : 'text-[#a38d7a]/40'}`}>
                     {form.icon}
                   </div>
@@ -179,12 +170,43 @@ export default function FormsPage() {
                   <span className="inline-block text-[9px] tracking-[0.15em] uppercase font-medium font-[var(--font-mono)] text-[#82a396] bg-[#82a396]/10 px-2.5 py-1 rounded-full">
                     {form.timing}
                   </span>
-
-                  {!hasForm && (
+                  {!hasForm && !hasExternal && (
                     <p className="mt-3 text-[10px] tracking-[0.1em] uppercase font-[var(--font-mono)] text-[#a38d7a]/40">
                       Coming soon
                     </p>
                   )}
+                </>
+              );
+
+              const cardClass = `fp-card text-left rounded-2xl p-6 border transition-all duration-500 ${
+                isActive
+                  ? 'bg-[#82a396]/5 border-[#82a396]/30 shadow-lg shadow-[#82a396]/5'
+                  : (hasForm || hasExternal)
+                    ? 'bg-white/60 border-[#383838]/5 hover:border-[#82a396]/20 hover:shadow-md hover:shadow-[#82a396]/5 cursor-pointer'
+                    : 'bg-white/30 border-[#383838]/5 opacity-50 cursor-default'
+              }`;
+
+              if (hasExternal) {
+                return (
+                  <a
+                    key={form.id}
+                    href={form.externalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cardClass}
+                  >
+                    {cardContent}
+                  </a>
+                );
+              }
+
+              return (
+                <button
+                  key={form.id}
+                  onClick={() => hasForm ? handleSelectForm(form.id) : null}
+                  className={cardClass}
+                >
+                  {cardContent}
                 </button>
               );
             })}
@@ -228,7 +250,7 @@ export default function FormsPage() {
               ) : (
                 <div className="bg-white/60 rounded-2xl border border-[#383838]/5 p-12 text-center">
                   <p className="text-[#a38d7a] font-[var(--font-body)] font-light">
-                    This form is being set up. Check back soon or <a href="mailto:hello@akconfluence.com?subject=Forms" className="text-[#82a396] underline underline-offset-2 hover:text-[#6b8f80] transition-colors">contact us</a> if you need it right away.
+                    This form is being set up. Check back soon or <a href="mailto:info@akconfluence.com?subject=Forms" className="text-[#82a396] underline underline-offset-2 hover:text-[#6b8f80] transition-colors">contact us</a> if you need it right away.
                   </p>
                 </div>
               )}
@@ -238,7 +260,7 @@ export default function FormsPage() {
           {/* Help note */}
           <div className="mt-14 text-center">
             <p className="text-[#a38d7a]/60 text-sm font-light font-[var(--font-body)] max-w-lg mx-auto leading-relaxed">
-              Having trouble with a form? <a href="mailto:hello@akconfluence.com?subject=Help with Forms" className="text-[#82a396] underline underline-offset-2 hover:text-[#6b8f80] transition-colors">We're here to help</a>
+              Having trouble with a form? <a href="mailto:info@akconfluence.com?subject=Help with Forms" className="text-[#82a396] underline underline-offset-2 hover:text-[#6b8f80] transition-colors">We're here to help</a>
             </p>
           </div>
         </div>

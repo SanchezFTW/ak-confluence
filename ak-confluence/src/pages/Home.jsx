@@ -17,6 +17,17 @@ function Hero() {
   const containerRef = useRef(null);
   const wordRef = useRef(null);
   const [wordIndex, setWordIndex] = useState(0);
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (!wordRef.current) return;
+    gsap.set(wordRef.current, { y: -15, opacity: 0 });
+    gsap.to(wordRef.current, { y: 0, opacity: 1, duration: 0.6, ease: 'expo.out' });
+  }, [wordIndex]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,10 +35,6 @@ function Hero() {
         y: 15, opacity: 0, duration: 0.6, ease: 'expo.inOut',
         onComplete: () => {
           setWordIndex((prev) => (prev + 1) % WORDS.length);
-          gsap.fromTo(wordRef.current,
-            { y: -15, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.6, ease: 'expo.out' }
-          );
         },
       });
     }, 4000);
@@ -185,7 +192,7 @@ const FAQ_DATA = [
   },
   {
     question: 'Do You Accept Insurance?',
-    answer: "We do accept insurance and can bill them on your behalf as a courtesy. Usually, we'll check your coverage within the first week of your free consultation, so by the time you know you're a good fit with your counselor, we'll have all that information lined up and ready for you to consider as you plan future sessions. We will honor what the insurance company says and only charge you what the insurance company states is your portion.",
+    answer: "We do accept insurance and can bill them on your behalf as a courtesy. Usually, we'll check your coverage within the first week of your consultation, so by the time you know you're a good fit with your counselor, we'll have all that information lined up and ready for you to consider as you plan future sessions. We will honor what the insurance company says and only charge you what the insurance company states is your portion.",
   },
   {
     question: 'Is There A Sliding Fee?',
@@ -309,7 +316,7 @@ function FAQ() {
         {/* Bottom CTA */}
         <div className="mt-14 text-center">
           <p className="text-[#a38d7a]/60 text-sm font-light font-[var(--font-body)] max-w-lg mx-auto leading-relaxed">
-            Still have questions? <a href="mailto:hello@akconfluence.com?subject=Question" className="text-[#82a396] underline underline-offset-2 hover:text-[#6b8f80] transition-colors">We're happy to help</a>
+            Still have questions? <a href="mailto:info@akconfluence.com?subject=Question" className="text-[#82a396] underline underline-offset-2 hover:text-[#6b8f80] transition-colors">We're happy to help</a>
           </p>
         </div>
       </div>
@@ -440,7 +447,7 @@ function EventsPreview() {
                         </span>
                       )}
                       <a
-                        href={`mailto:hello@akconfluence.com?subject=RSVP: ${event.title}`}
+                        href={`mailto:info@akconfluence.com?subject=RSVP: ${event.title}`}
                         className="inline-flex items-center gap-2 bg-[#82a396] text-white text-[10px] tracking-[0.15em] uppercase font-medium px-5 py-2.5 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all"
                       >
                         {event.spotsLeft !== null ? 'Reserve a spot' : 'Register free'}

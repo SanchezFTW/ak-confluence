@@ -332,11 +332,11 @@ function App() {
             {desktopNavLinks.map(t =>
               t.to ? (
                 <Link key={t.label} to={t.to} className={`text-[12px] tracking-widest uppercase font-medium transition-colors font-[var(--font-heading)] ${
-                  navDark ? 'text-[#f5f2ed]/80 hover:text-[#f5f2ed]' : 'text-[#82a396] hover:text-[#dd9e6f]'
+                  navDark ? 'text-[#f5f2ed] hover:text-[#82a396]' : 'text-[#82a396] hover:text-[#dd9e6f]'
                 }`}>{t.label}</Link>
               ) : (
                 <a key={t.label} href={t.href} className={`text-[12px] tracking-widest uppercase font-medium transition-colors font-[var(--font-heading)] ${
-                  navDark ? 'text-[#f5f2ed]/80 hover:text-[#f5f2ed]' : 'text-[#82a396] hover:text-[#dd9e6f]'
+                  navDark ? 'text-[#f5f2ed] hover:text-[#82a396]' : 'text-[#82a396] hover:text-[#dd9e6f]'
                 }`}>{t.label}</a>
               )
             )}

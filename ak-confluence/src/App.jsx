@@ -6,7 +6,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { List, X } from '@phosphor-icons/react';
 import { AnimatedLogo } from './components/brand/AnimatedLogo';
 import Home from './pages/Home';
-import EventsPage from './pages/EventsPage';
 import FormsPage from './pages/FormsPage';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -75,7 +74,6 @@ function MobileNav({ isOpen, onClose }) {
   const navLinks = [
     { label: 'Services', href: '/#services' },
     { label: 'Counselors', href: '/#counselors' },
-    { label: 'Events', to: '/events' },
     { label: 'Forms', to: '/forms' },
     { label: 'Contact', href: '/#contact' },
   ];
@@ -303,7 +301,6 @@ function App() {
   const desktopNavLinks = [
     { label: 'Services', href: '/#services' },
     { label: 'Counselors', href: '/#counselors' },
-    { label: 'Events', to: '/events' },
     { label: 'Forms', to: '/forms' },
     { label: 'Contact', href: '/#contact' },
   ];
@@ -359,7 +356,6 @@ function App() {
         <main id="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/events" element={<EventsPage />} />
             <Route path="/forms" element={<FormsPage />} />
           </Routes>
         </main>

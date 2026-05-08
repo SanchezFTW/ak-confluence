@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -325,156 +324,6 @@ function FAQ() {
 }
 
 //
-// ─────────────── EVENTS PREVIEW (HOMEPAGE) ───────────────
-//
-const EVENTS_PREVIEW = [
-  {
-    id: 1,
-    title: 'Breathwork & Grounding Circle',
-    date: '2026-04-18',
-    time: '6:00 PM – 7:30 PM',
-    location: 'Confluence Office, Anchorage',
-    type: 'Workshop',
-    description: 'A guided breathwork session designed to help you reconnect with your body, release tension, and cultivate calm. Open to all experience levels.',
-    spotsLeft: 6,
-    featured: true,
-  },
-  {
-    id: 2,
-    title: 'Navigating Life Transitions',
-    date: '2026-04-25',
-    time: '12:00 PM – 1:00 PM',
-    location: 'Virtual (Zoom)',
-    type: 'Webinar',
-    description: 'A free lunchtime talk exploring how to move through major life changes with intention and self-compassion.',
-    spotsLeft: null,
-    featured: false,
-  },
-  {
-    id: 3,
-    title: 'Couples Communication Workshop',
-    date: '2026-05-10',
-    time: '10:00 AM – 1:00 PM',
-    location: 'Confluence Office, Anchorage',
-    type: 'Workshop',
-    description: 'Learn practical Gottman-based tools for deeper listening, resolving conflict, and strengthening your partnership.',
-    spotsLeft: 4,
-    featured: false,
-  },
-];
-
-function formatEventDate(dateStr) {
-  const date = new Date(dateStr + 'T00:00:00');
-  const month = date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
-  const day = date.getDate();
-  const weekday = date.toLocaleDateString('en-US', { weekday: 'long' });
-  return { month, day, weekday };
-}
-
-function EventsPreview() {
-  const containerRef = useRef(null);
-
-  useGSAP(() => {
-    gsap.fromTo('.events-heading',
-      { y: 40, opacity: 0 },
-      { y: 0, opacity: 1, duration: 1.2, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: containerRef.current, start: 'top 75%' }}
-    );
-    gsap.fromTo('.event-card',
-      { y: 30, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: containerRef.current, start: 'top 65%' }}
-    );
-  }, { scope: containerRef });
-
-  return (
-    <section ref={containerRef} id="events" className="py-16 lg:py-24 px-6 lg:px-20 bg-[#e8e4dc] scroll-mt-24">
-      <div className="max-w-5xl mx-auto">
-        {/* Header */}
-        <div className="mb-14 max-w-2xl">
-          <p className="events-heading text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Events & Workshops
-          </p>
-          <h2 className="events-heading font-[var(--font-display)] text-[clamp(2.5rem,5vw,4rem)] font-light text-[#383838] leading-[1.05] mb-6">
-            Grow in <em className="text-[#82a396] italic">community</em>
-          </h2>
-          <p className="events-heading font-[var(--font-body)] text-[#a38d7a] font-light text-lg leading-relaxed">
-            Workshops, groups, and gatherings designed to support your journey alongside others.
-          </p>
-        </div>
-
-        {/* Preview Cards (top 3) */}
-        <div className="flex flex-col gap-4">
-          {EVENTS_PREVIEW.map((event) => {
-            const { month, day, weekday } = formatEventDate(event.date);
-            return (
-              <div
-                key={event.id}
-                className={`event-card group bg-white/60 backdrop-blur-sm border rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-lg hover:shadow-[#82a396]/5 hover:border-[#82a396]/20 ${
-                  event.featured ? 'border-[#82a396]/30' : 'border-[#383838]/5'
-                }`}
-              >
-                <div className="flex flex-col md:flex-row">
-                  <div className={`flex-shrink-0 w-full md:w-28 flex md:flex-col items-center justify-center gap-2 md:gap-0 py-4 md:py-8 ${
-                    event.featured ? 'bg-[#82a396]/5' : 'bg-[#f5f2ed]'
-                  }`}>
-                    <span className="text-[#82a396] text-[10px] tracking-[0.2em] uppercase font-[var(--font-mono)] font-medium">{month}</span>
-                    <span className="font-[var(--font-display)] text-[#383838] text-4xl md:text-5xl font-light leading-none">{day}</span>
-                  </div>
-
-                  <div className="flex-1 p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2 flex-wrap">
-                        <span className="text-[9px] tracking-[0.15em] uppercase font-medium font-[var(--font-mono)] text-[#82a396] bg-[#82a396]/10 px-2.5 py-1 rounded-full">
-                          {event.type}
-                        </span>
-                        {event.featured && (
-                          <span className="text-[9px] tracking-[0.15em] uppercase font-medium font-[var(--font-mono)] text-[#ecc292] bg-[#ecc292]/10 px-2.5 py-1 rounded-full">
-                            Featured
-                          </span>
-                        )}
-                      </div>
-                      <h3 className="font-[var(--font-heading)] text-[#383838] text-xl mb-1">{event.title}</h3>
-                      <p className="font-[var(--font-body)] text-[#a38d7a] text-sm font-light leading-relaxed mb-2">{event.description}</p>
-                      <div className="flex flex-wrap items-center gap-4 text-[#a38d7a]/60 text-xs font-[var(--font-mono)]">
-                        <span>{weekday} · {event.time}</span>
-                        <span>{event.location}</span>
-                      </div>
-                    </div>
-
-                    <div className="flex-shrink-0 flex flex-col items-start md:items-end gap-2">
-                      {event.spotsLeft !== null && (
-                        <span className="text-[10px] font-[var(--font-mono)] tracking-wider uppercase text-[#a38d7a]/60">
-                          {event.spotsLeft} spots left
-                        </span>
-                      )}
-                      <a
-                        href={`mailto:info@akconfluence.com?subject=RSVP: ${event.title}`}
-                        className="inline-flex items-center gap-2 bg-[#82a396] text-white text-[10px] tracking-[0.15em] uppercase font-medium px-5 py-2.5 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all"
-                      >
-                        {event.spotsLeft !== null ? 'Reserve a spot' : 'Register free'}
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Link to full events page */}
-        <div className="mt-12 text-center">
-          <Link
-            to="/events"
-            className="inline-flex items-center gap-2 text-[#82a396] text-[10px] tracking-[0.2em] uppercase font-medium font-[var(--font-mono)] border-b border-[#82a396]/30 pb-1 hover:border-[#82a396] hover:text-[#6b8f80] transition-colors"
-          >
-            View all events &rarr;
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-//
 // ─────────────── HOME PAGE ───────────────
 //
 export default function Home() {
@@ -483,7 +332,6 @@ export default function Home() {
       <Hero />
       <Capabilities />
       <CounselorGrid />
-      <EventsPreview />
       <FAQ />
     </>
   );

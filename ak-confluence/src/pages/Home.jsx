@@ -179,19 +179,15 @@ const FAQ_DATA = [
   },
   {
     question: 'What Is Therapy Like?',
-    answer: "Our aim is for therapy with us to feel like having an educated friend who's got your back, but will also call you out if we know you're moving in a direction you won't be proud of a year from now. If you are seeking ideas to expedite your goals, we help by offering some. If you have plenty of ideas and need someone to help you organize them, we do that too. We help you process major traumatic events in your childhood or current life, and if you require more professional and direct support, such as EMDR, we do that as well!",
+    answer: "Our aim is for therapy with us to feel like having an educated friend who's got your back, but will also call you out if we know you're moving in a direction you won't be proud of a year from now. If you are seeking ideas to expedite your goals, we help by offering some. If you have plenty of ideas and need someone to help you organize them, we do that too. We help you process major traumatic events in your childhood or current life, and if you require more direct support, such as EMDR or Brainspotting, we do that as well!",
   },
   {
     question: 'How Will Therapy Help Me?',
-    answer: "We have received feedback on many ways in which therapy has helped people. Specifically, it can help with confidence, anger, relationships, and quality of life. The American Psychological Association suggests that counseling can improve many aspects of your life, including learning effective strategies to cope with stress, changing habits that have a negative impact on your career or relationships, and increasing overall quality of life.",
-  },
-  {
-    question: 'What Is The Length And Frequency Of Sessions?',
-    answer: 'In the spirit of our "we lead together" mantra here at Confluence Counseling, this will vary from client to client. The variables we take into account include, but are not limited to, the issue you\'ve decided to address, as well as the frequency, intensity, and duration of your symptoms.',
+    answer: "You don't have to be in crisis to benefit from therapy. Therapy can help you understand patterns, manage everyday stress, improve relationships, set boundaries, and build coping skills before problems feel overwhelming. Many people wait because they think they need a diagnosis, a major life event, or a breaking point before reaching out, but support can be helpful long before that. Starting therapy early can make it easier to talk about your feelings, notice burnout, and feel more prepared when life becomes stressful. At akConfluence, therapy is a space for growth, reflection, and support—no crisis required.",
   },
   {
     question: 'Do You Accept Insurance?',
-    answer: "We do accept insurance and can bill them on your behalf as a courtesy. Usually, we'll check your coverage within the first week of your consultation, so by the time you know you're a good fit with your counselor, we'll have all that information lined up and ready for you to consider as you plan future sessions. We will honor what the insurance company says and only charge you what the insurance company states is your portion.",
+    answer: "We do accept most insurance and can bill them most of them on your behalf as a courtesy. Usually, we'll check your coverage within the first week of your consultation, so by the time you know you're a good fit with your counselor, we'll have all that information lined up and ready for you to consider as you plan future sessions.",
   },
   {
     question: 'Is There A Sliding Fee?',
@@ -206,12 +202,8 @@ const FAQ_DATA = [
     answer: 'Yes, we can. We offer telehealth sessions via a HIPAA-compliant platform.',
   },
   {
-    question: 'How Much Is The Session Fee?',
-    answer: 'Therapy sessions start at $150. Some factors that can affect the price include: training of the therapist, length of therapy session, specialization, and insurance coverage.',
-  },
-  {
-    question: 'What Is EMDR?',
-    answer: "Eye Movement Desensitization and Reprocessing (EMDR) is a psychotherapy treatment originally designed to alleviate the distress associated with traumatic memories. In short: it helps you feel much more neutral about the traumatic events that have occurred in your long-ago past (and even the not-so-long-ago past).",
+    question: 'What Is EMDR and Brainspotting?',
+    answer: "Brainspotting is considered a somatic therapy technique and uses body-centered interventions designed to calm the nervous system, release stored tension, and process trauma. It is a therapeutic technique designed to alleviate the distress associated with traumatic memories. Eye Movement Desensitization and Reprocessing (EMDR) is a structured, evidence-based psychotherapy designed to alleviate distress from traumatic memories and PTSD. It helps the brain reprocess stuck, painful memories by using bilateral stimulation such as guided eye movement, while focusing on the trauma, reducing the emotional charge and making memories feel less intense. In short: both techniques help you feel much more neutral about the traumatic events that have occurred in your long-ago past (and even the not-so-long-ago past).",
   },
 ];
 

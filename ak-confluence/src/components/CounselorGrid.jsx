@@ -166,7 +166,7 @@ export default function CounselorGrid() {
         </div>
 
         {/* Filter pills */}
-        <div className="flex flex-wrap gap-2 mb-10">
+        <div className="flex flex-wrap gap-2 mb-10 justify-center">
           <button
             className="cg-pill"
             onClick={() => toggleFilter("All")}

@@ -111,7 +111,7 @@ export default function FormsPage() {
 
       {/* Trust signals */}
       <section className="py-8 px-6 lg:px-20 bg-[#f5f2ed] border-b border-[#383838]/5">
-        <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-8 text-[#a38d7a]/50 text-[10px] tracking-[0.15em] uppercase font-[var(--font-mono)]">
+        <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-4 md:gap-8 text-[#a38d7a]/50 text-[10px] tracking-[0.15em] uppercase font-[var(--font-mono)]">
           <span className="flex items-center gap-2">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />

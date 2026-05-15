@@ -128,17 +128,17 @@ function Capabilities() {
   }, { scope: containerRef });
 
   const bentoTypeStyles = {
-    wide: 'md:col-span-2 bg-[#d5dee4] min-h-[280px]',
-    tall: 'md:row-span-2 bg-[#e8e4dc] min-h-[280px] md:min-h-0',
-    dark: 'bg-[#1a1a1a] text-[#f5f2ed] min-h-[280px]',
-    light: 'bg-white min-h-[280px]',
+    wide: 'md:col-span-2 bg-[#d5dee4] min-h-[160px] md:min-h-[260px]',
+    tall: 'md:row-span-2 bg-[#e8e4dc] min-h-[160px] md:min-h-0',
+    dark: 'bg-[#1a1a1a] text-[#f5f2ed] min-h-[160px] md:min-h-[220px]',
+    light: 'bg-white min-h-[160px] md:min-h-[220px]',
   };
 
   return (
     <section ref={containerRef} id="services" className="py-16 lg:py-24 px-6 lg:px-20 bg-[#f5f2ed]">
       <div className="max-w-[1100px] mx-auto">
 
-        <div id="approach" className="scroll-mt-24 mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <div id="approach" className="scroll-mt-24 mb-8 md:mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div>
             <p className="text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-4 flex items-center gap-2 font-[var(--font-mono)]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Services
@@ -354,7 +354,7 @@ function Reviews() {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} id="reviews" className="py-16 lg:py-20 px-6 lg:px-20 bg-[#f5f2ed]">
+    <section ref={containerRef} id="reviews" className="py-16 lg:py-24 px-6 lg:px-20 bg-[#f5f2ed]">
       <div className="max-w-[1100px] mx-auto">
         {/* Header */}
         <div className="mb-12 max-w-2xl">

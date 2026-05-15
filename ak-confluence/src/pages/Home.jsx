@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ThumbsUp } from '@phosphor-icons/react';
 import { AnimatedLogo } from '../components/brand/AnimatedLogo';
 import CounselorGrid from '../components/CounselorGrid';
 
@@ -316,6 +317,117 @@ function FAQ() {
 }
 
 //
+// ─────────────── REVIEWS + FOUNDER NOTE SECTION ───────────────
+//
+const REVIEWS = [
+  {
+    quote: "I have been a licensed psychologist in Anchorage for 22 years and can honestly say that Elly has been one of the highest caliber therapists it has been my pleasure to encounter. Her reassuring and thoughtful demeanor combined with her commitment to possibility of change for the better with each of her clients creates an ideal environment for effective therapy.",
+    name: "Danelle R. Winn, PhD",
+    title: null,
+  },
+  {
+    quote: "I refer to akConfluence because their clinicians offer high-quality, individualized therapy that respects the complexity of my patients' needs. Their team is responsive, collaborative, and consistently earns the trust of even our most treatment-resistant cases.",
+    name: "E. David Hjellen, DO",
+    title: "Frontier Health Services",
+  },
+  {
+    quote: "As a recently retired Marriage and Family Therapist with over 50 years of experience, I highly endorse akConfluence, its founder Elly, and her team. They offer exceptional services including individual therapy, couples therapy, group therapy, workshops, and training. Over the years, Elly has effectively supported several of my MFT supervisees through the licensure process. akConfluence is truly here to “help you imagine a future where today’s challenges don’t hold you back from reaching your full potential.”",
+    name: "Mercy Dennis",
+    title: "Retired Marriage and Family Therapist",
+  },
+];
+
+function Reviews() {
+  const containerRef = useRef(null);
+
+  useGSAP(() => {
+    gsap.fromTo('.rv-heading',
+      { y: 40, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1.2, stagger: 0.1, ease: 'power3.out',
+        scrollTrigger: { trigger: containerRef.current, start: 'top 80%' }}
+    );
+    gsap.fromTo('.rv-col',
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: 'power3.out',
+        scrollTrigger: { trigger: containerRef.current, start: 'top 70%' }}
+    );
+  }, { scope: containerRef });
+
+  return (
+    <section ref={containerRef} id="reviews" className="py-16 lg:py-20 px-6 lg:px-20 bg-[#f5f2ed]">
+      <div className="max-w-[1100px] mx-auto">
+        {/* Header */}
+        <div className="mb-12 max-w-2xl">
+          <p className="rv-heading text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Trusted By Providers
+          </p>
+          <h2 className="rv-heading font-[var(--font-display)] text-[clamp(2.5rem,5vw,4rem)] font-light text-[#383838] leading-[1.05] mb-5">
+            What providers <em className="text-[#82a396] italic">are saying</em>
+          </h2>
+          <p className="rv-heading font-[var(--font-body)] text-[#a38d7a] font-light text-lg leading-relaxed">
+            Endorsements from fellow Alaska clinicians who refer their patients to our team.
+          </p>
+        </div>
+
+        {/* Two-column: founder note (left, 40%) + reviews (right, 60%) */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-14 items-start">
+
+          {/* Founder note — left column */}
+          <aside className="rv-col lg:col-span-2 lg:sticky lg:top-28">
+            <div className="rounded-2xl bg-white/60 border border-[#82a396]/15 p-7 lg:p-8">
+              <p className="text-[#dd9e6f] text-[9px] tracking-[0.4em] uppercase font-medium mb-4 font-[var(--font-mono)]">
+                A Note From Our Founder
+              </p>
+              <div className="font-[var(--font-body)] text-[#383838] font-light text-[15px] leading-relaxed space-y-4">
+                <p>
+                  You&rsquo;ll notice our reviews are all from fellow healthcare providers &mdash; the people who trust us with their patients. We&rsquo;re honored by that.
+                </p>
+                <p>
+                  You might wonder where the patient reviews are. Most of our new clients come through personal referrals from friends and family, but patient privacy laws mean we can&rsquo;t ethically share those stories &mdash; even with permission.
+                </p>
+                <p>
+                  So if you&rsquo;d like a patient&rsquo;s perspective, ask around. Chances are someone in your circle has heard of us &mdash; and if not, that just means we have room to grow.
+                </p>
+              </div>
+              <p className="mt-6 font-[var(--font-display)] italic text-[#82a396] text-lg">
+                &ndash; Elly Sanchez, Founder
+              </p>
+            </div>
+          </aside>
+
+          {/* Reviews — right column */}
+          <div className="rv-col lg:col-span-3">
+            {REVIEWS.map((r, i) => (
+              <div
+                key={r.name}
+                className={`flex gap-4 items-start ${i === 0 ? '' : 'border-t border-[#383838]/10 pt-7 mt-7'}`}
+              >
+                <div className="flex-shrink-0 w-9 h-9 rounded-full bg-[#82a396]/10 flex items-center justify-center mt-1">
+                  <ThumbsUp size={18} weight="fill" color="#82a396" />
+                </div>
+                <div className="flex-1">
+                  <blockquote className="font-[var(--font-body)] text-[#383838] font-light text-[15px] leading-relaxed mb-3">
+                    {r.quote}
+                  </blockquote>
+                  <p className="font-[var(--font-display)] italic text-[#383838] text-base">
+                    &mdash; {r.name}
+                  </p>
+                  {r.title && (
+                    <p className="mt-1 text-[#a38d7a] text-[10px] tracking-[0.3em] uppercase font-medium font-[var(--font-mono)]">
+                      {r.title}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+//
 // ─────────────── HOME PAGE ───────────────
 //
 export default function Home() {
@@ -324,6 +436,7 @@ export default function Home() {
       <Hero />
       <Capabilities />
       <CounselorGrid />
+      <Reviews />
       <FAQ />
     </>
   );

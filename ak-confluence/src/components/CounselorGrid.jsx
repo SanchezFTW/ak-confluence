@@ -44,6 +44,7 @@ const counselors = [
     specialties: ["Depression", "Grief and Loss", "PTSD & Trauma"],
     bio: "Jessica specializes in evidence-based trauma therapies, creating a safe space for healing from life's most difficult experiences.",
     photo: "https://www.akconfluence.com/wp-content/uploads/2023/06/A0100013-scaled-e1687718700873.jpg",
+    photoPosition: "50% 20%",
   },
   {
     id: 5,
@@ -55,6 +56,7 @@ const counselors = [
     specialties: ["Grief and Loss", "Anxiety", "Depression"],
     bio: "Joe combines practical therapeutic techniques with genuine compassion, meeting clients exactly where they are.",
     photo: "https://www.akconfluence.com/wp-content/uploads/2023/06/A0100030-scaled-e1687718687763.jpg",
+    photoPosition: "50% 25%",
   },
   {
     id: 6,
@@ -66,6 +68,7 @@ const counselors = [
     specialties: ["Grief and Loss", "Depression", "Anxiety"],
     bio: "Katie provides a space where you feel seen and heard in a world where we sometimes feel overlooked and forgotten.",
     photo: "https://www.akconfluence.com/wp-content/uploads/2025/01/Katie2025.jpg",
+    photoPosition: "50% 15%",
   },
 ];
 
@@ -227,7 +230,8 @@ export default function CounselorGrid() {
                         <img
                           src={c.photo}
                           alt={`${c.name}, ${c.title}`}
-                          className="w-full h-full object-cover object-top transition-transform duration-700"
+                          className="w-full h-full object-cover transition-transform duration-700"
+                          style={{ objectPosition: c.photoPosition ?? "50% top" }}
                           loading="lazy"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />

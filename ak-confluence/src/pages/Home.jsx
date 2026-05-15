@@ -92,7 +92,7 @@ function Hero() {
 
         <div className="gsap-reveal-hero flex items-center gap-8 mt-8">
           <a href="#contact" className="btn-primary uppercase text-[10px] tracking-[0.2em] px-8 py-4">Begin here</a>
-          <a href="#approach" className="text-[#383838] text-[10px] tracking-[0.2em] uppercase hover:text-[#82a396] transition-colors border-b border-[#383838]/30 pb-1">Our approach &rarr;</a>
+          <a href="#counselors" className="text-[#383838] text-[10px] tracking-[0.2em] uppercase hover:text-[#82a396] transition-colors border-b border-[#383838]/30 pb-1">Our counselors &rarr;</a>
         </div>
       </div>
     </section>

@@ -82,7 +82,7 @@ function Hero() {
             Finding your way
           </span>
           <span className="gsap-reveal-hero font-[var(--font-heading)] text-[clamp(3.5rem,8vw,6.5rem)] font-normal tracking-tight leading-[1.05] block">
-            back to <span className="font-[var(--font-display)] text-[#82a396] italic" ref={wordRef}>{WORDS[wordIndex]}</span>
+            back to <span className="font-[var(--font-display)] text-[#82a396] italic" style={{ display: 'inline-block' }} ref={wordRef}>{WORDS[wordIndex]}</span>
           </span>
         </h1>
 

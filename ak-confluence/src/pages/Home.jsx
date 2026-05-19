@@ -134,6 +134,39 @@ function Capabilities() {
     light: 'bg-white min-h-[160px] md:min-h-[220px]',
   };
 
+  const logoSlots = {
+    wide: (
+      <AnimatedLogo animation="breath" variant="mark" size={56} colorMode="light" />
+    ),
+    tall: (
+      <div className="flex gap-4">
+        <AnimatedLogo animation="breath" variant="mark" size={56} colorMode="light" />
+        <AnimatedLogo animation="breath" variant="mark" size={56} colorMode="light" />
+      </div>
+    ),
+    light: (
+      <div className="flex flex-col gap-3">
+        <AnimatedLogo animation="breath" variant="mark" size={44} colorMode="light" />
+        <div className="flex gap-3">
+          <AnimatedLogo animation="breath" variant="mark" size={44} colorMode="light" />
+          <AnimatedLogo animation="breath" variant="mark" size={44} colorMode="light" />
+          <AnimatedLogo animation="breath" variant="mark" size={44} colorMode="light" />
+        </div>
+      </div>
+    ),
+    dark: (
+      <div className="flex flex-col gap-[3px]">
+        {[0, 1, 2].map((i) => (
+          <div key={i} style={{ height: 28, overflow: 'hidden', position: 'relative' }}>
+            <div style={{ position: 'absolute', top: -i * 28 }}>
+              <AnimatedLogo animation="flow" variant="mark" size={84} colorMode="dark" />
+            </div>
+          </div>
+        ))}
+      </div>
+    ),
+  };
+
   return (
     <section ref={containerRef} id="services" className="py-16 lg:py-24 px-6 lg:px-20 bg-[#f5f2ed]">
       <div className="max-w-[1100px] mx-auto">
@@ -154,10 +187,13 @@ function Capabilities() {
           {SERVICES.map((s) => (
             <div
               key={s.title}
-              className={`bento-item rounded-2xl flex flex-col justify-end p-8 transition-transform duration-500 hover:scale-[1.02] ${bentoTypeStyles[s.type]}`}
+              className={`bento-item rounded-2xl flex flex-col justify-between p-8 transition-transform duration-500 hover:scale-[1.02] ${bentoTypeStyles[s.type]}`}
             >
-              <h3 className={`font-[var(--font-heading)] text-2xl mb-1 ${s.type === 'dark' ? 'text-[#f5f2ed]' : 'text-[#383838]'}`}>{s.title}</h3>
-              <p className={`text-sm font-light font-[var(--font-body)] ${s.type === 'dark' ? 'text-[#f5f2ed]/60' : 'text-[#a38d7a]'}`}>{s.desc}</p>
+              <div>{logoSlots[s.type]}</div>
+              <div>
+                <h3 className={`font-[var(--font-heading)] text-2xl mb-1 ${s.type === 'dark' ? 'text-[#f5f2ed]' : 'text-[#383838]'}`}>{s.title}</h3>
+                <p className={`text-sm font-light font-[var(--font-body)] ${s.type === 'dark' ? 'text-[#f5f2ed]/60' : 'text-[#a38d7a]'}`}>{s.desc}</p>
+              </div>
             </div>
           ))}
         </div>

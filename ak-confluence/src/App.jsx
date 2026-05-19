@@ -7,6 +7,7 @@ import { List, X } from '@phosphor-icons/react';
 import { AnimatedLogo } from './components/brand/AnimatedLogo';
 import Home from './pages/Home';
 import FormsPage from './pages/FormsPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -357,6 +358,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/forms" element={<FormsPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
 

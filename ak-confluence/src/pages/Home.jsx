@@ -136,29 +136,31 @@ function Capabilities() {
 
   const logoSlots = {
     wide: (
-      <AnimatedLogo animation="breath" variant="mark" size={56} colorMode="light" />
+      <div className="opacity-70">
+        <AnimatedLogo animation="flow" variant="mark" size={72} colorMode="light" />
+      </div>
     ),
     tall: (
-      <div className="flex gap-4">
-        <AnimatedLogo animation="breath" variant="mark" size={56} colorMode="light" />
-        <AnimatedLogo animation="breath" variant="mark" size={56} colorMode="light" />
+      <div className="flex items-center gap-5 opacity-70">
+        <AnimatedLogo animation="flow" variant="mark" size={60} colorMode="light" />
+        <AnimatedLogo animation="flow" variant="mark" size={60} colorMode="light" />
       </div>
     ),
     light: (
-      <div className="flex flex-col gap-3">
-        <AnimatedLogo animation="breath" variant="mark" size={44} colorMode="light" />
-        <div className="flex gap-3">
-          <AnimatedLogo animation="breath" variant="mark" size={44} colorMode="light" />
-          <AnimatedLogo animation="breath" variant="mark" size={44} colorMode="light" />
-          <AnimatedLogo animation="breath" variant="mark" size={44} colorMode="light" />
+      <div className="flex flex-col items-center gap-3 opacity-70">
+        <AnimatedLogo animation="flow" variant="mark" size={40} colorMode="light" />
+        <div className="flex gap-4">
+          <AnimatedLogo animation="flow" variant="mark" size={40} colorMode="light" />
+          <AnimatedLogo animation="flow" variant="mark" size={40} colorMode="light" />
+          <AnimatedLogo animation="flow" variant="mark" size={40} colorMode="light" />
         </div>
       </div>
     ),
     dark: (
-      <div className="flex flex-col gap-[3px]">
+      <div className="flex flex-col items-center gap-[4px] opacity-80">
         {[0, 1, 2].map((i) => (
-          <div key={i} style={{ height: 28, overflow: 'hidden', position: 'relative' }}>
-            <div style={{ position: 'absolute', top: -i * 28 }}>
+          <div key={i} style={{ width: 84, height: 28, overflow: 'hidden', position: 'relative' }}>
+            <div style={{ position: 'absolute', top: -i * 28, left: 0 }}>
               <AnimatedLogo animation="flow" variant="mark" size={84} colorMode="dark" />
             </div>
           </div>
@@ -189,7 +191,7 @@ function Capabilities() {
               key={s.title}
               className={`bento-item rounded-2xl flex flex-col justify-between p-8 transition-transform duration-500 hover:scale-[1.02] ${bentoTypeStyles[s.type]}`}
             >
-              <div>{logoSlots[s.type]}</div>
+              <div className="flex-1 flex items-center justify-center py-4">{logoSlots[s.type]}</div>
               <div>
                 <h3 className={`font-[var(--font-heading)] text-2xl mb-1 ${s.type === 'dark' ? 'text-[#f5f2ed]' : 'text-[#383838]'}`}>{s.title}</h3>
                 <p className={`text-sm font-light font-[var(--font-body)] ${s.type === 'dark' ? 'text-[#f5f2ed]/60' : 'text-[#a38d7a]'}`}>{s.desc}</p>

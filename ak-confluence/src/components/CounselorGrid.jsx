@@ -43,8 +43,8 @@ const counselors = [
     quote: "Feel understood. Specialized trauma support for life's toughest challenges.",
     specialties: ["Depression", "Grief and Loss", "PTSD & Trauma"],
     bio: "Jessica specializes in evidence-based trauma therapies, creating a safe space for healing from life's most difficult experiences.",
-    photo: "https://www.akconfluence.com/wp-content/uploads/2023/06/A0100013-scaled-e1687718700873.jpg",
-    photoPosition: "50% 20%",
+    photo: "/Jessica.jpg",
+    bgStyle: { size: "auto 150%", position: "50% 78%" },
   },
   {
     id: 5,
@@ -55,8 +55,8 @@ const counselors = [
     quote: "Down-to-earth care using breathwork and CBT to support you through life's challenges.",
     specialties: ["Grief and Loss", "Anxiety", "Depression"],
     bio: "Joe combines practical therapeutic techniques with genuine compassion, meeting clients exactly where they are.",
-    photo: "https://www.akconfluence.com/wp-content/uploads/2023/06/A0100030-scaled-e1687718687763.jpg",
-    photoPosition: "50% 25%",
+    photo: "/Joe.jpg",
+    bgStyle: { size: "auto 150%", position: "50% 81%" },
   },
   {
     id: 6,
@@ -68,7 +68,7 @@ const counselors = [
     specialties: ["Grief and Loss", "Depression", "Anxiety"],
     bio: "Katie provides a space where you feel seen and heard in a world where we sometimes feel overlooked and forgotten.",
     photo: "https://www.akconfluence.com/wp-content/uploads/2025/01/Katie2025.jpg",
-    photoPosition: "50% 15%",
+    bgStyle: { size: "auto 150%", position: "50% 63%" },
   },
 ];
 
@@ -130,7 +130,8 @@ export default function CounselorGrid() {
           transform: translateY(-4px);
           box-shadow: 0 8px 24px rgba(56, 56, 56, 0.08);
         }
-        .cg-card:hover .cg-photo img {
+        .cg-card:hover .cg-photo img,
+        .cg-card:hover .cg-photo-bg {
           transform: scale(1.05);
         }
         .cg-pill {
@@ -227,13 +228,27 @@ export default function CounselorGrid() {
                       }}
                     >
                       <div className="cg-photo relative overflow-hidden aspect-square">
-                        <img
-                          src={c.photo}
-                          alt={`${c.name}, ${c.title}`}
-                          className="w-full h-full object-cover transition-transform duration-700"
-                          style={{ objectPosition: c.photoPosition ?? "50% top" }}
-                          loading="lazy"
-                        />
+                        {c.bgStyle ? (
+                          <div
+                            role="img"
+                            aria-label={`${c.name}, ${c.title}`}
+                            className="cg-photo-bg w-full h-full transition-transform duration-700"
+                            style={{
+                              backgroundImage: `url(${c.photo})`,
+                              backgroundRepeat: "no-repeat",
+                              backgroundSize: c.bgStyle.size,
+                              backgroundPosition: c.bgStyle.position,
+                            }}
+                          />
+                        ) : (
+                          <img
+                            src={c.photo}
+                            alt={`${c.name}, ${c.title}`}
+                            className="w-full h-full object-cover transition-transform duration-700"
+                            style={{ objectPosition: c.photoPosition ?? "50% top" }}
+                            loading="lazy"
+                          />
+                        )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                         <div className="absolute top-2 right-2">
                           <span className="inline-flex items-center gap-1 bg-white/90 backdrop-blur-sm text-[9px] tracking-[0.1em] uppercase font-medium px-2 py-0.5 rounded-full">

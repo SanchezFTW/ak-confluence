@@ -466,32 +466,6 @@ function Reviews() {
 }
 
 //
-// ─────────────── NEWSLETTER SECTION ───────────────
-//
-function Newsletter() {
-  useEffect(() => {
-    if (window.ml) window.ml('show', 'UGY1bC', true);
-  }, []);
-
-  return (
-    <section className="py-16 lg:py-24 px-6 lg:px-20 bg-[#f5f2ed]">
-      <div className="max-w-[640px] mx-auto text-center">
-        <p className="text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-4 flex items-center justify-center gap-2 font-[var(--font-mono)]">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Stay Connected
-        </p>
-        <h2 className="font-[var(--font-display)] text-[clamp(2rem,4vw,3rem)] font-light text-[#383838] leading-[1.05] mb-4">
-          Get updates from <em className="text-[#82a396] italic">our practice</em>
-        </h2>
-        <p className="font-[var(--font-body)] text-[#a38d7a] font-light text-base leading-relaxed mb-10">
-          Occasional news, resources, and workshop announcements — no spam, ever.
-        </p>
-        <div className="ml-embedded" data-form="UGY1bC"></div>
-      </div>
-    </section>
-  );
-}
-
-//
 // ─────────────── HOME PAGE ───────────────
 //
 export default function Home() {
@@ -501,7 +475,6 @@ export default function Home() {
       <Capabilities />
       <CounselorGrid />
       <Reviews />
-      <Newsletter />
       <FAQ />
     </>
   );

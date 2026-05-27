@@ -7,6 +7,8 @@ import { List, X } from '@phosphor-icons/react';
 import { AnimatedLogo } from './components/brand/AnimatedLogo';
 import Home from './pages/Home';
 import FormsPage from './pages/FormsPage';
+import NewsletterPage from './pages/NewsletterPage';
+import NewsletterPostPage from './pages/NewsletterPostPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -76,6 +78,7 @@ function MobileNav({ isOpen, onClose }) {
     { label: 'Services', href: '/#services' },
     { label: 'Counselors', href: '/#counselors' },
     { label: 'Forms', to: '/forms' },
+    { label: 'Newsletter', to: '/newsletter' },
     { label: 'Contact', href: '/#contact' },
   ];
 
@@ -303,6 +306,7 @@ function App() {
     { label: 'Services', href: '/#services' },
     { label: 'Counselors', href: '/#counselors' },
     { label: 'Forms', to: '/forms' },
+    { label: 'Newsletter', to: '/newsletter' },
     { label: 'Contact', href: '/#contact' },
   ];
 
@@ -358,6 +362,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/forms" element={<FormsPage />} />
+            <Route path="/newsletter" element={<NewsletterPage />} />
+            <Route path="/newsletter/:slug" element={<NewsletterPostPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>

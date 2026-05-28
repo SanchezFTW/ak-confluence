@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { posts } from '../data/posts';
 
@@ -11,10 +10,6 @@ function formatDate(dateStr) {
 }
 
 function NewsletterSignup() {
-  useEffect(() => {
-    if (window.ml) window.ml('show', 'UGY1bC', true);
-  }, []);
-
   return (
     <section className="py-16 lg:py-20 px-6 lg:px-20 bg-[#82a396]/10 border-y border-[#82a396]/20">
       <div className="max-w-[580px] mx-auto text-center">

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { posts } from '../data/posts';
 
@@ -10,6 +11,17 @@ function formatDate(dateStr) {
 }
 
 function NewsletterSignup() {
+  useEffect(() => {
+    const el = document.querySelector('.ml-embedded[data-form="UGY1bC"]');
+    if (!el || el.hasChildNodes()) return;
+    // MailerLite may have already run its initial scan before React mounted this div.
+    // Re-inject the form-specific JSONP script to force it to render.
+    document.querySelectorAll('script[src*="forms/UGY1bC"]').forEach(s => s.remove());
+    const script = document.createElement('script');
+    script.src = 'https://assets.mailerlite.com/jsonp/2382319/forms/UGY1bC?callback=ml.fn.renderEmbeddedForm';
+    document.head.appendChild(script);
+  }, []);
+
   return (
     <section className="py-16 lg:py-20 px-6 lg:px-20 bg-[#82a396]/10 border-y border-[#82a396]/20">
       <div className="max-w-[580px] mx-auto text-center">

@@ -7,9 +7,9 @@ const counselors = [
     title: "Licensed Professional Counselor",
     role: "Founder",
     status: "waitlist",
-    quote: "Transforming complex life experiences with laughter and purpose.",
+    quote: "Leading From the Inside Out.",
     specialties: ["Anxiety", "Somatic", "Life Transitions"],
-    bio: "Elly brings warmth and humor to the therapeutic process, helping clients navigate major life changes with clarity and self-compassion.",
+    bio: "Perfect for life's unexpected promotions. One moment you're handling your responsibilities, the next you're suddenly in charge—at work, home, or in key relationships and no one prepared you for this part. Those contradictory thoughts making you second-guess yourself? They're not flaws—just part of being beautifully human. I work with people who never sought leadership but now have everyone looking to them for answers. Real change happens when we abandon perfection for honesty. Our work will be direct, purposeful, and surprisingly enjoyable—discovering authentic leadership that feels true to who you really are.",
     photo: "https://www.akconfluence.com/wp-content/uploads/2021/08/Elly-Web-2.jpg",
   },
   {

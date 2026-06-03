@@ -77,8 +77,16 @@ const FILTER_SPECIALTIES = ['Anxiety', 'Couples', 'Grief and Loss', 'Depression'
 export default function CounselorGrid() {
   const [activeFilters, setActiveFilters] = useState([]);
   const [expandedId, setExpandedId] = useState(null);
+  const [colCount, setColCount] = useState(() => window.innerWidth >= 768 ? 3 : 2);
   const detailRef = useRef(null);
   const panelRef = useRef(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const handler = (e) => setColCount(e.matches ? 3 : 2);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   function toggleFilter(specialty) {
     if (specialty === "All") {
@@ -206,7 +214,7 @@ export default function CounselorGrid() {
         {/* Card grid — detail panel injects inline after the clicked card's row */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-[960px] mx-auto">
           {(() => {
-            const cols = 3; // md+ columns
+            const cols = colCount;
             const rows = [];
             for (let i = 0; i < filtered.length; i += cols) {
               const rowItems = filtered.slice(i, i + cols);
@@ -272,7 +280,7 @@ export default function CounselorGrid() {
                   {rowHasExpanded && expanded && (
                     <div
                       ref={detailRef}
-                      className="cg-detail-panel col-span-2 md:col-span-3"
+                      className="cg-detail-panel col-span-full"
                     >
                       <div
                         ref={panelRef}
@@ -310,7 +318,7 @@ export default function CounselorGrid() {
                             ))}
                           </div>
 
-                          <p className="font-[var(--font-body)] text-[#a38d7a] text-sm font-light leading-relaxed mb-5">
+                          <p className="font-[var(--font-body)] text-[#a38d7a] text-[15px] font-light leading-relaxed mb-5">
                             {expanded.bio}
                           </p>
 

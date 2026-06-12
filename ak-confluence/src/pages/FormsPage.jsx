@@ -100,10 +100,10 @@ export default function FormsPage() {
           <p className="fp-heading text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Client Forms
           </p>
-          <h1 className="fp-heading font-[var(--font-display)] text-[clamp(2.5rem,5vw,4.5rem)] font-light text-[#383838] leading-[1.05] mb-6">
+          <h1 className="fp-heading font-[var(--font-display)] text-[clamp(1.8rem,5vw,4.5rem)] font-light text-[#383838] leading-[1.05] mb-6">
             Paperwork, <em className="text-[#82a396] italic">simplified</em>
           </h1>
-          <p className="fp-heading font-[var(--font-body)] text-[#a38d7a] font-light text-lg leading-relaxed max-w-2xl">
+          <p className="fp-heading font-[var(--font-body)] text-[#a38d7a] font-light text-base lg:text-lg leading-relaxed max-w-2xl">
             Complete your forms here at your own pace — from your couch, your car, wherever you're most comfortable. Everything is secure and confidential.
           </p>
         </div>

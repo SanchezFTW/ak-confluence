@@ -137,7 +137,7 @@ function Footer() {
           <div className="mb-6 opacity-20 text-[#82a396] w-10 h-10">
              <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 0C50 27.6142 27.6142 50 0 50C27.6142 50 50 72.3858 50 100C50 72.3858 72.3858 50 100 50C72.3858 50 50 27.6142 50 0Z" fill="currentColor"/></svg>
           </div>
-          <h2 className="font-[var(--font-heading)] text-[clamp(2.5rem,5vw,4.5rem)] font-normal mb-4">
+          <h2 className="font-[var(--font-heading)] text-[clamp(1.75rem,5vw,4.5rem)] font-normal mb-4">
             The first step is simply <em className="italic text-[#82a396]">reaching out.</em>
           </h2>
           <p className="font-[var(--font-body)] text-[#f5f2ed]/50 text-lg font-light mb-8 max-w-2xl">

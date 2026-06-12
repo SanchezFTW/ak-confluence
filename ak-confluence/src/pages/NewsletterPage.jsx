@@ -1,6 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { MagnifyingGlass } from '@phosphor-icons/react';
 import { posts } from '../data/posts';
+import { postTags, SUBJECT_FILTERS } from '../data/tags';
 
 function formatDate(dateStr) {
   return new Date(dateStr + 'T12:00:00').toLocaleDateString('en-US', {
@@ -71,6 +73,19 @@ function PostCard({ post }) {
 
 export default function NewsletterPage() {
   const sorted = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeSubject, setActiveSubject] = useState('');
+
+  const filtered = sorted.filter((post) => {
+    const tags = postTags[post.slug] ?? [];
+    const matchesSubject = !activeSubject || tags.includes(activeSubject);
+    const q = searchQuery.toLowerCase();
+    const matchesSearch =
+      !q ||
+      post.title.toLowerCase().includes(q) ||
+      post.excerpt.toLowerCase().includes(q);
+    return matchesSubject && matchesSearch;
+  });
 
   return (
     <>
@@ -95,14 +110,68 @@ export default function NewsletterPage() {
       {/* Post grid */}
       <section className="py-16 lg:py-24 px-6 lg:px-20 bg-[#f5f2ed]">
         <div className="max-w-6xl mx-auto">
-          <p className="font-[var(--font-mono)] text-[9px] tracking-[0.4em] uppercase text-[#a38d7a]/60 mb-10 text-center">
-            {sorted.length} posts
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {sorted.map((post) => (
-              <PostCard key={post.slug} post={post} />
-            ))}
+
+          {/* Filter bar */}
+          <div className="mb-10 flex flex-col gap-4">
+            {/* Search */}
+            <div className="relative max-w-sm mx-auto w-full">
+              <MagnifyingGlass
+                size={14}
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#a38d7a] pointer-events-none"
+              />
+              <input
+                type="search"
+                placeholder="Search posts…"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-4 py-2.5 rounded-full bg-white border border-[#82a396]/20 text-[#383838] text-sm font-[var(--font-body)] placeholder:text-[#a38d7a]/50 focus:outline-none focus:border-[#82a396]/60 transition-colors"
+              />
+            </div>
+
+            {/* Subject pills */}
+            <div className="flex flex-wrap gap-2 justify-center">
+              <button
+                onClick={() => setActiveSubject('')}
+                className={`text-[10px] tracking-[0.15em] uppercase font-medium font-[var(--font-mono)] px-4 py-2 rounded-full transition-all ${
+                  activeSubject === ''
+                    ? 'bg-[#82a396] text-white'
+                    : 'bg-transparent text-[#a38d7a] border border-[#383838]/10 hover:border-[#82a396] hover:text-[#82a396]'
+                }`}
+              >
+                All topics
+              </button>
+              {SUBJECT_FILTERS.map((subject) => (
+                <button
+                  key={subject}
+                  onClick={() => setActiveSubject(activeSubject === subject ? '' : subject)}
+                  className={`text-[10px] tracking-[0.15em] uppercase font-medium font-[var(--font-mono)] px-4 py-2 rounded-full transition-all ${
+                    activeSubject === subject
+                      ? 'bg-[#82a396] text-white'
+                      : 'bg-transparent text-[#a38d7a] border border-[#383838]/10 hover:border-[#82a396] hover:text-[#82a396]'
+                  }`}
+                >
+                  {subject}
+                </button>
+              ))}
+            </div>
           </div>
+
+          <p className="font-[var(--font-mono)] text-[9px] tracking-[0.4em] uppercase text-[#a38d7a]/60 mb-8 text-center">
+            {filtered.length} {filtered.length === 1 ? 'post' : 'posts'}
+            {(activeSubject || searchQuery) && ' matching'}
+          </p>
+
+          {filtered.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {filtered.map((post) => (
+                <PostCard key={post.slug} post={post} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-center font-[var(--font-body)] text-[#a38d7a] font-light text-sm py-12">
+              No posts match your search. <button onClick={() => { setSearchQuery(''); setActiveSubject(''); }} className="text-[#82a396] underline underline-offset-2 hover:text-[#6b8f80] transition-colors cursor-pointer">Clear filters</button>
+            </p>
+          )}
         </div>
       </section>
     </>

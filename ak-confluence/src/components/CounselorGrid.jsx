@@ -44,7 +44,6 @@ const counselors = [
     specialties: ["Depression", "Grief and Loss", "PTSD & Trauma"],
     bio: "If you need specialized trauma support, I create a compassionate space where you can feel truly understood while working through trauma, PTSD, and life's most challenging experiences. I specialize in evidence-based trauma treatment methods including EMDR (Eye Movement Desensitization and Reprocessing) and Accelerated Resolution Therapy—powerful approaches that can help process difficult experiences and create meaningful change.",
     photo: "/Jessica.jpg",
-    bgStyle: { size: "auto 150%", position: "50% 78%" },
   },
   {
     id: 5,
@@ -56,7 +55,6 @@ const counselors = [
     specialties: ["Grief and Loss", "Anxiety", "Depression"],
     bio: "I use breathwork and Cognitive-Behavioral Therapy to support your journey, teaching mindfulness tools that reduce stress and balance mood. My eclectic approach combines behavioral techniques, Gestalt therapy, and person-centered counseling—meeting you exactly where you are. Conscious breathing is central to my practice, creating powerful shifts words alone cannot achieve. I don't just observe; I actively join your process. Together, we'll reflect on your path while building on your inherent strengths. In our safe therapeutic relationship, you won't walk this healing journey alone.",
     photo: "/Joe.jpg",
-    bgStyle: { size: "auto 150%", position: "50% 81%" },
   },
   {
     id: 6,
@@ -68,7 +66,6 @@ const counselors = [
     specialties: ["Grief and Loss", "Depression", "Anxiety"],
     bio: "Through grief, loss, life transitions, or anxiety, I create a sanctuary where you can be known without judgment as we work together to unlock your empowered voice and transform your life. My theoretical orientation is founded in family systems theory and collaborative language theory. I can also provide Brainspotting to help clients with deeper processing. Within a session, I take an exploratory, non-directive approach, and I like to use warmth, humor, and lots of thought-provoking questions to connect and know my clients better.",
     photo: "https://www.akconfluence.com/wp-content/uploads/2025/01/Katie2025.jpg",
-    bgStyle: { size: "auto 150%", position: "50% 63%" },
   },
 ];
 
@@ -79,7 +76,6 @@ export default function CounselorGrid() {
   const [expandedId, setExpandedId] = useState(null);
   const [colCount, setColCount] = useState(() => window.innerWidth >= 768 ? 3 : 2);
   const detailRef = useRef(null);
-  const panelRef = useRef(null);
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 768px)');
@@ -138,8 +134,7 @@ export default function CounselorGrid() {
           transform: translateY(-4px);
           box-shadow: 0 8px 24px rgba(56, 56, 56, 0.08);
         }
-        .cg-card:hover .cg-photo img,
-        .cg-card:hover .cg-photo-bg {
+        .cg-card:hover .cg-photo img {
           transform: scale(1.05);
         }
         .cg-pill {
@@ -236,27 +231,13 @@ export default function CounselorGrid() {
                       }}
                     >
                       <div className="cg-photo relative overflow-hidden aspect-square">
-                        {c.bgStyle ? (
-                          <div
-                            role="img"
-                            aria-label={`${c.name}, ${c.title}`}
-                            className="cg-photo-bg w-full h-full transition-transform duration-700"
-                            style={{
-                              backgroundImage: `url(${c.photo})`,
-                              backgroundRepeat: "no-repeat",
-                              backgroundSize: c.bgStyle.size,
-                              backgroundPosition: c.bgStyle.position,
-                            }}
-                          />
-                        ) : (
-                          <img
-                            src={c.photo}
-                            alt={`${c.name}, ${c.title}`}
-                            className="w-full h-full object-cover transition-transform duration-700"
-                            style={{ objectPosition: c.photoPosition ?? "50% top" }}
-                            loading="lazy"
-                          />
-                        )}
+                        <img
+                          src={c.photo}
+                          alt={`${c.name}, ${c.title}`}
+                          className="w-full h-full object-cover transition-transform duration-700"
+                          style={{ objectPosition: c.photoPosition ?? "50% top" }}
+                          loading="lazy"
+                        />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                         <div className="absolute top-2 right-2">
                           <span className="inline-flex items-center gap-1 bg-white/90 backdrop-blur-sm text-[9px] tracking-[0.1em] uppercase font-medium px-2 py-0.5 rounded-full">
@@ -283,7 +264,6 @@ export default function CounselorGrid() {
                       className="cg-detail-panel col-span-full"
                     >
                       <div
-                        ref={panelRef}
                         className="bg-white/80 backdrop-blur-sm rounded-2xl border border-[#383838]/5 overflow-hidden shadow-lg shadow-[#383838]/5"
                       >
                         <div className="p-6">

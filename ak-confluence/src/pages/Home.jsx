@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ThumbsUp } from '@phosphor-icons/react';
 import { AnimatedLogo } from '../components/brand/AnimatedLogo';
 import CounselorGrid from '../components/CounselorGrid';
 
@@ -78,21 +77,20 @@ function Hero() {
         </p>
 
         <h1 className="flex flex-col text-[#383838] mb-8">
-          <span className="gsap-reveal-hero font-[var(--font-heading)] text-[clamp(3.5rem,8vw,6.5rem)] font-normal tracking-tight leading-[1.05] block">
+          <span className="gsap-reveal-hero font-[var(--font-heading)] text-[clamp(2rem,8vw,6.5rem)] font-normal tracking-tight leading-[1.05] block">
             Finding your way
           </span>
-          <span className="gsap-reveal-hero font-[var(--font-heading)] text-[clamp(3.5rem,8vw,6.5rem)] font-normal tracking-tight leading-[1.05] block">
+          <span className="gsap-reveal-hero font-[var(--font-heading)] text-[clamp(2rem,8vw,6.5rem)] font-normal tracking-tight leading-[1.05] block">
             back to <span className="font-[var(--font-display)] text-[#82a396] italic" style={{ display: 'inline-block' }} ref={wordRef}>{WORDS[wordIndex]}</span>
           </span>
         </h1>
 
-        <p className="gsap-reveal-hero text-[#a38d7a] font-light text-lg max-w-lg leading-relaxed mb-8">
+        <p className="gsap-reveal-hero text-[#a38d7a] font-light text-base lg:text-lg max-w-lg leading-relaxed mb-8">
           A collaborative, empowering practice that meets you where you are and guides you to where you want to be.
         </p>
 
-        <div className="gsap-reveal-hero flex items-center gap-8 mt-8">
-          <a href="#contact" className="btn-primary uppercase text-[10px] tracking-[0.2em] px-8 py-4">Begin here</a>
-          <a href="#counselors" className="text-[#383838] text-[10px] tracking-[0.2em] uppercase hover:text-[#82a396] transition-colors border-b border-[#383838]/30 pb-1">Our counselors &rarr;</a>
+        <div className="gsap-reveal-hero mt-8">
+          <a href="#counselors" className="btn-primary uppercase text-[10px] tracking-[0.2em] px-8 py-4">Meet our counselors</a>
         </div>
       </div>
     </section>
@@ -189,7 +187,7 @@ function Capabilities() {
           {SERVICES.map((s) => (
             <div
               key={s.title}
-              className={`bento-item rounded-2xl flex flex-col justify-between p-8 transition-transform duration-500 hover:scale-[1.02] ${bentoTypeStyles[s.type]}`}
+              className={`bento-item rounded-2xl flex flex-col justify-between p-5 md:p-8 transition-transform duration-500 hover:scale-[1.02] ${bentoTypeStyles[s.type]}`}
             >
               <div className="flex-1 flex items-center justify-center py-4">{logoSlots[s.type]}</div>
               <div>
@@ -399,7 +397,7 @@ function Reviews() {
           <p className="rv-heading text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Trusted By Providers
           </p>
-          <h2 className="rv-heading font-[var(--font-display)] text-[clamp(2.5rem,5vw,4rem)] font-light text-[#383838] leading-[1.05] mb-5">
+          <h2 className="rv-heading font-[var(--font-display)] text-[clamp(1.8rem,5vw,4rem)] font-light text-[#383838] leading-[1.05] mb-5">
             What providers <em className="text-[#82a396] italic">are saying</em>
           </h2>
           <p className="rv-heading font-[var(--font-body)] text-[#a38d7a] font-light text-lg leading-relaxed">

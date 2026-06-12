@@ -1,17 +1,4 @@
-import { useState } from "react";
-
-/**
- * Confluence Animated Logo Component
- *
- * Animations: draw, breath, growth, converge, flow
- * Variants: mark, horizontal, vertical
- *
- * Animation philosophy (from brand kit):
- *   - No bounce. No overshoot. No cubic-bezier values > 1.
- *   - Minimum 2.4s for any entrance animation.
- *   - Opacity changes are gradual — nothing pops, everything arrives.
- *   - The feeling: watching morning fog lift off a river.
- */
+// Animation constraints: no bounce/overshoot, min 2.4s entrance, gradual opacity — nothing pops.
 export function AnimatedLogo({
   animation = "flow",
   variant = "mark",
@@ -19,8 +6,6 @@ export function AnimatedLogo({
   className = "",
   size = 120,
 }) {
-  const [key] = useState(0);
-
   const fillColor =
     colorMode === "dark"
       ? "#f5f2ed"
@@ -29,7 +14,7 @@ export function AnimatedLogo({
         : "currentColor";
 
   return (
-    <div className={`animated-logo anim-${animation} ${className}`} key={key}>
+    <div className={`animated-logo anim-${animation} ${className}`}>
       <style>{animationStyles}</style>
 
       {variant === "mark" && <LogoMark fill={fillColor} size={size} />}

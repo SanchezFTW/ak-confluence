@@ -6,7 +6,7 @@ const counselors = [
     name: "Elly Sanchez",
     title: "Licensed Professional Counselor",
     role: "Founder",
-    status: "waitlist",
+    status: "full",
     quote: "Leading From the Inside Out.",
     specialties: ["Anxiety", "Somatic", "Life Transitions"],
     bio: "Perfect for life's unexpected promotions. One moment you're handling your responsibilities, the next you're suddenly in charge—at work, home, or in key relationships and no one prepared you for this part. Those contradictory thoughts making you second-guess yourself? They're not flaws—just part of being beautifully human. I work with people who never sought leadership but now have everyone looking to them for answers. Real change happens when we abandon perfection for honesty. Our work will be direct, purposeful, and surprisingly enjoyable—discovering authentic leadership that feels true to who you really are.",
@@ -69,7 +69,7 @@ const counselors = [
   },
 ];
 
-const FILTER_SPECIALTIES = ['Anxiety', 'Couples', 'Grief and Loss', 'Depression', 'Somatic'];
+const FILTER_SPECIALTIES = [...new Set(counselors.flatMap(c => c.specialties))];
 
 export default function CounselorGrid() {
   const [activeFilters, setActiveFilters] = useState([]);
@@ -241,9 +241,9 @@ export default function CounselorGrid() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                         <div className="absolute top-2 right-2">
                           <span className="inline-flex items-center gap-1 bg-white/90 backdrop-blur-sm text-[9px] tracking-[0.1em] uppercase font-medium px-2 py-0.5 rounded-full">
-                            <span className={`w-1.5 h-1.5 rounded-full ${c.status === 'open' ? 'bg-[#82a396]' : 'bg-[#a38d7a]'}`} />
-                            <span className={c.status === 'open' ? 'text-[#82a396]' : 'text-[#a38d7a]'}>
-                              {c.status === "open" ? "Open" : "Waitlist"}
+                            <span className={`w-1.5 h-1.5 rounded-full ${c.status === 'open' ? 'bg-[#82a396]' : c.status === 'full' ? 'bg-[#dd9e6f]' : 'bg-[#a38d7a]'}`} />
+                            <span className={c.status === 'open' ? 'text-[#82a396]' : c.status === 'full' ? 'text-[#dd9e6f]' : 'text-[#a38d7a]'}>
+                              {c.status === 'open' ? 'Open' : c.status === 'full' ? 'Full' : 'Waitlist'}
                             </span>
                           </span>
                         </div>

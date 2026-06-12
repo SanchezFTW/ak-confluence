@@ -402,7 +402,7 @@ function Reviews() {
             What providers <em className="text-[#82a396] italic">are saying</em>
           </h2>
           <p className="rv-heading font-[var(--font-body)] text-[#a38d7a] font-light text-lg leading-relaxed">
-            Endorsements from fellow Alaska clinicians who refer their patients to our team.
+            Endorsements from fellow alaskan clinicians who refer their patients to our team.
           </p>
         </div>
 

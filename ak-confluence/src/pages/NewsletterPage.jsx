@@ -99,7 +99,7 @@ export default function NewsletterPage() {
             Real talk from<br /><em className="text-[#82a396] italic">our counselors</em>
           </h1>
           <p className="font-[var(--font-body)] text-[#a38d7a] font-light text-base lg:text-lg leading-relaxed max-w-xl mx-auto">
-            Straightforward advice, practical tips, and real-life strategies for everyday life — from the team at AK Confluence.
+            Straightforward advice, practical tips, and real-life strategies for everyday life — from the team at akConfluence.
           </p>
         </div>
       </section>

@@ -633,7 +633,7 @@ export const posts = [
     slug: 'reconnecting-in-the-new-year',
     title: 'Reconnecting In The New Year',
     date: '2024-01-05',
-    author: 'AK Confluence',
+    author: 'akConfluence',
     excerpt: 'As relationships naturally evolve over time, couples risk drifting apart without intentional effort to maintain connection. The new year is a meaningful moment to recommit.',
     body: `<p>As relationships naturally evolve over time, couples risk drifting apart without intentional effort to maintain connection. The new year presents an opportunity to strengthen romantic partnerships — to establish what you might call "relationship resolutions" together.</p>
 <h3>Five Key Reconnection Tips</h3>
@@ -657,7 +657,7 @@ export const posts = [
     slug: 'surviving-the-holidays-as-a-couple',
     title: 'Surviving The Holidays As A Couple',
     date: '2023-12-01',
-    author: 'AK Confluence',
+    author: 'akConfluence',
     excerpt: 'The holiday season presents both excitement and challenges for couples. As festivities intensify, partners often deprioritize their connection — creating distance exactly when closeness matters most.',
     body: `<p>The holiday season presents both excitement and challenges for couples. As festivities intensify, partners often deprioritize their connection, creating distance when closeness matters most. The pressure to create a "magical" holiday experience can trigger stress, exhaustion, and resentment that leaves couples feeling lonely and frustrated.</p>
 <p>Research indicates relationship difficulties spike in the early months following the holidays — potentially stemming from accumulated seasonal tension. The antidote involves embracing "good enough is the new perfect" and focusing on mindful presence rather than achievement.</p>
@@ -694,7 +694,7 @@ export const posts = [
     slug: 'building-love-maps',
     title: 'Building Love Maps',
     date: '2023-10-12',
-    author: 'AK Confluence',
+    author: 'akConfluence',
     excerpt: 'Have you considered how deeply you know your partner\'s inner world? Love Maps — a concept from Dr. Gottman\'s research — offer a straightforward method for understanding the nuances of your partner\'s life.',
     body: `<p>Have you considered how deeply you know your partner's inner world? The concept of building Love Maps offers a straightforward method for learning the nuances of your partner's life — their hopes, worries, preferences, and the details that matter to them.</p>
 <p>Dr. Gottman's four decades of research show that couples with emotional intelligence possess comprehensive understanding of each other's lives. They pursue intimate knowledge of one another, making detailed Love Maps essential for relationship health.</p>
@@ -990,7 +990,7 @@ export const posts = [
     slug: 'getting-through-it',
     title: 'Getting Through It',
     date: '2022-12-01',
-    author: 'AK Confluence',
+    author: 'akConfluence',
     excerpt: 'Life is a lot to take in. Two practices that help: prayer and journaling — not to solve problems, but to cultivate presence.',
     body: `<p>Life in general is a lot to take in. And yet we often present polished versions of ourselves rather than honest ones — as if the struggle doesn't exist. This is an invitation to acknowledge the hard parts, and to find practices that help you get through them.</p>
 <h3>Two Practices Worth Returning To</h3>
@@ -1010,7 +1010,7 @@ export const posts = [
     slug: 'normal-is-bullshit',
     title: 'Normal is Bullshit',
     date: '2022-12-01',
-    author: 'AK Confluence',
+    author: 'akConfluence',
     excerpt: 'When is life going to return to normal? Normal is subjective — it varies by individual, and it\'s worth questioning whether you want to return to it at all.',
     body: `<p>When is life going to return to normal? That question came up a lot. And the honest answer is: normal is different for everyone.</p>
 <p>Normal is "anything an individual is willing to accept consistently over time." That means you get to decide what your normal is — rather than waiting for the world to hand one back to you.</p>
@@ -1028,7 +1028,7 @@ export const posts = [
     slug: 'anxiety-is-my-superpower',
     title: 'Anxiety is my Superpower',
     date: '2022-12-01',
-    author: 'AK Confluence',
+    author: 'akConfluence',
     excerpt: 'Fear and excitement run fairly parallel. What if the anxiety you\'ve been fighting is actually a signal worth listening to?',
     body: `<p>Fear and excitement run fairly parallel — and anxiety, it turns out, contains elements of both. Rather than treating anxiety purely as something to eliminate, what if you started treating it as useful information?</p>
 <p>The neuroscience: the amygdala, hippocampus, and hypothalamus work together to process both threats and opportunities. Anxiety is your nervous system paying attention. The problem arises when rumination and inaction perpetuate problems instead of solving them.</p>
@@ -1049,7 +1049,7 @@ export const posts = [
     slug: 'this-is-effed-up',
     title: 'This is Effed Up',
     date: '2022-12-01',
-    author: 'AK Confluence',
+    author: 'akConfluence',
     excerpt: 'The world is messy right now. But are we actually surprised? And more importantly — what can we do about our part in it?',
     body: `<p>The world is messed up right now. But are we actually surprised? And before we focus outward, it's worth asking what role our own thinking patterns play in how we experience it.</p>
 <h3>Thinking Errors That Make It Worse</h3>

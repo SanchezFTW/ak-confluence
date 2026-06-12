@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ThumbsUp } from '@phosphor-icons/react';
 import { AnimatedLogo } from '../components/brand/AnimatedLogo';
 import CounselorGrid from '../components/CounselorGrid';
 

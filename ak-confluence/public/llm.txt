@@ -28,16 +28,26 @@ AK Confluence (Confluence LLC) is a collaborative therapy practice based in Anch
 - Katie McNamara — Marriage & Family Therapist — Accepting new clients
 
 ## Pages
-- / — Homepage with hero, services overview, events preview, and FAQ
-- /events — Full events and workshops listing
-- /forms — Client intake and administrative forms
-- /newsletter — "From the Confluence Couch" blog with counselor articles and newsletter signup
+- / — Homepage: hero, services overview, counselor directory, provider reviews, and FAQ
+- /contact — Contact form, practice contact details, and new client intake link
+- /newsletter — "From the Confluence Couch" blog index with counselor articles and newsletter signup
+- /newsletter/{slug} — Individual newsletter articles
+
+## New Client Intake
+New clients can begin through the secure intake widget linked from the /contact page:
+https://elly.clientsecure.me/contact-widget
 
 ## Newsletter
-"From the Confluence Couch" — Practical advice, mental health insights, and workshop announcements from the AK Confluence team. Subscribers receive occasional updates with no spam.
+"From the Confluence Couch" — Practical advice, mental health insights, and workshop announcements from the AK Confluence team. Subscribers receive occasional updates with no spam. Topics include cognitive-behavioral strategies, trauma and EMDR, couples communication, grief, anxiety, and depression.
 
 ## Specialties
-Anxiety, Depression, Couples Therapy, Grief and Loss, Somatic Therapy, Trauma, Family Therapy
+Anxiety, Depression, Couples Therapy, Grief and Loss, Somatic Therapy, Trauma, Family Therapy, EMDR, Brainspotting
+
+## Therapeutic Approaches
+Cognitive Behavioral Therapy (CBT), EMDR (Eye Movement Desensitization and Reprocessing), Brainspotting, Accelerated Resolution Therapy, Gottman Method (couples), breathwork, family systems theory, and person-centered counseling.
+
+## Insurance
+Most private health plans accepted; coverage is typically verified within the first week of consultation. Out-of-pocket options are available. No sliding-fee scale at this time.
 
 ## Location
-Anchorage, Alaska. Virtual sessions available throughout Alaska.
+Anchorage, Alaska. In-person sessions in Anchorage and virtual (HIPAA-compliant telehealth) sessions available throughout Alaska.

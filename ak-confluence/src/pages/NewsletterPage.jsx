@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MagnifyingGlass } from '@phosphor-icons/react';
 import { posts } from '../data/posts';
@@ -10,36 +10,6 @@ function formatDate(dateStr) {
     day: 'numeric',
     year: 'numeric',
   });
-}
-
-function NewsletterSignup() {
-  useEffect(() => {
-    const el = document.querySelector('.ml-embedded[data-form="UGY1bC"]');
-    if (!el || el.hasChildNodes()) return;
-    // MailerLite may have already run its initial scan before React mounted this div.
-    // Re-inject the form-specific JSONP script to force it to render.
-    document.querySelectorAll('script[src*="forms/UGY1bC"]').forEach(s => s.remove());
-    const script = document.createElement('script');
-    script.src = 'https://assets.mailerlite.com/jsonp/2382319/forms/UGY1bC?callback=ml.fn.renderEmbeddedForm';
-    document.head.appendChild(script);
-  }, []);
-
-  return (
-    <section className="py-16 lg:py-20 px-6 lg:px-20 bg-[#82a396]/10 border-y border-[#82a396]/20">
-      <div className="max-w-[580px] mx-auto text-center">
-        <p className="text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-4 flex items-center justify-center gap-2 font-[var(--font-mono)]">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Stay Connected
-        </p>
-        <h2 className="font-[var(--font-display)] text-[clamp(1.75rem,3.5vw,2.5rem)] font-light text-[#383838] leading-[1.05] mb-4">
-          Get updates from <em className="text-[#82a396] italic">our practice</em>
-        </h2>
-        <p className="font-[var(--font-body)] text-[#a38d7a] font-light text-base leading-relaxed mb-8">
-          Occasional insights, resources, and workshop announcements — no spam, ever.
-        </p>
-        <div className="ml-embedded" data-form="UGY1bC"></div>
-      </div>
-    </section>
-  );
 }
 
 function PostCard({ post }) {
@@ -103,9 +73,6 @@ export default function NewsletterPage() {
           </p>
         </div>
       </section>
-
-      {/* Signup embed */}
-      <NewsletterSignup />
 
       {/* Post grid */}
       <section className="py-16 lg:py-24 px-6 lg:px-20 bg-[#f5f2ed]">

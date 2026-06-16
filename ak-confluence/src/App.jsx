@@ -5,8 +5,10 @@ import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { List, X } from '@phosphor-icons/react';
 import { AnimatedLogo } from './components/brand/AnimatedLogo';
+import NewsletterSignup from './components/NewsletterSignup';
+import NewsletterSticky from './components/NewsletterSticky';
 import Home from './pages/Home';
-import FormsPage from './pages/FormsPage';
+import ContactPage from './pages/ContactPage';
 import NewsletterPage from './pages/NewsletterPage';
 import NewsletterPostPage from './pages/NewsletterPostPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -77,9 +79,8 @@ function MobileNav({ isOpen, onClose }) {
   const navLinks = [
     { label: 'Services', href: '/#services' },
     { label: 'Counselors', href: '/#counselors' },
-    { label: 'Forms', to: '/forms' },
     { label: 'Newsletter', to: '/newsletter' },
-    { label: 'Contact', href: '/#contact' },
+    { label: 'Contact', to: '/contact' },
   ];
 
   return (
@@ -113,13 +114,13 @@ function MobileNav({ isOpen, onClose }) {
             </a>
           )
         )}
-        <a
-          href="/#contact"
+        <Link
+          to="/contact"
           onClick={onClose}
           className="mobile-nav-link mt-4 bg-[#82a396] text-[#0a0a0a] px-8 py-3 text-[10px] tracking-[0.2em] uppercase font-medium font-[var(--font-mono)] hover:bg-[#90b8a0] transition-colors"
         >
           Book Now
-        </a>
+        </Link>
       </nav>
     </div>
   );
@@ -131,23 +132,9 @@ function MobileNav({ isOpen, onClose }) {
 function Footer() {
   return (
     <footer id="contact" data-nav-dark className="text-[#f5f2ed] scroll-mt-24">
-      {/* Pre-Footer CTA */}
-      <div className="bg-[#383838] py-14 lg:py-16 px-6 lg:px-20 text-center">
-        <div className="max-w-3xl mx-auto flex flex-col items-center">
-          <div className="mb-6 opacity-20 text-[#82a396] w-10 h-10">
-             <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M50 0C50 27.6142 27.6142 50 0 50C27.6142 50 50 72.3858 50 100C50 72.3858 72.3858 50 100 50C72.3858 50 50 27.6142 50 0Z" fill="currentColor"/></svg>
-          </div>
-          <h2 className="font-[var(--font-heading)] text-[clamp(1.75rem,5vw,4.5rem)] font-normal mb-4">
-            The first step is simply <em className="italic text-[#82a396]">reaching out.</em>
-          </h2>
-          <p className="font-[var(--font-body)] text-[#f5f2ed]/50 text-lg font-light mb-8 max-w-2xl">
-            Sessions available in-person in Anchorage and virtually across Alaska.<br/>Most private health plans accepted.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center gap-4 font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase">
-            <a href="mailto:info@akconfluence.com?subject=Consultation Request" className="bg-[#82a396] text-[#f5f2ed] px-8 py-4 hover:bg-[#6b8f80] active:scale-[0.98] transition-all">Book a consultation</a>
-            <a href="mailto:info@akconfluence.com?subject=Question" className="border border-[#f5f2ed]/20 text-[#f5f2ed]/70 px-8 py-4 hover:border-[#82a396] hover:text-[#82a396] active:scale-[0.98] transition-all">Ask a question</a>
-          </div>
-        </div>
+      {/* Newsletter signup */}
+      <div id="newsletter" className="bg-[#383838] py-14 lg:py-16 px-6 lg:px-20 scroll-mt-24">
+        <NewsletterSignup variant="footer" />
       </div>
 
       {/* Footer Info */}
@@ -196,12 +183,8 @@ function Footer() {
 
       {/* Legal Footer */}
       <div className="bg-[#222222] py-5 px-6 lg:px-20">
-        <div className="max-w-[1100px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-[#f5f2ed]/20 text-xs font-[var(--font-body)]">
+        <div className="max-w-[1100px] mx-auto flex justify-center items-center text-[#f5f2ed]/20 text-xs font-[var(--font-body)]">
           <span>&copy; {new Date().getFullYear()} Confluence LLC. All rights reserved.</span>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-[#f5f2ed]/40 transition-colors">Privacy policy</a>
-            <a href="#" className="hover:text-[#f5f2ed]/40 transition-colors">Terms of service</a>
-          </div>
         </div>
       </div>
     </footer>
@@ -305,9 +288,8 @@ function App() {
   const desktopNavLinks = [
     { label: 'Services', href: '/#services' },
     { label: 'Counselors', href: '/#counselors' },
-    { label: 'Forms', to: '/forms' },
     { label: 'Newsletter', to: '/newsletter' },
-    { label: 'Contact', href: '/#contact' },
+    { label: 'Contact', to: '/contact' },
   ];
 
   return (
@@ -317,6 +299,7 @@ function App() {
 
       <MobileNav isOpen={mobileNavOpen} onClose={() => setMobileNavOpen(false)} />
       <ScrollToHash />
+      {!(showLoader && loading) && <NewsletterSticky />}
 
       <div className={showLoader && loading ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}>
         {/* Fixed Pill Navigation */}
@@ -345,7 +328,7 @@ function App() {
                 }`}>{t.label}</a>
               )
             )}
-            <a href="/#contact" className="btn-primary" style={{ padding: '8px 24px' }}>Book now</a>
+            <Link to="/contact" className="btn-primary" style={{ padding: '8px 24px' }}>Book now</Link>
           </div>
 
           {/* Mobile hamburger */}
@@ -361,7 +344,7 @@ function App() {
         <main id="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/forms" element={<FormsPage />} />
+            <Route path="/contact" element={<ContactPage />} />
             <Route path="/newsletter" element={<NewsletterPage />} />
             <Route path="/newsletter/:slug" element={<NewsletterPostPage />} />
             <Route path="*" element={<NotFoundPage />} />

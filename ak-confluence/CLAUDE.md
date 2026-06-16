@@ -40,15 +40,18 @@ ak-confluence/
 │   ├── index.css        # global styles, CSS variables, font imports
 │   ├── components/
 │   │   ├── CounselorGrid.jsx         # counselor cards + specialty filter pills
+│   │   ├── NewsletterSignup.jsx       # reusable MailerLite embed (footer + newsletter page)
+│   │   ├── NewsletterSticky.jsx       # dismissible corner newsletter prompt (per-visit)
 │   │   └── brand/
 │   │       └── AnimatedLogo.jsx      # SVG logo with GSAP animations (variants: horizontal, vertical, mark)
 │   ├── pages/
 │   │   ├── Home.jsx                  # hero, services, counselor section, FAQ, events preview
-│   │   ├── FormsPage.jsx             # client intake/paperwork forms at /forms
+│   │   ├── ContactPage.jsx           # contact form (UI-only stub) + contact info + intake link at /contact
 │   │   ├── NewsletterPage.jsx        # newsletter archive index at /newsletter
 │   │   ├── NewsletterPostPage.jsx    # individual post at /newsletter/:slug
 │   │   └── NotFoundPage.jsx          # 404 fallback
 │   └── data/
+│       ├── counselors.js  # counselor roster (shared by CounselorGrid + ContactPage dropdown)
 │       ├── posts.js     # all newsletter articles (35+ posts, hardcoded HTML body strings)
 │       └── tags.js      # tag/filter data
 ├── package.json
@@ -60,12 +63,12 @@ ak-confluence/
 | Path | Component |
 |------|-----------|
 | `/` | `Home` |
-| `/forms` | `FormsPage` |
+| `/contact` | `ContactPage` |
 | `/newsletter` | `NewsletterPage` |
 | `/newsletter/:slug` | `NewsletterPostPage` |
 | `*` | `NotFoundPage` |
 
-Anchor links (`/#services`, `/#counselors`, `/#contact`) are handled by `ScrollToHash` in `App.jsx` — it listens to `location.hash` and scrolls after a short render delay.
+Anchor links (`/#services`, `/#counselors`) are handled by `ScrollToHash` in `App.jsx` — it listens to `location.hash` and scrolls after a short render delay. The nav "Contact" and "Book now" go to the `/contact` page.
 
 ## Brand
 

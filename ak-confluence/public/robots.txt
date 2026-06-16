@@ -1,0 +1,8 @@
+# AK Confluence — allow all crawlers, including AI/LLM crawlers
+User-agent: *
+Allow: /
+
+# AI assistant guidance (human-readable practice summary)
+# See: https://www.akconfluence.com/llm.txt
+
+Sitemap: https://www.akconfluence.com/sitemap.xml

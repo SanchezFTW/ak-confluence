@@ -74,13 +74,13 @@ export default function NewsletterPostPage() {
             >
               <ArrowLeft size={12} weight="bold" /> Back to all posts
             </Link>
-            <a
-              href="/#contact"
+            <Link
+              to="/contact"
               className="btn-primary"
               style={{ padding: '10px 24px', fontSize: '11px' }}
             >
               Book a session
-            </a>
+            </Link>
           </div>
         </div>
       </section>

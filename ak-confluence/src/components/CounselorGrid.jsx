@@ -2,7 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { counselors } from "../data/counselors";
 
-const FILTER_SPECIALTIES = [...new Set(counselors.flatMap(c => c.specialties))];
+const FILTER_SPECIALTIES = [
+  'Grief & Loss',
+  'Relationship & Family',
+  'Major Life Changes',
+  'Anxiety',
+  'Depression',
+  'EMDR & Brainspotting',
+];
 
 export default function CounselorGrid() {
   const [activeFilters, setActiveFilters] = useState([]);

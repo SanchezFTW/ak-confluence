@@ -15,6 +15,8 @@ import NotFoundPage from './pages/NotFoundPage';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const INTAKE_URL = 'https://elly.clientsecure.me/contact-widget';
+
 //
 // ─────────────── LOADER ───────────────
 //
@@ -114,13 +116,15 @@ function MobileNav({ isOpen, onClose }) {
             </a>
           )
         )}
-        <Link
-          to="/contact"
+        <a
+          href={INTAKE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           onClick={onClose}
           className="mobile-nav-link mt-4 bg-[#82a396] text-[#0a0a0a] px-8 py-3 text-[10px] tracking-[0.2em] uppercase font-medium font-[var(--font-mono)] hover:bg-[#90b8a0] transition-colors"
         >
           Book Now
-        </Link>
+        </a>
       </nav>
     </div>
   );
@@ -328,7 +332,7 @@ function App() {
                 }`}>{t.label}</a>
               )
             )}
-            <Link to="/contact" className="btn-primary" style={{ padding: '8px 24px' }}>Book now</Link>
+            <a href={INTAKE_URL} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ padding: '8px 24px' }}>Book now</a>
           </div>
 
           {/* Mobile hamburger */}

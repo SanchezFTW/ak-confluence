@@ -1,8 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MagnifyingGlass } from '@phosphor-icons/react';
-import { posts } from '../data/posts';
-import { postTags, SUBJECT_FILTERS } from '../data/tags';
+import { getPosts } from '../lib/sanity';
+
+const SUBJECT_FILTERS = [
+  'Relationships',
+  'Communication',
+  'Emotional Wellness',
+  'Self-Care',
+  'Anxiety',
+  'Parenting',
+];
 
 function formatDate(dateStr) {
   return new Date(dateStr + 'T12:00:00').toLocaleDateString('en-US', {
@@ -42,18 +50,30 @@ function PostCard({ post }) {
 }
 
 export default function NewsletterPage() {
-  const sorted = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeSubject, setActiveSubject] = useState('');
 
+  useEffect(() => {
+    let active = true;
+    getPosts()
+      .then((data) => { if (active) setPosts(data); })
+      .catch((err) => console.error('Failed to load posts', err))
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, []);
+
+  const sorted = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
+
   const filtered = sorted.filter((post) => {
-    const tags = postTags[post.slug] ?? [];
+    const tags = post.tags ?? [];
     const matchesSubject = !activeSubject || tags.includes(activeSubject);
     const q = searchQuery.toLowerCase();
     const matchesSearch =
       !q ||
       post.title.toLowerCase().includes(q) ||
-      post.excerpt.toLowerCase().includes(q);
+      (post.excerpt ?? '').toLowerCase().includes(q);
     return matchesSubject && matchesSearch;
   });
 
@@ -124,11 +144,21 @@ export default function NewsletterPage() {
           </div>
 
           <p className="font-[var(--font-mono)] text-[9px] tracking-[0.4em] uppercase text-[#a38d7a]/60 mb-8 text-center">
-            {filtered.length} {filtered.length === 1 ? 'post' : 'posts'}
-            {(activeSubject || searchQuery) && ' matching'}
+            {loading
+              ? 'Loading…'
+              : `${filtered.length} ${filtered.length === 1 ? 'post' : 'posts'}${(activeSubject || searchQuery) ? ' matching' : ''}`}
           </p>
 
-          {filtered.length > 0 ? (
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-44 rounded-2xl bg-white/60 border border-[#82a396]/10 animate-pulse"
+                />
+              ))}
+            </div>
+          ) : filtered.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {filtered.map((post) => (
                 <PostCard key={post.slug} post={post} />

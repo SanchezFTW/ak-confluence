@@ -1,12 +1,29 @@
 // Generates public/sitemap.xml from the static route list + every newsletter post.
-// Runs as part of `npm run build` so the sitemap always matches the published posts.
+// Runs as part of `npm run build`. Post URLs are pulled live from Sanity so the
+// sitemap matches published content at build time.
 import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
-import { posts } from '../src/data/posts.js';
+import { createClient } from '@sanity/client';
 
 const SITE = 'https://www.akconfluence.com';
 const today = new Date().toISOString().slice(0, 10);
+
+const sanity = createClient({
+  projectId: process.env.VITE_SANITY_PROJECT_ID || '3gzdej0i',
+  dataset: process.env.VITE_SANITY_DATASET || 'production',
+  apiVersion: process.env.VITE_SANITY_API_VERSION || '2024-01-01',
+  useCdn: false,
+});
+
+let posts = [];
+try {
+  posts = await sanity.fetch(
+    `*[_type == "post" && defined(slug.current)]{ "slug": slug.current, date }`
+  );
+} catch (err) {
+  console.warn('sitemap: could not fetch posts from Sanity, continuing with static routes only.', err.message);
+}
 
 const staticRoutes = [
   { path: '/', priority: '1.0', changefreq: 'weekly' },

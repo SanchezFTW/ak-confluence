@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { counselors } from "../data/counselors";
+import { getCounselors, urlFor } from "../lib/sanity";
 
 const FILTER_SPECIALTIES = [
   'Grief & Loss',
@@ -12,10 +12,21 @@ const FILTER_SPECIALTIES = [
 ];
 
 export default function CounselorGrid() {
+  const [counselors, setCounselors] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeFilters, setActiveFilters] = useState([]);
   const [expandedId, setExpandedId] = useState(null);
   const [colCount, setColCount] = useState(() => window.innerWidth >= 768 ? 3 : 2);
   const detailRef = useRef(null);
+
+  useEffect(() => {
+    let active = true;
+    getCounselors()
+      .then((data) => { if (active) setCounselors(data); })
+      .catch((err) => console.error('Failed to load counselors', err))
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 768px)');
@@ -148,7 +159,14 @@ export default function CounselorGrid() {
 
         {/* Card grid — detail panel injects inline after the clicked card's row */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-[960px] mx-auto">
-          {(() => {
+          {loading
+            ? Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="rounded-xl overflow-hidden bg-[#f5f2ed]/60 border border-[#383838]/5 aspect-[3/4] animate-pulse"
+                />
+              ))
+            : (() => {
             const cols = colCount;
             const rows = [];
             for (let i = 0; i < filtered.length; i += cols) {
@@ -172,10 +190,9 @@ export default function CounselorGrid() {
                     >
                       <div className="cg-photo relative overflow-hidden aspect-square">
                         <img
-                          src={c.photo}
+                          src={urlFor(c.photo)?.width(600).height(600).fit('crop').auto('format').url()}
                           alt={`${c.name}, ${c.title}`}
                           className="w-full h-full object-cover transition-transform duration-700"
-                          style={{ objectPosition: c.photoPosition ?? "50% top" }}
                           loading="lazy"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />

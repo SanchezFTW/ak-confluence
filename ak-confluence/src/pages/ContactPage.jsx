@@ -1,11 +1,8 @@
 import { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { counselors } from '../data/counselors';
 
 const INTAKE_URL = 'https://elly.clientsecure.me/contact-widget';
-
-const COUNSELOR_OPTIONS = counselors.filter((c) => c.role !== 'Founder').map((c) => c.name);
 
 const inputClass =
   'w-full px-4 py-3 rounded-xl bg-white border border-[#82a396]/20 text-[#383838] text-sm font-[var(--font-body)] placeholder:text-[#a38d7a]/50 focus:outline-none focus:border-[#82a396]/60 transition-colors';

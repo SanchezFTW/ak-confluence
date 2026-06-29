@@ -1,0 +1,21 @@
+{
+  "name": "ak-confluence-studio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Content editing studio for AK Confluence",
+  "main": "package.json",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "sanity dev",
+    "start": "sanity start",
+    "build": "sanity build",
+    "deploy": "sanity deploy"
+  },
+  "dependencies": {
+    "@sanity/vision": "^3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sanity": "^3",
+    "styled-components": "^6"
+  }
+}

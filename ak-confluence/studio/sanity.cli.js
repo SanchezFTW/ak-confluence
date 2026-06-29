@@ -1,0 +1,11 @@
+import {defineCliConfig} from 'sanity/cli'
+
+export default defineCliConfig({
+  api: {
+    projectId: '3gzdej0i',
+    dataset: 'production',
+  },
+  // Hostname for the deployed studio -> https://akconfluence.sanity.studio
+  studioHost: 'akconfluence',
+  autoUpdates: true,
+})

@@ -1,8 +1,11 @@
+import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { posts } from '../data/posts';
 import { ArrowLeft } from '@phosphor-icons/react';
+import { getPostBySlug, urlFor } from '../lib/sanity';
+import { PortableText } from '../lib/portableText';
 
 function formatDate(dateStr) {
+  if (!dateStr) return '';
   return new Date(dateStr + 'T12:00:00').toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
@@ -12,7 +15,30 @@ function formatDate(dateStr) {
 
 export default function NewsletterPostPage() {
   const { slug } = useParams();
-  const post = posts.find((p) => p.slug === slug);
+  const [post, setPost] = useState(null);
+  const [loadedSlug, setLoadedSlug] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    getPostBySlug(slug)
+      .then((data) => { if (active) setPost(data ?? null); })
+      .catch((err) => { console.error('Failed to load post', err); if (active) setPost(null); })
+      .finally(() => { if (active) setLoadedSlug(slug); });
+    return () => { active = false; };
+  }, [slug]);
+
+  // Derived (not synchronous setState): true until this slug's fetch settles.
+  const loading = loadedSlug !== slug;
+
+  if (loading) {
+    return (
+      <section className="min-h-screen flex flex-col items-center justify-center px-6 bg-[#f5f2ed]">
+        <p className="font-[var(--font-mono)] text-[9px] tracking-[0.4em] uppercase text-[#82a396] animate-pulse">
+          Loading…
+        </p>
+      </section>
+    );
+  }
 
   if (!post) {
     return (
@@ -51,6 +77,17 @@ export default function NewsletterPostPage() {
         </div>
       </section>
 
+      {/* Cover image */}
+      {post.coverImage && (
+        <div className="px-6 lg:px-20 pb-2">
+          <img
+            src={urlFor(post.coverImage)?.width(1400).fit('max').auto('format').url()}
+            alt={post.title}
+            className="max-w-2xl mx-auto w-full rounded-2xl"
+          />
+        </div>
+      )}
+
       {/* Divider */}
       <div className="px-6 lg:px-20">
         <div className="max-w-2xl mx-auto border-t border-[#82a396]/20" />
@@ -58,10 +95,9 @@ export default function NewsletterPostPage() {
 
       {/* Body */}
       <section className="py-12 lg:py-16 px-6 lg:px-20 bg-[#f5f2ed]">
-        <div
-          className="max-w-2xl mx-auto prose-newsletter"
-          dangerouslySetInnerHTML={{ __html: post.body }}
-        />
+        <div className="max-w-2xl mx-auto prose-newsletter">
+          <PortableText value={post.body} />
+        </div>
       </section>
 
       {/* Back link */}

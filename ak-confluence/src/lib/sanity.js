@@ -1,9 +1,12 @@
 import {createClient} from '@sanity/client'
 import {createImageUrlBuilder} from '@sanity/image-url'
 
+// projectId + dataset are public (visible in every request), so hardcode them as
+// fallbacks. This keeps the live site working without Cloudflare env-var config;
+// a local .env can still override for a different project/dataset.
 export const client = createClient({
-  projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
-  dataset: import.meta.env.VITE_SANITY_DATASET,
+  projectId: import.meta.env.VITE_SANITY_PROJECT_ID || '3gzdej0i',
+  dataset: import.meta.env.VITE_SANITY_DATASET || 'production',
   apiVersion: import.meta.env.VITE_SANITY_API_VERSION || '2024-01-01',
   useCdn: true,
 })

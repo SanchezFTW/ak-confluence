@@ -198,9 +198,9 @@ export default function CounselorGrid() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                         <div className="absolute top-2 right-2">
                           <span className="inline-flex items-center gap-1 bg-white/90 backdrop-blur-sm text-[9px] tracking-[0.1em] uppercase font-medium px-2 py-0.5 rounded-full">
-                            <span className={`w-1.5 h-1.5 rounded-full ${c.status === 'open' ? 'bg-[#82a396]' : c.status === 'full' ? 'bg-[#dd9e6f]' : 'bg-[#a38d7a]'}`} />
-                            <span className={c.status === 'open' ? 'text-[#82a396]' : c.status === 'full' ? 'text-[#dd9e6f]' : 'text-[#a38d7a]'}>
-                              {c.status === 'open' ? 'Open' : c.status === 'full' ? 'Full' : 'Waitlist'}
+                            <span className={`w-1.5 h-1.5 rounded-full ${c.status === 'open' ? 'bg-[#82a396]' : c.status === 'full' ? 'bg-[#dd9e6f]' : c.status === 'unavailable' ? 'bg-[#383838]/40' : 'bg-[#a38d7a]'}`} />
+                            <span className={c.status === 'open' ? 'text-[#82a396]' : c.status === 'full' ? 'text-[#dd9e6f]' : c.status === 'unavailable' ? 'text-[#383838]/60' : 'text-[#a38d7a]'}>
+                              {c.status === 'open' ? 'Open' : c.status === 'full' ? 'Full' : c.status === 'unavailable' ? 'Unavailable' : 'Waitlist'}
                             </span>
                           </span>
                         </div>
@@ -259,13 +259,19 @@ export default function CounselorGrid() {
                             {expanded.bio}
                           </p>
 
-                          <a
-                            href={`mailto:info@akconfluence.com?subject=Inquiry for ${expanded.name}`}
-                            className="inline-flex items-center gap-2 bg-[#82a396] text-white text-[10px] tracking-[0.15em] uppercase font-medium px-5 py-2.5 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {expanded.status === "open" ? "Send a message" : "Join waitlist"}
-                          </a>
+                          {expanded.status === "unavailable" ? (
+                            <p className="font-[var(--font-mono)] text-[10px] tracking-[0.15em] uppercase text-[#a38d7a]">
+                              Not currently accepting new clients
+                            </p>
+                          ) : (
+                            <a
+                              href={`mailto:info@akconfluence.com?subject=Inquiry for ${expanded.name}`}
+                              className="inline-flex items-center gap-2 bg-[#82a396] text-white text-[10px] tracking-[0.15em] uppercase font-medium px-5 py-2.5 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {expanded.status === "open" ? "Send a message" : "Join waitlist"}
+                            </a>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -280,7 +286,7 @@ export default function CounselorGrid() {
         {/* Bottom note */}
         <div className="mt-16 text-center">
           <p className="text-[#a38d7a]/60 text-sm font-light font-[var(--font-body)] max-w-lg mx-auto leading-relaxed">
-            Not sure who's the right fit? That's completely okay — <Link to="/contact" className="text-[#82a396] underline underline-offset-2 hover:text-[#6b8f80] transition-colors">reach out to us</Link> and we'll help you find the best match.
+            Not sure who's the right fit? That's completely okay, <Link to="/contact" className="text-[#82a396] underline underline-offset-2 hover:text-[#6b8f80] transition-colors">reach out to us</Link> and we'll help you find the best match.
           </p>
         </div>
       </div>

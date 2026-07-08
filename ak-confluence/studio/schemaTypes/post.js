@@ -7,6 +7,7 @@ const TAG_OPTIONS = [
   'Self-Care',
   'Anxiety',
   'Parenting',
+  'Workplace',
 ]
 
 export default defineType({

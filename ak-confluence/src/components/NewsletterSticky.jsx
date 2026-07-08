@@ -68,7 +68,7 @@ export default function NewsletterSticky() {
         <div>
           <p className="font-[var(--font-heading)] text-[#383838] text-base leading-snug mb-1">Join our newsletter</p>
           <p className="font-[var(--font-body)] text-[#a38d7a] text-xs font-light leading-relaxed">
-            Occasional insights and workshop announcements — no spam, ever.
+            Occasional insights and workshop announcements, no spam, ever.
           </p>
         </div>
       </div>

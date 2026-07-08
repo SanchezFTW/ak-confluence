@@ -23,7 +23,7 @@ export default function NotFoundPage() {
           <em className="italic text-[#82a396]">uncharted territory.</em>
         </h1>
         <p className="font-[var(--font-body)] text-[#a38d7a] font-light text-lg leading-relaxed mb-10">
-          The page you're looking for doesn't exist — but your path forward does.
+          The page you're looking for doesn't exist, but your path forward does.
         </p>
         <Link to="/" className="btn-primary">
           Back to home

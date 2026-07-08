@@ -74,7 +74,7 @@ function Hero() {
 
         <p className="gsap-reveal-hero text-[#82a396] text-[10px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
           <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" />
-          Therapy & Counseling — Anchorage, AK
+          Therapy & Counseling, Anchorage, AK
         </p>
 
         <h1 className="flex flex-col text-[#383838] mb-8">
@@ -221,7 +221,7 @@ const FAQ_DATA = [
   },
   {
     question: 'How Will Therapy Help Me?',
-    answer: "You don't have to be in crisis to benefit from therapy. Therapy can help you understand patterns, manage everyday stress, improve relationships, set boundaries, and build coping skills before problems feel overwhelming. Many people wait because they think they need a diagnosis, a major life event, or a breaking point before reaching out, but support can be helpful long before that. Starting therapy early can make it easier to talk about your feelings, notice burnout, and feel more prepared when life becomes stressful. At akConfluence, therapy is a space for growth, reflection, and support—no crisis required.",
+    answer: "You don't have to be in crisis to benefit from therapy. Therapy can help you understand patterns, manage everyday stress, improve relationships, set boundaries, and build coping skills before problems feel overwhelming. Many people wait because they think they need a diagnosis, a major life event, or a breaking point before reaching out, but support can be helpful long before that. Starting therapy early can make it easier to talk about your feelings, notice burnout, and feel more prepared when life becomes stressful. At akConfluence, therapy is a space for growth, reflection, and support, no crisis required.",
   },
   {
     question: 'Do You Accept Insurance?',
@@ -417,17 +417,17 @@ function Reviews() {
               </p>
               <div className="font-[var(--font-body)] text-[#383838] font-light text-[15px] leading-relaxed space-y-4">
                 <p>
-                  You&rsquo;ll notice our reviews are all from fellow healthcare providers &mdash; the people who trust us with their patients. We&rsquo;re honored by that.
+                  You&rsquo;ll notice our reviews are all from fellow healthcare providers, the people who trust us with their patients. We&rsquo;re honored by that.
                 </p>
                 <p>
-                  You might wonder where the patient reviews are. Most of our new clients come through personal referrals from friends and family, but patient privacy laws mean we can&rsquo;t ethically share those stories &mdash; even with permission.
+                  You might wonder where the patient reviews are. Most of our new clients come through personal referrals from friends and family, but patient privacy laws mean we can&rsquo;t ethically share those stories, even with permission.
                 </p>
                 <p>
-                  So if you&rsquo;d like a patient&rsquo;s perspective, ask around. Chances are someone in your circle has heard of us &mdash; and if not, that just means we have room to grow.
+                  So if you&rsquo;d like a patient&rsquo;s perspective, ask around. Chances are someone in your circle has heard of us, and if not, that just means we have room to grow.
                 </p>
               </div>
               <p className="mt-6 font-[var(--font-display)] italic text-[#82a396] text-lg">
-                &ndash; Elly Sanchez, Founder
+                (Elly Sanchez, Founder)
               </p>
             </div>
           </aside>
@@ -447,7 +447,7 @@ function Reviews() {
                     {r.quote}
                   </blockquote>
                   <p className="font-[var(--font-display)] italic text-[#383838] text-base">
-                    &mdash; {r.name}
+                    ({r.name})
                   </p>
                   {r.title && (
                     <p className="mt-1 text-[#a38d7a] text-[10px] tracking-[0.3em] uppercase font-medium font-[var(--font-mono)]">

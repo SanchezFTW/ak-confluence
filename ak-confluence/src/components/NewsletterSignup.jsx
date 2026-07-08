@@ -33,7 +33,7 @@ export default function NewsletterSignup({ variant = 'section' }) {
           Get updates from <em className="text-[#82a396] italic">our practice</em>
         </h2>
         <p className={`font-[var(--font-body)] font-light text-base leading-relaxed ${dark ? 'text-[#f5f2ed]/50' : 'text-[#a38d7a]'}`}>
-          Occasional insights, resources, and workshop announcements — no spam, ever.
+          Occasional insights, resources, and workshop announcements, no spam, ever.
         </p>
       </div>
 

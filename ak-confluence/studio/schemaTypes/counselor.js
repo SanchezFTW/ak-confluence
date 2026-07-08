@@ -32,6 +32,7 @@ export default defineType({
           {title: 'Open', value: 'open'},
           {title: 'Full', value: 'full'},
           {title: 'Waitlist', value: 'waitlist'},
+          {title: 'Unavailable', value: 'unavailable'},
         ],
         layout: 'radio',
       },

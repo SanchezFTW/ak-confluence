@@ -7,5 +7,5 @@ export default defineCliConfig({
   },
   // Hostname for the deployed studio -> https://akconfluence.sanity.studio
   studioHost: 'akconfluence',
-  autoUpdates: true,
+  deployment: {autoUpdates: true, appId: 'xbv10uihp0vmipmt7w20sv01'},
 })

@@ -62,3 +62,25 @@ export function getCounselors() {
     }`
   )
 }
+
+export function getServices() {
+  return client.fetch(
+    `*[_type == "service"] | order(order asc){
+      "id": _id,
+      title,
+      desc,
+      layout,
+      image
+    }`
+  )
+}
+
+export function getSiteSettings() {
+  return client.fetch(
+    `*[_type == "siteSettings"][0]{
+      heroImage,
+      heroSubtitle,
+      heroWords
+    }`
+  )
+}

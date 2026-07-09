@@ -9,7 +9,15 @@ A therapy practice website for AK Confluence based in Anchorage, Alaska. Built a
 - **React Router 7** (`react-router-dom`) for client-side routing
 - **GSAP 3** + `@gsap/react` for all animations
 - **Phosphor Icons** (`@phosphor-icons/react`)
-- No backend, no CMS — all content is hardcoded JS arrays/objects in each file
+- **Sanity CMS** — newsletters, counselors, homepage services, and site settings load at runtime from Sanity ([src/lib/sanity.js](src/lib/sanity.js), schemas in [studio/schemaTypes/](studio/schemaTypes/)). Remaining static content (hero copy fallbacks, FAQ, reviews, contact info) is still hardcoded in the page files.
+
+### Sanity-managed content (client-editable in the Studio)
+- **Counselors** (`counselor` docs) — roster, bios, photos, availability status
+- **Newsletter posts** (`post` docs)
+- **Services** (`service` docs) — the homepage "How we work together" bento cards: title, description, optional photo, card layout, order. When a photo is set it fills the card behind the text (dark overlay for legibility); with no photo the card keeps the animated-logo look.
+- **Site Settings** (`siteSettings` singleton) — homepage hero background photo, intro sentence, and rotating headline words. Each field is optional and falls back to a hardcoded default in [Home.jsx](src/pages/Home.jsx) when blank.
+
+Every Sanity fetch has a hardcoded fallback so the site renders even if the CMS is unreachable or a field is empty. Schema changes require redeploying the Studio (`cd studio && npx sanity deploy`).
 
 ## Running Locally
 
@@ -89,13 +97,15 @@ CSS custom properties for fonts: `var(--font-heading)`, `var(--font-body)`, `var
 
 ## Counselors
 
-Current roster (6 active, Elly is the only one on waitlist):
-- Elly Sanchez — Founder, LPC — **Waitlist**
+Current roster (managed in Sanity — statuses may change; check the CMS for live values):
+- Elly Sanchez — Founder, LPC — **Unavailable**
 - Samuel Peterson — LPC — Open
 - Jillian Thony — Marriage & Family Therapist — Open
 - Jessica Pretz — LPC — Open
 - Joe Mattison — LPC — Open
 - Katie McNamara — Marriage & Family Therapist — Open
+
+Availability options (counselor `status` in Sanity): `open`, `full`, `waitlist`, `unavailable`. `unavailable` shows a muted "Unavailable" badge and hides the message/waitlist CTA (see [CounselorGrid.jsx](src/components/CounselorGrid.jsx)).
 
 Counselor filter options (hardcoded, do not auto-generate):
 `Anxiety, Couples, Grief and Loss, Depression, Somatic`

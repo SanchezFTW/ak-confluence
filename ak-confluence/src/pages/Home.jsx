@@ -5,10 +5,14 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ThumbsUp } from '@phosphor-icons/react';
 import { AnimatedLogo } from '../components/brand/AnimatedLogo';
 import CounselorGrid from '../components/CounselorGrid';
+import { getServices, getSiteSettings, urlFor } from '../lib/sanity';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const WORDS = ['Clarity.', 'Connection.', 'Wholeness.'];
+const DEFAULT_WORDS = ['Clarity.', 'Connection.', 'Wholeness.'];
+const DEFAULT_HERO_IMAGE = 'https://picsum.photos/seed/confluence-forest/2560/1440';
+const DEFAULT_HERO_SUBTITLE =
+  'A collaborative, empowering practice that meets you where you are and guides you to where you want to be.';
 
 //
 // ─────────────── HERO SECTION ───────────────
@@ -18,6 +22,21 @@ function Hero() {
   const wordRef = useRef(null);
   const [wordIndex, setWordIndex] = useState(0);
   const isFirstRender = useRef(true);
+  const [settings, setSettings] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    getSiteSettings()
+      .then((data) => { if (active && data) setSettings(data); })
+      .catch((err) => console.error('Failed to load site settings', err));
+    return () => { active = false; };
+  }, []);
+
+  const words = settings?.heroWords?.length ? settings.heroWords : DEFAULT_WORDS;
+  const heroImage = settings?.heroImage
+    ? urlFor(settings.heroImage)?.width(2560).height(1440).fit('crop').auto('format').url()
+    : DEFAULT_HERO_IMAGE;
+  const subtitle = settings?.heroSubtitle || DEFAULT_HERO_SUBTITLE;
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -34,12 +53,12 @@ function Hero() {
       gsap.to(wordRef.current, {
         y: 15, opacity: 0, duration: 0.6, ease: 'expo.inOut',
         onComplete: () => {
-          setWordIndex((prev) => (prev + 1) % WORDS.length);
+          setWordIndex((prev) => (prev + 1) % words.length);
         },
       });
     }, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [words.length]);
 
   useGSAP(() => {
     gsap.fromTo('.gsap-reveal-hero',
@@ -62,7 +81,7 @@ function Hero() {
       >
         <div
           className="absolute inset-0 bg-cover bg-center reveal-img"
-          style={{ backgroundImage: 'url("https://picsum.photos/seed/confluence-forest/2560/1440")' }}
+          style={{ backgroundImage: `url("${heroImage}")` }}
         />
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-[#f5f2ed] via-white/70 to-transparent pointer-events-none" />
@@ -82,12 +101,12 @@ function Hero() {
             Finding your way
           </span>
           <span className="gsap-reveal-hero font-[var(--font-heading)] text-[clamp(2rem,8vw,6.5rem)] font-normal tracking-tight leading-[1.05] block">
-            back to <span className="font-[var(--font-display)] text-[#82a396] italic" style={{ display: 'inline-block' }} ref={wordRef}>{WORDS[wordIndex]}</span>
+            back to <span className="font-[var(--font-display)] text-[#82a396] italic" style={{ display: 'inline-block' }} ref={wordRef}>{words[wordIndex % words.length]}</span>
           </span>
         </h1>
 
         <p className="gsap-reveal-hero text-[#a38d7a] font-light text-base lg:text-lg max-w-lg leading-relaxed mb-8">
-          A collaborative, empowering practice that meets you where you are and guides you to where you want to be.
+          {subtitle}
         </p>
 
         <div className="gsap-reveal-hero mt-8">
@@ -101,15 +120,29 @@ function Hero() {
 //
 // ─────────────── SERVICES SECTION ───────────────
 //
-const SERVICES = [
-  { title: 'Individual Therapy', desc: 'One-on-one sessions tailored to your unique story.', type: 'wide' },
-  { title: 'Couples Counseling', desc: 'Rebuilding connection together.', type: 'tall' },
-  { title: 'Trauma Recovery', desc: 'From surviving toward genuine healing.', type: 'dark' },
-  { title: 'Workshops', desc: 'Learn, grow, and connect in a group setting.', type: 'light' },
+// Fallback used until Sanity responds (or if no services are published yet).
+const DEFAULT_SERVICES = [
+  { id: 'd1', title: 'Individual Therapy', desc: 'One-on-one sessions tailored to your unique story.', type: 'wide', image: null },
+  { id: 'd2', title: 'Couples Counseling', desc: 'Rebuilding connection together.', type: 'tall', image: null },
+  { id: 'd3', title: 'Trauma Recovery', desc: 'From surviving toward genuine healing.', type: 'dark', image: null },
+  { id: 'd4', title: 'Workshops', desc: 'Learn, grow, and connect in a group setting.', type: 'light', image: null },
 ];
 
 function Capabilities() {
   const containerRef = useRef(null);
+  const [services, setServices] = useState(DEFAULT_SERVICES);
+
+  useEffect(() => {
+    let active = true;
+    getServices()
+      .then((data) => {
+        if (active && data?.length) {
+          setServices(data.map((s) => ({ ...s, type: s.layout })));
+        }
+      })
+      .catch((err) => console.error('Failed to load services', err));
+    return () => { active = false; };
+  }, []);
 
   useGSAP(() => {
     gsap.fromTo('.bento-item',
@@ -185,18 +218,34 @@ function Capabilities() {
 
         {/* Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {SERVICES.map((s) => (
+          {services.map((s) => {
+            const imgUrl = s.image ? urlFor(s.image)?.width(1000).auto('format').url() : null;
+            // With a photo, text sits on a dark overlay so it stays legible.
+            const onPhoto = Boolean(imgUrl);
+            return (
             <div
-              key={s.title}
-              className={`bento-item rounded-2xl flex flex-col justify-between p-5 md:p-8 transition-transform duration-500 hover:scale-[1.02] ${bentoTypeStyles[s.type]}`}
+              key={s.id || s.title}
+              className={`bento-item relative overflow-hidden rounded-2xl flex flex-col justify-between p-5 md:p-8 transition-transform duration-500 hover:scale-[1.02] ${bentoTypeStyles[s.type]}`}
             >
-              <div className="flex-1 flex items-center justify-center py-4">{logoSlots[s.type]}</div>
-              <div>
-                <h3 className={`font-[var(--font-heading)] text-2xl mb-1 ${s.type === 'dark' ? 'text-[#f5f2ed]' : 'text-[#383838]'}`}>{s.title}</h3>
-                <p className={`text-sm font-light font-[var(--font-body)] ${s.type === 'dark' ? 'text-[#f5f2ed]/60' : 'text-[#a38d7a]'}`}>{s.desc}</p>
+              {imgUrl && (
+                <>
+                  <img
+                    src={imgUrl}
+                    alt={s.title}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-black/10" />
+                </>
+              )}
+              <div className={`relative flex-1 flex items-center justify-center py-4 ${onPhoto ? 'opacity-0 pointer-events-none' : ''}`}>{logoSlots[s.type]}</div>
+              <div className="relative">
+                <h3 className={`font-[var(--font-heading)] text-2xl mb-1 ${onPhoto || s.type === 'dark' ? 'text-[#f5f2ed]' : 'text-[#383838]'}`}>{s.title}</h3>
+                <p className={`text-sm font-light font-[var(--font-body)] ${onPhoto ? 'text-[#f5f2ed]/80' : s.type === 'dark' ? 'text-[#f5f2ed]/60' : 'text-[#a38d7a]'}`}>{s.desc}</p>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

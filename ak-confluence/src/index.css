@@ -145,3 +145,43 @@ body {
 .reveal-img.active {
   transform: scale(1);
 }
+
+/* ─────────────── MailerLite embed overrides ───────────────
+   The form is built in MailerLite but rendered inside our DOM, so we
+   restyle it here to match the brand instead of editing it in MailerLite.
+   MailerLite ships high-specificity inline styles, hence !important. */
+.ml-embedded,
+.ml-embedded input,
+.ml-embedded button,
+.ml-embedded label,
+.ml-embedded p,
+.ml-embedded .label-description,
+.ml-embedded .ml-form-embedContent {
+  font-family: var(--font-body) !important;
+}
+
+/* Email field: was cream (#f5f2ed) text on white — nearly invisible */
+.ml-embedded input.form-control {
+  color: #383838 !important;
+  font-family: var(--font-body) !important;
+}
+.ml-embedded input.form-control::placeholder {
+  color: #a38d7a !important;
+  opacity: 1 !important;
+}
+
+/* Subscribe button + checkbox copy in brand font/color */
+.ml-embedded .ml-button-horizontal,
+.ml-embedded button.primary {
+  font-family: var(--font-body) !important;
+}
+.ml-embedded .ml-form-checkboxRow label,
+.ml-embedded .label-description {
+  color: #383838 !important;
+}
+
+/* Intro/description copy under the heading — was cream on cream */
+.ml-embedded .ml-form-embedContent p,
+.ml-embedded .ml-form-embedContent {
+  color: #383838 !important;
+}

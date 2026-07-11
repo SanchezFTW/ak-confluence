@@ -131,6 +131,14 @@ const DEFAULT_SERVICES = [
 function Capabilities() {
   const containerRef = useRef(null);
   const [services, setServices] = useState(DEFAULT_SERVICES);
+  const [openCards, setOpenCards] = useState(() => new Set());
+
+  const toggleCard = (id) =>
+    setOpenCards((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
 
   useEffect(() => {
     let active = true;
@@ -222,10 +230,22 @@ function Capabilities() {
             const imgUrl = s.image ? urlFor(s.image)?.width(1000).auto('format').url() : null;
             // With a photo, text sits on a dark overlay so it stays legible.
             const onPhoto = Boolean(imgUrl);
+            const cardId = s.id || s.title;
+            const isOpen = openCards.has(cardId);
             return (
             <div
-              key={s.id || s.title}
-              className={`bento-item relative overflow-hidden rounded-2xl flex flex-col justify-between p-5 md:p-8 transition-transform duration-500 hover:scale-[1.02] ${bentoTypeStyles[s.type]}`}
+              key={cardId}
+              onClick={() => toggleCard(cardId)}
+              role="button"
+              tabIndex={0}
+              aria-expanded={isOpen}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  toggleCard(cardId);
+                }
+              }}
+              className={`bento-item relative overflow-hidden rounded-2xl flex flex-col justify-between p-5 md:p-8 transition-transform duration-500 hover:scale-[1.02] cursor-pointer ${bentoTypeStyles[s.type]}`}
             >
               {imgUrl && (
                 <>
@@ -241,7 +261,7 @@ function Capabilities() {
               <div className={`relative flex-1 flex items-center justify-center py-4 ${onPhoto ? 'opacity-0 pointer-events-none' : ''}`}>{logoSlots[s.type]}</div>
               <div className="relative">
                 <h3 className={`font-[var(--font-heading)] text-2xl mb-1 ${onPhoto || s.type === 'dark' ? 'text-[#f5f2ed]' : 'text-[#383838]'}`}>{s.title}</h3>
-                <p className={`text-sm font-light font-[var(--font-body)] ${onPhoto ? 'text-[#f5f2ed]/80' : s.type === 'dark' ? 'text-[#f5f2ed]/60' : 'text-[#a38d7a]'}`}>{s.desc}</p>
+                <p className={`text-sm font-light font-[var(--font-body)] transition-all duration-500 ease-out overflow-hidden ${isOpen ? 'opacity-100 max-h-40 mt-0' : 'opacity-0 max-h-0'} ${onPhoto ? 'text-[#f5f2ed]/80' : s.type === 'dark' ? 'text-[#f5f2ed]/60' : 'text-[#a38d7a]'}`}>{s.desc}</p>
               </div>
             </div>
             );

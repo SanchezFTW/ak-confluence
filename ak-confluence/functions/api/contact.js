@@ -1,5 +1,5 @@
 const TO_EMAIL = 'info@akconfluence.com';
-const FROM_EMAIL = 'AK Confluence Website <onboarding@resend.dev>';
+const FROM_EMAIL = 'AK Confluence <info@akconfluence.com>';
 
 function escapeHtml(str) {
   return str

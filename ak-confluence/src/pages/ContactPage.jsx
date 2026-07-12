@@ -10,6 +10,8 @@ const inputClass =
 export default function ContactPage() {
   const containerRef = useRef(null);
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
   const [form, setForm] = useState({ name: '', email: '', message: '' });
 
   useGSAP(() => {
@@ -23,12 +25,26 @@ export default function ContactPage() {
     return (e) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    const subject = 'Question for AK Confluence';
-    const body = `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`;
-    window.location.href = `mailto:info@akconfluence.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setSubmitted(true);
+    setSending(true);
+    setError('');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Something went wrong. Please try again.');
+      }
+      setSubmitted(true);
+    } catch (err) {
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -98,7 +114,7 @@ export default function ContactPage() {
                     </svg>
                   </div>
                   <p className="font-[var(--font-body)] text-[#a38d7a] text-sm font-light">
-                    Your email app should have opened — just hit send and we'll be in touch soon.
+                    Thanks for reaching out — your message is on its way and we'll be in touch within one business day.
                   </p>
                 </div>
               ) : (
@@ -115,8 +131,13 @@ export default function ContactPage() {
                     <label htmlFor="cp-message" className="block font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#a38d7a] mb-1.5">Question</label>
                     <textarea id="cp-message" required rows={4} value={form.message} onChange={update('message')} className={`${inputClass} resize-y`} placeholder="What would you like to know?" />
                   </div>
-                  <button type="submit" className="btn-primary uppercase text-[10px] tracking-[0.2em] px-6 py-3 self-start">
-                    Send message
+                  {error && (
+                    <p className="font-[var(--font-body)] text-[#c0563f] text-xs font-light -mt-1" role="alert">
+                      {error}
+                    </p>
+                  )}
+                  <button type="submit" disabled={sending} className="btn-primary uppercase text-[10px] tracking-[0.2em] px-6 py-3 self-start disabled:opacity-60 disabled:cursor-not-allowed">
+                    {sending ? 'Sending…' : 'Send message'}
                   </button>
                 </form>
               )}

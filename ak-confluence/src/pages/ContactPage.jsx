@@ -114,7 +114,7 @@ export default function ContactPage() {
                     </svg>
                   </div>
                   <p className="font-[var(--font-body)] text-[#a38d7a] text-sm font-light">
-                    Thanks for reaching out — your message is on its way and we'll be in touch within one business day.
+                    Thanks for reaching out — your message is on its way and we'll be in touch as soon as we can.
                   </p>
                 </div>
               ) : (

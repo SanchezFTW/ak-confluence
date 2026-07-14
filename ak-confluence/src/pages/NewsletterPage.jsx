@@ -81,15 +81,15 @@ export default function NewsletterPage() {
   return (
     <>
       {/* Hero */}
-      <section className="pt-36 pb-16 lg:pt-44 lg:pb-20 px-6 lg:px-20 bg-[#f5f2ed]">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="font-[var(--font-mono)] text-[9px] tracking-[0.4em] uppercase text-[#82a396] mb-5 flex items-center justify-center gap-2">
+      <section className="pt-32 pb-12 lg:pt-40 lg:pb-16 px-6 lg:px-20 bg-[#e8e4dc]">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> From the Confluence Couch
           </p>
-          <h1 className="font-[var(--font-display)] text-[clamp(2.5rem,6vw,4rem)] font-light text-[#383838] leading-[1.0] mb-6">
-            Real talk from<br /><em className="text-[#82a396] italic">our counselors</em>
+          <h1 className="font-[var(--font-display)] text-[clamp(1.8rem,5vw,4.5rem)] font-light text-[#383838] leading-[1.05] mb-6">
+            Real talk from <em className="text-[#82a396] italic">our counselors</em>
           </h1>
-          <p className="font-[var(--font-body)] text-[#a38d7a] font-light text-base lg:text-lg leading-relaxed max-w-xl mx-auto">
+          <p className="font-[var(--font-body)] text-[#a38d7a] font-light text-base lg:text-lg leading-relaxed max-w-2xl">
             Straightforward advice, practical tips, and real-life strategies for everyday life, from the team at akConfluence.
           </p>
         </div>

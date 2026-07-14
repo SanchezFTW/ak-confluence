@@ -16,6 +16,7 @@ import NotFoundPage from './pages/NotFoundPage';
 gsap.registerPlugin(ScrollTrigger);
 
 const INTAKE_URL = 'https://elly.clientsecure.me/contact-widget';
+const LOADER_SEEN_KEY = 'ak_loader_seen';
 
 //
 // ─────────────── LOADER ───────────────
@@ -223,19 +224,21 @@ function ScrollToHash() {
 // ─────────────── MAIN APP ───────────────
 //
 function App() {
-  const [loading, setLoading] = useState(true);
+  const seenLoader = sessionStorage.getItem(LOADER_SEEN_KEY) === '1';
+  const [loading, setLoading] = useState(!seenLoader);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [navDark, setNavDark] = useState(false);
   const location = useLocation();
 
-  // Only show loader on the home page, first visit
+  // Only show loader on the home page, first load of the session
   const isHome = location.pathname === '/';
-  const [hasLoaded, setHasLoaded] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(seenLoader);
   const showLoader = isHome && !hasLoaded;
 
   function handleLoaderComplete() {
     setLoading(false);
     setHasLoaded(true);
+    sessionStorage.setItem(LOADER_SEEN_KEY, '1');
   }
 
   // Skip loader on non-home pages

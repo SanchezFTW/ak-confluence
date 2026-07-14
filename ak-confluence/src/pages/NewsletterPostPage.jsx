@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft } from '@phosphor-icons/react';
 import { getPostBySlug, urlFor } from '../lib/sanity';
 import { PortableText } from '../lib/portableText';
+import { usePageReveal } from '../lib/usePageReveal';
 
 function formatDate(dateStr) {
   if (!dateStr) return '';
@@ -17,6 +18,7 @@ export default function NewsletterPostPage() {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
   const [loadedSlug, setLoadedSlug] = useState(null);
+  const revealRef = usePageReveal([loadedSlug]);
 
   useEffect(() => {
     let active = true;
@@ -57,21 +59,21 @@ export default function NewsletterPostPage() {
   return (
     <>
       {/* Header */}
-      <section className="pt-36 pb-10 lg:pt-44 lg:pb-12 px-6 lg:px-20 bg-[#f5f2ed]">
+      <section ref={revealRef} className="pt-36 pb-10 lg:pt-44 lg:pb-12 px-6 lg:px-20 bg-[#f5f2ed]">
         <div className="max-w-2xl mx-auto">
           <Link
             to="/newsletter"
-            className="inline-flex items-center gap-2 font-[var(--font-mono)] text-[9px] tracking-[0.3em] uppercase text-[#82a396] hover:text-[#dd9e6f] transition-colors mb-10"
+            className="reveal-up inline-flex items-center gap-2 font-[var(--font-mono)] text-[9px] tracking-[0.3em] uppercase text-[#82a396] hover:text-[#dd9e6f] transition-colors mb-10"
           >
             <ArrowLeft size={12} weight="bold" /> All Posts
           </Link>
-          <p className="font-[var(--font-mono)] text-[9px] tracking-[0.4em] uppercase text-[#a38d7a]/70 mb-4">
+          <p className="reveal-up font-[var(--font-mono)] text-[9px] tracking-[0.4em] uppercase text-[#a38d7a]/70 mb-4">
             {formatDate(post.date)}
           </p>
-          <h1 className="font-[var(--font-display)] text-[clamp(2rem,5vw,3.25rem)] font-light text-[#383838] leading-[1.05] mb-5">
+          <h1 className="reveal-up font-[var(--font-display)] text-[clamp(2rem,5vw,3.25rem)] font-light text-[#383838] leading-[1.05] mb-5">
             {post.title}
           </h1>
-          <p className="font-[var(--font-mono)] text-[10px] tracking-[0.25em] uppercase text-[#82a396]">
+          <p className="reveal-up font-[var(--font-mono)] text-[10px] tracking-[0.25em] uppercase text-[#82a396]">
             {post.author}
           </p>
         </div>

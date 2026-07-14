@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MagnifyingGlass } from '@phosphor-icons/react';
 import { getPosts } from '../lib/sanity';
+import { usePageReveal } from '../lib/usePageReveal';
 
 const SUBJECT_FILTERS = [
   'Relationships',
@@ -55,6 +56,7 @@ export default function NewsletterPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeSubject, setActiveSubject] = useState('');
+  const revealRef = usePageReveal();
 
   useEffect(() => {
     let active = true;
@@ -81,15 +83,15 @@ export default function NewsletterPage() {
   return (
     <>
       {/* Hero */}
-      <section className="pt-32 pb-12 lg:pt-40 lg:pb-16 px-6 lg:px-20 bg-[#e8e4dc]">
+      <section ref={revealRef} className="pt-32 pb-12 lg:pt-40 lg:pb-16 px-6 lg:px-20 bg-[#e8e4dc]">
         <div className="max-w-4xl mx-auto">
-          <p className="text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
+          <p className="reveal-up text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> From the Confluence Couch
           </p>
-          <h1 className="font-[var(--font-display)] text-[clamp(1.8rem,5vw,4.5rem)] font-light text-[#383838] leading-[1.05] mb-6">
+          <h1 className="reveal-up font-[var(--font-display)] text-[clamp(1.8rem,5vw,4.5rem)] font-light text-[#383838] leading-[1.05] mb-6">
             Real talk from <em className="text-[#82a396] italic">our counselors</em>
           </h1>
-          <p className="font-[var(--font-body)] text-[#a38d7a] font-light text-base lg:text-lg leading-relaxed max-w-2xl">
+          <p className="reveal-up font-[var(--font-body)] text-[#a38d7a] font-light text-base lg:text-lg leading-relaxed max-w-2xl">
             Straightforward advice, practical tips, and real-life strategies for everyday life, from the team at akConfluence.
           </p>
         </div>

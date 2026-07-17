@@ -218,3 +218,21 @@ body {
   box-shadow: 0 0 0 2px rgba(130, 163, 150, 0.2) !important;
   outline: none !important;
 }
+
+/* Success/thank-you message — MailerLite defaults body text to cream,
+   which is invisible on the light card. Force brand colors + fonts. */
+.ml-embedded .ml-form-successContent,
+.ml-embedded .ml-form-successContent p {
+  color: #383838 !important;
+  font-family: var(--font-body) !important;
+}
+.ml-embedded .ml-form-successContent h1,
+.ml-embedded .ml-form-successContent h2,
+.ml-embedded .ml-form-successContent h3,
+.ml-embedded .ml-form-successContent h4 {
+  color: #383838 !important;
+  font-family: var(--font-heading) !important;
+}
+.ml-embedded .ml-form-successContent a {
+  color: #82a396 !important;
+}

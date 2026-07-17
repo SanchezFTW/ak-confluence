@@ -66,9 +66,9 @@ export default function NewsletterSticky() {
           <EnvelopeSimple size={18} weight="light" />
         </div>
         <div>
-          <p className="font-[var(--font-heading)] text-[#383838] text-base leading-snug mb-1">Join our newsletter</p>
+          <p className="font-[var(--font-heading)] text-[#383838] text-base leading-snug mb-1">Get the free Boundaries Blueprint</p>
           <p className="font-[var(--font-body)] text-[#a38d7a] text-xs font-light leading-relaxed">
-            Occasional insights and workshop announcements, no spam, ever.
+            A practical guide to setting healthier boundaries, straight to your inbox. Free.
           </p>
         </div>
       </div>
@@ -76,7 +76,7 @@ export default function NewsletterSticky() {
         onClick={goToSignup}
         className="mt-4 w-full bg-[#82a396] text-white text-[10px] tracking-[0.2em] uppercase font-medium font-[var(--font-mono)] px-5 py-3 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer"
       >
-        Sign up
+        Get the guide
       </button>
     </div>
   );

@@ -185,3 +185,36 @@ body {
 .ml-embedded .ml-form-embedContent {
   color: #383838 !important;
 }
+
+/* Pill-shaped submit button + brand hover, to match the site's buttons */
+.ml-embedded .ml-form-embedSubmit button,
+.ml-embedded button[type="submit"],
+.ml-embedded .ml-button-horizontal button {
+  border-radius: 9999px !important;
+  background-color: #82a396 !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.02em !important;
+  box-shadow: none !important;
+  transition: background-color 0.2s ease !important;
+}
+.ml-embedded .ml-form-embedSubmit button:hover,
+.ml-embedded button[type="submit"]:hover,
+.ml-embedded .ml-button-horizontal button:hover {
+  background-color: #6b8f80 !important;
+}
+
+/* Rounded email field with brand focus ring */
+.ml-embedded input.form-control,
+.ml-embedded input[type="email"],
+.ml-embedded input[type="text"] {
+  border-radius: 9999px !important;
+  border: 1px solid rgba(130, 163, 150, 0.35) !important;
+  padding-left: 1.1rem !important;
+}
+.ml-embedded input.form-control:focus,
+.ml-embedded input[type="email"]:focus,
+.ml-embedded input[type="text"]:focus {
+  border-color: #82a396 !important;
+  box-shadow: 0 0 0 2px rgba(130, 163, 150, 0.2) !important;
+  outline: none !important;
+}

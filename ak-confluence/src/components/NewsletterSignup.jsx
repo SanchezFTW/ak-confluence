@@ -27,13 +27,13 @@ export default function NewsletterSignup({ variant = 'section' }) {
       {/* Text — left */}
       <div className="text-center lg:text-left">
         <p className="text-[9px] tracking-[0.4em] uppercase font-medium mb-4 flex items-center justify-center lg:justify-start gap-2 font-[var(--font-mono)] text-[#82a396]">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Stay Connected
+          <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Free Guide
         </p>
         <h2 className={`font-[var(--font-display)] text-[clamp(1.75rem,3.5vw,2.5rem)] font-light leading-[1.05] mb-4 ${dark ? 'text-[#f5f2ed]' : 'text-[#383838]'}`}>
-          Get updates from <em className="text-[#82a396] italic">our practice</em>
+          Get the free <em className="text-[#82a396] italic">Boundaries Blueprint</em>
         </h2>
         <p className={`font-[var(--font-body)] font-light text-base leading-relaxed ${dark ? 'text-[#f5f2ed]/50' : 'text-[#a38d7a]'}`}>
-          Occasional insights, resources, and workshop announcements, no spam, ever.
+          A practical guide to setting healthier boundaries. Enter your email and we'll send it straight to your inbox, no spam, ever.
         </p>
       </div>
 

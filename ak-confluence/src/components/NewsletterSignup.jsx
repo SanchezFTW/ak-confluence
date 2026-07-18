@@ -33,7 +33,7 @@ export default function NewsletterSignup({ variant = 'section' }) {
           Get the free <em className="text-[#82a396] italic">Boundaries Blueprint</em>
         </h2>
         <p className={`font-[var(--font-body)] font-light text-base leading-relaxed ${dark ? 'text-[#f5f2ed]/50' : 'text-[#a38d7a]'}`}>
-          A practical guide to setting healthier boundaries. Enter your email and we'll send it straight to your inbox, no spam, ever.
+          A practical guide to setting healthier boundaries. Enter your email and we'll send it straight to your inbox when you sign up for our monthly newsletter.
         </p>
       </div>
 

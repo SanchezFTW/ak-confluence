@@ -236,3 +236,45 @@ body {
 .ml-embedded .ml-form-successContent a {
   color: #82a396 !important;
 }
+
+/* ─────────────── Footer newsletter: one integrated pill ───────────────
+   The footer form (.ml-embedded-pill) drops MailerLite's own white card
+   and heading — the page's own copy replaces them — and merges the email
+   field and button into a single pill sitting on the dark section. */
+.ml-embedded-pill .ml-form-embedWrapper,
+.ml-embedded-pill .ml-form-embedBody {
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+.ml-embedded-pill .ml-form-embedContent {
+  display: none !important;
+}
+.ml-embedded-pill .ml-form-horizontalRow {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem;
+  background: rgba(245, 242, 237, 0.08) !important;
+  border: 1px solid rgba(245, 242, 237, 0.14) !important;
+  border-radius: 9999px !important;
+  padding: 0.35rem 0.35rem 0.35rem 1.3rem !important;
+  max-width: 440px;
+  margin: 0 auto !important;
+}
+.ml-embedded-pill .ml-input-horizontal {
+  flex: 1 !important;
+}
+.ml-embedded-pill input.form-control {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0.65rem 0 !important;
+  color: #f5f2ed !important;
+}
+.ml-embedded-pill input.form-control::placeholder {
+  color: rgba(245, 242, 237, 0.4) !important;
+}
+.ml-embedded-pill input.form-control:focus {
+  box-shadow: none !important;
+}

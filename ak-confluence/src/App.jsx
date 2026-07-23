@@ -145,7 +145,7 @@ function Footer() {
       {/* Newsletter signup */}
       {!hideNewsletter && (
         <div id="newsletter" className="bg-[#383838] py-14 lg:py-16 px-6 lg:px-20 scroll-mt-24">
-          <NewsletterSignup variant="footer" />
+          <NewsletterSignup />
         </div>
       )}
 

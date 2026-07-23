@@ -11,6 +11,7 @@ import Home from './pages/Home';
 import ContactPage from './pages/ContactPage';
 import NewsletterPage from './pages/NewsletterPage';
 import NewsletterPostPage from './pages/NewsletterPostPage';
+import BoundariesBlueprintPage from './pages/BoundariesBlueprintPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -135,12 +136,18 @@ function MobileNav({ isOpen, onClose }) {
 // ─────────────── FOOTER ───────────────
 //
 function Footer() {
+  const location = useLocation();
+  // Skip the duplicate embed on the dedicated lead-magnet page — it has its own MailerLite form.
+  const hideNewsletter = location.pathname === '/boundaries-blueprint';
+
   return (
     <footer id="contact" data-nav-dark className="text-[#f5f2ed] scroll-mt-24">
       {/* Newsletter signup */}
-      <div id="newsletter" className="bg-[#383838] py-14 lg:py-16 px-6 lg:px-20 scroll-mt-24">
-        <NewsletterSignup variant="footer" />
-      </div>
+      {!hideNewsletter && (
+        <div id="newsletter" className="bg-[#383838] py-14 lg:py-16 px-6 lg:px-20 scroll-mt-24">
+          <NewsletterSignup variant="footer" />
+        </div>
+      )}
 
       {/* Footer Info */}
       <div className="bg-[#2a2a2a] py-14 px-6 lg:px-20">
@@ -306,7 +313,7 @@ function App() {
 
       <MobileNav isOpen={mobileNavOpen} onClose={() => setMobileNavOpen(false)} />
       <ScrollToHash />
-      {!(showLoader && loading) && <NewsletterSticky />}
+      {!(showLoader && loading) && location.pathname !== '/boundaries-blueprint' && <NewsletterSticky />}
 
       <div className={showLoader && loading ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}>
         {/* Fixed Pill Navigation */}
@@ -354,6 +361,7 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/newsletter" element={<NewsletterPage />} />
             <Route path="/newsletter/:slug" element={<NewsletterPostPage />} />
+            <Route path="/boundaries-blueprint" element={<BoundariesBlueprintPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>

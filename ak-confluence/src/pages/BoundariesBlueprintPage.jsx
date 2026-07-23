@@ -24,11 +24,11 @@ export default function BoundariesBlueprintPage() {
   const revealRef = usePageReveal();
 
   useEffect(() => {
-    const el = document.querySelector('.ml-embedded[data-form="UGY1bC"]');
+    const el = document.querySelector('.ml-embedded[data-form="P5BeST"]');
     if (!el || el.hasChildNodes()) return;
-    document.querySelectorAll('script[src*="forms/UGY1bC"]').forEach((s) => s.remove());
+    document.querySelectorAll('script[src*="forms/P5BeST"]').forEach((s) => s.remove());
     const script = document.createElement('script');
-    script.src = 'https://assets.mailerlite.com/jsonp/2382319/forms/UGY1bC?callback=ml.fn.renderEmbeddedForm';
+    script.src = 'https://assets.mailerlite.com/jsonp/2382319/forms/P5BeST?callback=ml.fn.renderEmbeddedForm';
     document.head.appendChild(script);
   }, []);
 
@@ -73,7 +73,7 @@ export default function BoundariesBlueprintPage() {
           <p className="font-[var(--font-body)] text-[#f5f2ed]/50 text-sm font-light leading-relaxed mb-8">
             We'll send the guide straight to your inbox, along with our monthly newsletter. Unsubscribe anytime.
           </p>
-          <div className="ml-embedded w-full text-left" data-form="UGY1bC"></div>
+          <div className="ml-embedded w-full text-left" data-form="P5BeST"></div>
         </div>
       </section>
     </div>

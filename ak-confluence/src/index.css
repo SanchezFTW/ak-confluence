@@ -278,3 +278,22 @@ body {
 .ml-embedded-pill input.form-control:focus {
   box-shadow: none !important;
 }
+
+/* Checkbox + success-message text default to dark (#383838) for the
+   Blueprint page's white card — on this dark section that's unreadable,
+   so light-on-dark for anything still rendering inside the pill instance. */
+.ml-embedded-pill .ml-form-checkboxRow label,
+.ml-embedded-pill .label-description,
+.ml-embedded-pill .ml-form-checkboxRow p {
+  color: rgba(245, 242, 237, 0.7) !important;
+}
+.ml-embedded-pill .ml-form-successContent,
+.ml-embedded-pill .ml-form-successContent p {
+  color: #f5f2ed !important;
+}
+.ml-embedded-pill .ml-form-successContent h1,
+.ml-embedded-pill .ml-form-successContent h2,
+.ml-embedded-pill .ml-form-successContent h3,
+.ml-embedded-pill .ml-form-successContent h4 {
+  color: #f5f2ed !important;
+}

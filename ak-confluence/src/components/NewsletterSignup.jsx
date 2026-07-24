@@ -21,7 +21,7 @@ export default function NewsletterSignup() {
   }, []);
 
   return (
-    <div className="max-w-[1100px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+    <div className="max-w-[1100px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
       <div className="lg:order-1 text-center lg:text-left">
         <h2 className="font-[var(--font-display)] text-[clamp(1.75rem,3.5vw,2.5rem)] font-light leading-[1.05] mb-4 text-[#f5f2ed]">
           Sign up for our email newsletter

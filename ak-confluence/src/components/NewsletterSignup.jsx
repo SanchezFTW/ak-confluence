@@ -21,14 +21,18 @@ export default function NewsletterSignup() {
   }, []);
 
   return (
-    <div className="max-w-md mx-auto text-center">
-      <h2 className="font-[var(--font-display)] text-[clamp(1.75rem,3.5vw,2.5rem)] font-light leading-[1.05] mb-4 text-[#f5f2ed]">
-        Sign up for our email newsletter
-      </h2>
-      <p className="font-[var(--font-body)] font-light text-base leading-relaxed mb-8 text-[#f5f2ed]/50">
-        Notes from our therapists on boundaries, anxiety, and everyday life in Anchorage. One email a month, nothing more.
-      </p>
-      <div className="ml-embedded ml-embedded-pill w-full" data-form="UGY1bC"></div>
+    <div className="max-w-[1100px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+      <div className="lg:order-2 text-center lg:text-left">
+        <h2 className="font-[var(--font-display)] text-[clamp(1.75rem,3.5vw,2.5rem)] font-light leading-[1.05] mb-4 text-[#f5f2ed]">
+          Sign up for our email newsletter
+        </h2>
+        <p className="font-[var(--font-body)] font-light text-base leading-relaxed mb-6 lg:mb-0 text-[#f5f2ed]/50">
+          Notes from our therapists on boundaries, anxiety, and everyday life in Anchorage. One email a month, nothing more.
+        </p>
+      </div>
+      <div className="lg:order-1">
+        <div className="ml-embedded ml-embedded-pill w-full" data-form="UGY1bC"></div>
+      </div>
     </div>
   );
 }

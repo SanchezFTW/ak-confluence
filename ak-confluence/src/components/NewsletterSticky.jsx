@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, EnvelopeSimple } from '@phosphor-icons/react';
 
 const DISMISS_KEY = 'nl-sticky-dismissed';
@@ -8,15 +9,14 @@ const DISMISS_KEY = 'nl-sticky-dismissed';
 //
 // Small dismissible card in the bottom-right corner. Closing it hides it for
 // the rest of the visit (sessionStorage) — it returns on a fresh session.
-// Its CTA scrolls to the footer signup (#newsletter) rather than embedding the
-// MailerLite form again (duplicate `data-form` containers conflict). It can
-// later be swapped for a dedicated MailerLite popup form.
+// Its CTA links to the Boundaries Blueprint landing page (/boundaries-blueprint).
 //
 // Entrance uses a CSS keyframe (not GSAP) so the card's visibility never
 // depends on requestAnimationFrame ticking — animation-fill-mode keeps it
 // visible even if the tab is backgrounded when it mounts.
 //
 export default function NewsletterSticky() {
+  const navigate = useNavigate();
   const [visible, setVisible] = useState(() => {
     if (typeof window === 'undefined') return false;
     return sessionStorage.getItem(DISMISS_KEY) !== '1';
@@ -28,9 +28,8 @@ export default function NewsletterSticky() {
   }
 
   function goToSignup() {
-    const el = document.querySelector('#newsletter');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     dismiss();
+    navigate('/boundaries-blueprint');
   }
 
   if (!visible) return null;

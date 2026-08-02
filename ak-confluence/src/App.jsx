@@ -3,7 +3,7 @@ import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { List, X } from '@phosphor-icons/react';
+import { List, X, FacebookLogo, InstagramLogo } from '@phosphor-icons/react';
 import { AnimatedLogo } from './components/brand/AnimatedLogo';
 import NewsletterSignup from './components/NewsletterSignup';
 import NewsletterSticky from './components/NewsletterSticky';
@@ -18,6 +18,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 const INTAKE_URL = 'https://elly.clientsecure.me/contact-widget';
 const LOADER_SEEN_KEY = 'ak_loader_seen';
+
+const SOCIAL_LINKS = [
+  { label: 'Facebook', href: 'https://www.facebook.com/akconfluences/', Icon: FacebookLogo },
+  { label: 'Instagram', href: 'https://www.instagram.com/akconfluence/', Icon: InstagramLogo },
+];
 
 //
 // ─────────────── LOADER ───────────────
@@ -195,8 +200,22 @@ function Footer() {
 
       {/* Legal Footer */}
       <div className="bg-[#222222] py-5 px-6 lg:px-20">
-        <div className="max-w-[1100px] mx-auto flex justify-center items-center text-[#f5f2ed]/20 text-xs font-[var(--font-body)]">
+        <div className="max-w-[1100px] mx-auto flex flex-col-reverse md:flex-row justify-center md:justify-between items-center gap-3 text-[#f5f2ed]/20 text-xs font-[var(--font-body)]">
           <span>&copy; {new Date().getFullYear()} Confluence LLC. All rights reserved.</span>
+          <div className="flex items-center gap-4">
+            {SOCIAL_LINKS.map(({ label, href, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="text-[#f5f2ed]/40 hover:text-[#82a396] transition-colors"
+              >
+                <Icon size={18} weight="light" />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>

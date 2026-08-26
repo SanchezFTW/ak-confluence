@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, EnvelopeSimple, ArrowsOutSimple, CheckCircle } from '@phosphor-icons/react';
 
 const DISMISS_KEY = 'nl-sticky-dismissed';
 
 //
 // ─────────────── STICKY MONTHLY NEWSLETTER SIGNUP ───────────────
+// Form ID: 41815299  |  Group: Monthly Newsletter
+// MailerLite's webforms.min.js handles submission via AJAX.
+// We hook into window.ml_webform_success_41815299 for inline success state.
 //
 export default function NewsletterSticky() {
   const [visible, setVisible] = useState(() => {
@@ -12,8 +15,28 @@ export default function NewsletterSticky() {
     return sessionStorage.getItem(DISMISS_KEY) !== '1';
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    // Register success callback BEFORE the script initialises
+    window.ml_webform_success_41815299 = () => setSubmitted(true);
+
+    // Inform MailerLite this form has been viewed
+    fetch('https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/takel').catch(() => {});
+
+    // Load MailerLite webforms script once per page
+    if (!document.getElementById('ml-webforms-js')) {
+      const s = document.createElement('script');
+      s.id = 'ml-webforms-js';
+      s.src = 'https://groot.mailerlite.com/js/w/webforms.min.js?v83147fa8ce2d95cb73ece7f28b469519';
+      s.async = true;
+      document.body.appendChild(s);
+    }
+
+    return () => {
+      delete window.ml_webform_success_41815299;
+    };
+  }, []);
 
   function dismiss() {
     sessionStorage.setItem(DISMISS_KEY, '1');
@@ -21,17 +44,22 @@ export default function NewsletterSticky() {
     setIsModalOpen(false);
   }
 
-  function handleSubmit() {
-    setSubmitted(true);
-  }
-
   if (!visible) return null;
+
+  const ConsentCheckbox = ({ light = false }) => (
+    <label className="flex items-start gap-2.5 cursor-pointer group">
+      <div className="relative flex-shrink-0 mt-0.5">
+        <input type="checkbox" required className="peer sr-only" />
+        <div className="w-4 h-4 rounded border border-[#82a396]/40 bg-transparent peer-checked:bg-[#82a396] peer-checked:border-[#82a396] transition-colors" />
+      </div>
+      <span className={`font-[var(--font-body)] text-xs leading-relaxed ${light ? 'text-[#a38d7a]' : 'text-[#f5f2ed]/50'} group-hover:opacity-80 transition-opacity`}>
+        Opt in to receive news and updates.
+      </span>
+    </label>
+  );
 
   return (
     <>
-      {/* Hidden iframe for background form processing */}
-      <iframe name="ml_sticky_iframe" id="ml_sticky_iframe" style={{ display: 'none' }} title="MailerLite sticky frame" />
-
       <div
         className="nl-sticky fixed bottom-4 right-4 z-[50] w-[min(22rem,calc(100vw-2rem))] bg-white/95 backdrop-blur-md rounded-2xl border border-[#82a396]/30 shadow-[0_12px_40px_-12px_rgba(56,56,56,0.22)] p-5"
         role="complementary"
@@ -50,11 +78,11 @@ export default function NewsletterSticky() {
             .nl-sticky { animation: none; opacity: 1; }
           }
         `}</style>
-        
+
         {/* Header row */}
         <div className="flex items-center justify-between mb-2">
           <span className="font-[var(--font-mono)] text-[9px] tracking-[0.25em] uppercase text-[#82a396] font-medium flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block animate-pulse"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block animate-pulse" />
             Monthly Newsletter
           </span>
           <div className="flex items-center gap-1">
@@ -62,7 +90,6 @@ export default function NewsletterSticky() {
               onClick={() => setIsModalOpen(true)}
               className="w-6 h-6 flex items-center justify-center rounded-full text-[#a38d7a] hover:text-[#383838] hover:bg-[#f5f2ed] transition-colors cursor-pointer"
               aria-label="Expand newsletter modal"
-              title="Expand popup"
             >
               <ArrowsOutSimple size={13} weight="bold" />
             </button>
@@ -100,24 +127,22 @@ export default function NewsletterSticky() {
           </div>
         ) : (
           <form
+            className="ml-block-form flex flex-col gap-2 mt-2"
             action="https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/subscribe"
+            data-code=""
             method="post"
-            target="ml_sticky_iframe"
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-2 mt-2"
           >
             <input type="hidden" name="ml-submit" value="1" />
             <input type="hidden" name="anticsrf" value="true" />
             <input
               type="email"
               name="fields[email]"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email..."
+              autoComplete="email"
               required
               className="w-full bg-[#f5f2ed] border border-[#82a396]/30 text-[#383838] placeholder-[#a38d7a] text-xs font-[var(--font-body)] rounded-full px-4 py-2.5 focus:outline-none focus:border-[#82a396] transition-colors"
             />
-            <div className="g-recaptcha flex justify-center scale-[0.75] origin-center my-[-8px]" data-sitekey="6Lf1KHQUAAAAAFNKEX1hdSWCS3mRMv4FlFaNslaD"></div>
+            <ConsentCheckbox light />
             <button
               type="submit"
               className="w-full bg-[#82a396] text-white text-[10px] tracking-[0.18em] uppercase font-medium font-[var(--font-mono)] px-5 py-2.5 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer shadow-sm hover:shadow"
@@ -148,7 +173,7 @@ export default function NewsletterSticky() {
             <p className="font-[var(--font-body)] text-[#f5f2ed]/70 text-sm font-light leading-relaxed mb-6">
               Straightforward mental health insights, boundary scripts, and anxiety tools sent once a month by our Anchorage therapy team.
             </p>
-            
+
             {submitted ? (
               <div className="flex items-center gap-3 bg-[#82a396]/20 border border-[#82a396]/40 rounded-full px-6 py-4 text-[#f5f2ed] w-full">
                 <CheckCircle size={22} weight="fill" className="text-[#82a396] flex-shrink-0" />
@@ -158,22 +183,19 @@ export default function NewsletterSticky() {
               </div>
             ) : (
               <form
+                className="ml-block-form flex flex-col gap-3 w-full"
                 action="https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/subscribe"
+                data-code=""
                 method="post"
-                target="ml_sticky_iframe"
-                onSubmit={handleSubmit}
-                className="flex flex-col gap-3 w-full"
               >
                 <input type="hidden" name="ml-submit" value="1" />
                 <input type="hidden" name="anticsrf" value="true" />
-
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-[#f5f2ed]/10 border border-white/15 rounded-2xl sm:rounded-full p-2 sm:p-1.5 sm:pl-5 w-full focus-within:border-[#82a396] transition-colors">
                   <input
                     type="email"
                     name="fields[email]"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email..."
+                    autoComplete="email"
                     required
                     className="w-full bg-transparent border-none text-[#f5f2ed] placeholder-[#f5f2ed]/50 text-sm font-[var(--font-body)] px-3 py-2 sm:p-0 focus:outline-none"
                   />
@@ -184,8 +206,7 @@ export default function NewsletterSticky() {
                     Subscribe
                   </button>
                 </div>
-
-                <div className="g-recaptcha flex justify-center scale-90 origin-center" data-sitekey="6Lf1KHQUAAAAAFNKEX1hdSWCS3mRMv4FlFaNslaD"></div>
+                <ConsentCheckbox />
               </form>
             )}
           </div>
@@ -194,6 +215,3 @@ export default function NewsletterSticky() {
     </>
   );
 }
-
-
-

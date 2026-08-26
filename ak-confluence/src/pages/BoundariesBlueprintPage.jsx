@@ -20,20 +20,39 @@ const POINTS = [
   },
 ];
 
+//
+// ─────────────── BOUNDARIES BLUEPRINT PAGE ───────────────
+// Form ID: 44077565  |  Group: Boundaries Blueprint
+// MailerLite's webforms.min.js handles submission via AJAX.
+// We hook into window.ml_webform_success_44077565 for inline success state.
+//
 export default function BoundariesBlueprintPage() {
   const revealRef = usePageReveal();
-  const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
-  function handleSubmit() {
-    setSubmitted(true);
-  }
+  useEffect(() => {
+    // Register success callback BEFORE the script initialises
+    window.ml_webform_success_44077565 = () => setSubmitted(true);
+
+    // Inform MailerLite this form has been viewed
+    fetch('https://assets.mailerlite.com/jsonp/2382319/forms/193826477630817348/takel').catch(() => {});
+
+    // Load MailerLite webforms script once per page
+    if (!document.getElementById('ml-webforms-js')) {
+      const s = document.createElement('script');
+      s.id = 'ml-webforms-js';
+      s.src = 'https://groot.mailerlite.com/js/w/webforms.min.js?v83147fa8ce2d95cb73ece7f28b469519';
+      s.async = true;
+      document.body.appendChild(s);
+    }
+
+    return () => {
+      delete window.ml_webform_success_44077565;
+    };
+  }, []);
 
   return (
     <div ref={revealRef} className="min-h-screen bg-[#f5f2ed]">
-      {/* Hidden iframe for background form processing */}
-      <iframe name="ml_blueprint_iframe" id="ml_blueprint_iframe" style={{ display: 'none' }} title="MailerLite blueprint frame" />
-
       {/* Hero */}
       <section className="pt-32 pb-14 lg:pt-40 lg:pb-20 px-6 lg:px-20 bg-[#e8e4dc]">
         <div className="max-w-3xl mx-auto text-center">
@@ -73,32 +92,41 @@ export default function BoundariesBlueprintPage() {
           <p className="font-[var(--font-body)] text-[#f5f2ed]/50 text-sm font-light leading-relaxed mb-8">
             We'll send the guide straight to your inbox, along with our monthly newsletter. Unsubscribe anytime.
           </p>
-          
+
           {submitted ? (
-            <div className="flex items-center justify-center gap-3 bg-[#82a396]/20 border border-[#82a396]/40 rounded-full px-6 py-4 text-[#f5f2ed] w-full animate-fadeUp">
-              <CheckCircle size={22} weight="fill" className="text-[#82a396] flex-shrink-0" />
-              <span className="font-[var(--font-body)] text-sm font-light">
-                Your Boundaries Blueprint is on its way to your inbox!
-              </span>
+            <div className="flex flex-col items-center gap-4 w-full">
+              <div className="flex items-center justify-center gap-3 bg-[#82a396]/20 border border-[#82a396]/40 rounded-full px-6 py-4 text-[#f5f2ed] w-full">
+                <CheckCircle size={22} weight="fill" className="text-[#82a396] flex-shrink-0" />
+                <span className="font-[var(--font-body)] text-sm font-light">
+                  Your Boundaries Blueprint is on its way to your inbox!
+                </span>
+              </div>
+              <a
+                href="https://akconfluence.com/boundaries-blueprint-guide.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-[var(--font-body)] text-[#82a396] text-sm underline underline-offset-4 hover:text-[#a8c4b8] transition-colors"
+              >
+                Can't wait? Download it now →
+              </a>
             </div>
           ) : (
             <form
+              className="ml-block-form flex flex-col gap-3 w-full"
               action="https://assets.mailerlite.com/jsonp/2382319/forms/193826477630817348/subscribe"
+              data-code=""
               method="post"
-              target="ml_blueprint_iframe"
-              onSubmit={handleSubmit}
-              className="flex flex-col gap-3 w-full"
             >
               <input type="hidden" name="ml-submit" value="1" />
               <input type="hidden" name="anticsrf" value="true" />
-              
+
+              {/* Email + button pill */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-[#f5f2ed]/10 border border-white/15 rounded-2xl sm:rounded-full p-2 sm:p-1.5 sm:pl-5 w-full focus-within:border-[#82a396] transition-colors text-left">
                 <input
                   type="email"
                   name="fields[email]"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email..."
+                  autoComplete="email"
                   required
                   className="w-full bg-transparent border-none text-[#f5f2ed] placeholder-[#f5f2ed]/50 text-sm font-[var(--font-body)] px-3 py-2 sm:p-0 focus:outline-none"
                 />
@@ -110,7 +138,16 @@ export default function BoundariesBlueprintPage() {
                 </button>
               </div>
 
-              <div className="g-recaptcha flex justify-center scale-90 origin-center" data-sitekey="6Lf1KHQUAAAAAFNKEX1hdSWCS3mRMv4FlFaNslaD"></div>
+              {/* Required opt-in checkbox */}
+              <label className="flex items-start gap-2.5 cursor-pointer group text-left">
+                <div className="relative flex-shrink-0 mt-0.5">
+                  <input type="checkbox" required className="peer sr-only" />
+                  <div className="w-4 h-4 rounded border border-[#f5f2ed]/30 bg-transparent peer-checked:bg-[#82a396] peer-checked:border-[#82a396] transition-colors" />
+                </div>
+                <span className="font-[var(--font-body)] text-xs text-[#f5f2ed]/50 leading-relaxed group-hover:text-[#f5f2ed]/70 transition-colors">
+                  Opt in to receive news and updates.
+                </span>
+              </label>
             </form>
           )}
         </div>
@@ -118,4 +155,3 @@ export default function BoundariesBlueprintPage() {
     </div>
   );
 }
-

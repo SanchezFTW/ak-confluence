@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { SquaresFour, ChatCircleDots, NotePencil } from '@phosphor-icons/react';
+import { useState, useEffect } from 'react';
+import { SquaresFour, ChatCircleDots, NotePencil, CheckCircle } from '@phosphor-icons/react';
 import { usePageReveal } from '../lib/usePageReveal';
 
 const POINTS = [
@@ -22,15 +22,32 @@ const POINTS = [
 
 export default function BoundariesBlueprintPage() {
   const revealRef = usePageReveal();
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const el = document.querySelector('.ml-embedded[data-form="193826477630817348"]');
-    if (!el || el.hasChildNodes()) return;
-    document.querySelectorAll('script[src*="forms/193826477630817348"]').forEach((s) => s.remove());
-    const script = document.createElement('script');
-    script.src = 'https://assets.mailerlite.com/jsonp/2382319/forms/193826477630817348?callback=ml.fn.renderEmbeddedForm';
-    document.head.appendChild(script);
-  }, []);
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!email) return;
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('fields[email]', email);
+      formData.append('ml-submit', '1');
+      formData.append('anticsrf', 'true');
+      fetch('https://assets.mailerlite.com/jsonp/2382319/forms/193826477630817348/subscribe', {
+        method: 'POST',
+        body: formData,
+        mode: 'no-cors'
+      });
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      setSubmitted(true);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div ref={revealRef} className="min-h-screen bg-[#f5f2ed]">
@@ -66,37 +83,46 @@ export default function BoundariesBlueprintPage() {
 
       {/* Signup form */}
       <section className="reveal-up py-16 lg:py-20 px-6 lg:px-20 bg-[#383838]">
-        <div className="max-w-md mx-auto text-center">
+        <div className="max-w-md mx-auto text-center flex flex-col items-center">
           <h2 className="font-[var(--font-display)] text-[clamp(1.5rem,3vw,2rem)] font-light text-[#f5f2ed] leading-[1.1] mb-3">
             Get your free copy
           </h2>
           <p className="font-[var(--font-body)] text-[#f5f2ed]/50 text-sm font-light leading-relaxed mb-8">
             We'll send the guide straight to your inbox, along with our monthly newsletter. Unsubscribe anytime.
           </p>
-          <form
-            action="https://assets.mailerlite.com/jsonp/2382319/forms/193826477630817348/subscribe"
-            method="post"
-            target="_blank"
-            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-[#f5f2ed]/10 border border-white/15 rounded-2xl sm:rounded-full p-2 sm:p-1.5 sm:pl-5 w-full focus-within:border-[#82a396] transition-colors text-left"
-          >
-            <input type="hidden" name="ml-submit" value="1" />
-            <input type="hidden" name="anticsrf" value="true" />
-            <input
-              type="email"
-              name="fields[email]"
-              placeholder="Enter your email..."
-              required
-              className="w-full bg-transparent border-none text-[#f5f2ed] placeholder-[#f5f2ed]/50 text-sm font-[var(--font-body)] px-3 py-2 sm:p-0 focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="bg-[#82a396] text-white text-xs font-medium font-[var(--font-body)] px-6 py-3 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
+          
+          {submitted ? (
+            <div className="flex items-center justify-center gap-3 bg-[#82a396]/20 border border-[#82a396]/40 rounded-full px-6 py-4 text-[#f5f2ed] w-full animate-fadeUp">
+              <CheckCircle size={22} weight="fill" className="text-[#82a396] flex-shrink-0" />
+              <span className="font-[var(--font-body)] text-sm font-light">
+                Your Boundaries Blueprint is on its way to your inbox!
+              </span>
+            </div>
+          ) : (
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-[#f5f2ed]/10 border border-white/15 rounded-2xl sm:rounded-full p-2 sm:p-1.5 sm:pl-5 w-full focus-within:border-[#82a396] transition-colors text-left"
             >
-              Get Guide
-            </button>
-          </form>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email..."
+                required
+                className="w-full bg-transparent border-none text-[#f5f2ed] placeholder-[#f5f2ed]/50 text-sm font-[var(--font-body)] px-3 py-2 sm:p-0 focus:outline-none"
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-[#82a396] text-white text-xs font-medium font-[var(--font-body)] px-6 py-3 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap disabled:opacity-50"
+              >
+                {loading ? 'Sending...' : 'Get Guide'}
+              </button>
+            </form>
+          )}
         </div>
       </section>
     </div>
   );
 }
+

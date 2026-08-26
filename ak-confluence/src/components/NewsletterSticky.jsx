@@ -1,13 +1,10 @@
 import { useState } from 'react';
-import { X, EnvelopeSimple, ArrowsOutSimple } from '@phosphor-icons/react';
+import { X, EnvelopeSimple, ArrowsOutSimple, CheckCircle } from '@phosphor-icons/react';
 
 const DISMISS_KEY = 'nl-sticky-dismissed';
 
 //
 // ─────────────── STICKY MONTHLY NEWSLETTER SIGNUP ───────────────
-//
-// Small dismissible card in the bottom-right corner for the Monthly Newsletter.
-// Submits natively to MailerLite form 188567234692515097.
 //
 export default function NewsletterSticky() {
   const [visible, setVisible] = useState(() => {
@@ -15,11 +12,37 @@ export default function NewsletterSticky() {
     return sessionStorage.getItem(DISMISS_KEY) !== '1';
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   function dismiss() {
     sessionStorage.setItem(DISMISS_KEY, '1');
     setVisible(false);
     setIsModalOpen(false);
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!email) return;
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('fields[email]', email);
+      formData.append('ml-submit', '1');
+      formData.append('anticsrf', 'true');
+      fetch('https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/subscribe', {
+        method: 'POST',
+        body: formData,
+        mode: 'no-cors'
+      });
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      setSubmitted(true);
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (!visible) return null;
@@ -85,32 +108,35 @@ export default function NewsletterSticky() {
           </div>
         </div>
 
-        {/* Native Form Input in Sticky Card */}
-        <form
-          action="https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/subscribe"
-          method="post"
-          target="_blank"
-          className="flex flex-col gap-2 mt-2"
-        >
-          <input type="hidden" name="ml-submit" value="1" />
-          <input type="hidden" name="anticsrf" value="true" />
-          <input
-            type="email"
-            name="fields[email]"
-            placeholder="Enter your email..."
-            required
-            className="w-full bg-[#f5f2ed] border border-[#82a396]/30 text-[#383838] placeholder-[#a38d7a] text-xs font-[var(--font-body)] rounded-full px-4 py-2.5 focus:outline-none focus:border-[#82a396] transition-colors"
-          />
-          <button
-            type="submit"
-            className="w-full bg-[#82a396] text-white text-[10px] tracking-[0.18em] uppercase font-medium font-[var(--font-mono)] px-5 py-2.5 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer shadow-sm hover:shadow"
-          >
-            Subscribe Free
-          </button>
-        </form>
+        {submitted ? (
+          <div className="flex items-center gap-2 bg-[#82a396]/15 border border-[#82a396]/30 rounded-xl p-3 text-[#383838] mt-2">
+            <CheckCircle size={20} weight="fill" className="text-[#82a396] flex-shrink-0" />
+            <span className="font-[var(--font-body)] text-xs font-normal">
+              You're subscribed! Thanks for joining.
+            </span>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-2 mt-2">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email..."
+              required
+              className="w-full bg-[#f5f2ed] border border-[#82a396]/30 text-[#383838] placeholder-[#a38d7a] text-xs font-[var(--font-body)] rounded-full px-4 py-2.5 focus:outline-none focus:border-[#82a396] transition-colors"
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#82a396] text-white text-[10px] tracking-[0.18em] uppercase font-medium font-[var(--font-mono)] px-5 py-2.5 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer shadow-sm hover:shadow disabled:opacity-50"
+            >
+              {loading ? 'Subscribing...' : 'Subscribe Free'}
+            </button>
+          </form>
+        )}
       </div>
 
-      {/* Expanded Modal Overlay with Native Form */}
+      {/* Expanded Modal Overlay */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
           <div className="bg-[#383838] text-[#f5f2ed] rounded-3xl p-6 sm:p-10 max-w-md w-full relative shadow-2xl border border-white/10">
@@ -131,32 +157,40 @@ export default function NewsletterSticky() {
               Straightforward mental health insights, boundary scripts, and anxiety tools sent once a month by our Anchorage therapy team.
             </p>
             
-            <form
-              action="https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/subscribe"
-              method="post"
-              target="_blank"
-              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-[#f5f2ed]/10 border border-white/15 rounded-2xl sm:rounded-full p-2 sm:p-1.5 sm:pl-5 w-full focus-within:border-[#82a396] transition-colors"
-            >
-              <input type="hidden" name="ml-submit" value="1" />
-              <input type="hidden" name="anticsrf" value="true" />
-              <input
-                type="email"
-                name="fields[email]"
-                placeholder="Enter your email..."
-                required
-                className="w-full bg-transparent border-none text-[#f5f2ed] placeholder-[#f5f2ed]/50 text-sm font-[var(--font-body)] px-3 py-2 sm:p-0 focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="bg-[#82a396] text-white text-xs font-medium font-[var(--font-body)] px-6 py-3 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
+            {submitted ? (
+              <div className="flex items-center gap-3 bg-[#82a396]/20 border border-[#82a396]/40 rounded-full px-6 py-4 text-[#f5f2ed] w-full">
+                <CheckCircle size={22} weight="fill" className="text-[#82a396] flex-shrink-0" />
+                <span className="font-[var(--font-body)] text-sm font-light">
+                  You're on the list! Thank you for subscribing.
+                </span>
+              </div>
+            ) : (
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-[#f5f2ed]/10 border border-white/15 rounded-2xl sm:rounded-full p-2 sm:p-1.5 sm:pl-5 w-full focus-within:border-[#82a396] transition-colors"
               >
-                Subscribe
-              </button>
-            </form>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email..."
+                  required
+                  className="w-full bg-transparent border-none text-[#f5f2ed] placeholder-[#f5f2ed]/50 text-sm font-[var(--font-body)] px-3 py-2 sm:p-0 focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-[#82a396] text-white text-xs font-medium font-[var(--font-body)] px-6 py-3 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap disabled:opacity-50"
+                >
+                  {loading ? 'Subscribing...' : 'Subscribe'}
+                </button>
+              </form>
+            )}
           </div>
         </div>
       )}
     </>
   );
 }
+
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { SquaresFour, ChatCircleDots, NotePencil, CheckCircle } from '@phosphor-icons/react';
 import { usePageReveal } from '../lib/usePageReveal';
 
@@ -23,36 +23,17 @@ const POINTS = [
 //
 // ─────────────── BOUNDARIES BLUEPRINT PAGE ───────────────
 // Form ID: 44077565  |  Group: Boundaries Blueprint
-// MailerLite's webforms.min.js handles submission via AJAX.
-// We hook into window.ml_webform_success_44077565 for inline success state.
+// Posts to MailerLite via hidden iframe so the page never navigates away.
 //
 export default function BoundariesBlueprintPage() {
   const revealRef = usePageReveal();
   const [submitted, setSubmitted] = useState(false);
 
-  useEffect(() => {
-    // Register success callback BEFORE the script initialises
-    window.ml_webform_success_44077565 = () => setSubmitted(true);
-
-    // Inform MailerLite this form has been viewed
-    fetch('https://assets.mailerlite.com/jsonp/2382319/forms/193826477630817348/takel').catch(() => {});
-
-    // Load MailerLite webforms script once per page
-    if (!document.getElementById('ml-webforms-js')) {
-      const s = document.createElement('script');
-      s.id = 'ml-webforms-js';
-      s.src = 'https://groot.mailerlite.com/js/w/webforms.min.js?v83147fa8ce2d95cb73ece7f28b469519';
-      s.async = true;
-      document.body.appendChild(s);
-    }
-
-    return () => {
-      delete window.ml_webform_success_44077565;
-    };
-  }, []);
-
   return (
     <div ref={revealRef} className="min-h-screen bg-[#f5f2ed]">
+      {/* Hidden iframe absorbs MailerLite JSON response */}
+      <iframe name="ml_blueprint_frame" title="" style={{ display: 'none' }} />
+
       {/* Hero */}
       <section className="pt-32 pb-14 lg:pt-40 lg:pb-20 px-6 lg:px-20 bg-[#e8e4dc]">
         <div className="max-w-3xl mx-auto text-center">
@@ -112,10 +93,11 @@ export default function BoundariesBlueprintPage() {
             </div>
           ) : (
             <form
-              className="ml-block-form flex flex-col gap-3 w-full"
               action="https://assets.mailerlite.com/jsonp/2382319/forms/193826477630817348/subscribe"
-              data-code=""
               method="post"
+              target="ml_blueprint_frame"
+              onSubmit={() => setSubmitted(true)}
+              className="flex flex-col gap-3 w-full"
             >
               <input type="hidden" name="ml-submit" value="1" />
               <input type="hidden" name="anticsrf" value="true" />
@@ -138,12 +120,13 @@ export default function BoundariesBlueprintPage() {
                 </button>
               </div>
 
-              {/* Required opt-in checkbox */}
+              {/* Required opt-in */}
               <label className="flex items-start gap-2.5 cursor-pointer group text-left">
-                <div className="relative flex-shrink-0 mt-0.5">
-                  <input type="checkbox" required className="peer sr-only" />
-                  <div className="w-4 h-4 rounded border border-[#f5f2ed]/30 bg-transparent peer-checked:bg-[#82a396] peer-checked:border-[#82a396] transition-colors" />
-                </div>
+                <input
+                  type="checkbox"
+                  required
+                  className="mt-0.5 flex-shrink-0 w-4 h-4 rounded accent-[#82a396] cursor-pointer"
+                />
                 <span className="font-[var(--font-body)] text-xs text-[#f5f2ed]/50 leading-relaxed group-hover:text-[#f5f2ed]/70 transition-colors">
                   Opt in to receive news and updates.
                 </span>

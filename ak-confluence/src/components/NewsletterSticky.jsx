@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { X, EnvelopeSimple, ArrowsOutSimple, CheckCircle } from '@phosphor-icons/react';
 
 const DISMISS_KEY = 'nl-sticky-dismissed';
@@ -6,8 +6,7 @@ const DISMISS_KEY = 'nl-sticky-dismissed';
 //
 // ─────────────── STICKY MONTHLY NEWSLETTER SIGNUP ───────────────
 // Form ID: 41815299  |  Group: Monthly Newsletter
-// MailerLite's webforms.min.js handles submission via AJAX.
-// We hook into window.ml_webform_success_41815299 for inline success state.
+// Posts to MailerLite via hidden iframe so the page never navigates away.
 //
 export default function NewsletterSticky() {
   const [visible, setVisible] = useState(() => {
@@ -16,27 +15,6 @@ export default function NewsletterSticky() {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-
-  useEffect(() => {
-    // Register success callback BEFORE the script initialises
-    window.ml_webform_success_41815299 = () => setSubmitted(true);
-
-    // Inform MailerLite this form has been viewed
-    fetch('https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/takel').catch(() => {});
-
-    // Load MailerLite webforms script once per page
-    if (!document.getElementById('ml-webforms-js')) {
-      const s = document.createElement('script');
-      s.id = 'ml-webforms-js';
-      s.src = 'https://groot.mailerlite.com/js/w/webforms.min.js?v83147fa8ce2d95cb73ece7f28b469519';
-      s.async = true;
-      document.body.appendChild(s);
-    }
-
-    return () => {
-      delete window.ml_webform_success_41815299;
-    };
-  }, []);
 
   function dismiss() {
     sessionStorage.setItem(DISMISS_KEY, '1');
@@ -48,11 +26,12 @@ export default function NewsletterSticky() {
 
   const ConsentCheckbox = ({ light = false }) => (
     <label className="flex items-start gap-2.5 cursor-pointer group">
-      <div className="relative flex-shrink-0 mt-0.5">
-        <input type="checkbox" required className="peer sr-only" />
-        <div className="w-4 h-4 rounded border border-[#82a396]/40 bg-transparent peer-checked:bg-[#82a396] peer-checked:border-[#82a396] transition-colors" />
-      </div>
-      <span className={`font-[var(--font-body)] text-xs leading-relaxed ${light ? 'text-[#a38d7a]' : 'text-[#f5f2ed]/50'} group-hover:opacity-80 transition-opacity`}>
+      <input
+        type="checkbox"
+        required
+        className="mt-0.5 flex-shrink-0 w-4 h-4 rounded accent-[#82a396] cursor-pointer"
+      />
+      <span className={`font-[var(--font-body)] text-xs leading-relaxed transition-colors ${light ? 'text-[#a38d7a] group-hover:text-[#383838]' : 'text-[#f5f2ed]/50 group-hover:text-[#f5f2ed]/70'}`}>
         Opt in to receive news and updates.
       </span>
     </label>
@@ -60,6 +39,9 @@ export default function NewsletterSticky() {
 
   return (
     <>
+      {/* Hidden iframe absorbs MailerLite JSON response */}
+      <iframe name="ml_sticky_frame" title="" style={{ display: 'none' }} />
+
       <div
         className="nl-sticky fixed bottom-4 right-4 z-[50] w-[min(22rem,calc(100vw-2rem))] bg-white/95 backdrop-blur-md rounded-2xl border border-[#82a396]/30 shadow-[0_12px_40px_-12px_rgba(56,56,56,0.22)] p-5"
         role="complementary"
@@ -127,10 +109,11 @@ export default function NewsletterSticky() {
           </div>
         ) : (
           <form
-            className="ml-block-form flex flex-col gap-2 mt-2"
             action="https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/subscribe"
-            data-code=""
             method="post"
+            target="ml_sticky_frame"
+            onSubmit={() => setSubmitted(true)}
+            className="flex flex-col gap-2 mt-2"
           >
             <input type="hidden" name="ml-submit" value="1" />
             <input type="hidden" name="anticsrf" value="true" />
@@ -183,10 +166,11 @@ export default function NewsletterSticky() {
               </div>
             ) : (
               <form
-                className="ml-block-form flex flex-col gap-3 w-full"
                 action="https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/subscribe"
-                data-code=""
                 method="post"
+                target="ml_sticky_frame"
+                onSubmit={() => setSubmitted(true)}
+                className="flex flex-col gap-3 w-full"
               >
                 <input type="hidden" name="ml-submit" value="1" />
                 <input type="hidden" name="anticsrf" value="true" />

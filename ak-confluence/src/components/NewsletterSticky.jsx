@@ -117,6 +117,7 @@ export default function NewsletterSticky() {
               required
               className="w-full bg-[#f5f2ed] border border-[#82a396]/30 text-[#383838] placeholder-[#a38d7a] text-xs font-[var(--font-body)] rounded-full px-4 py-2.5 focus:outline-none focus:border-[#82a396] transition-colors"
             />
+            <div className="g-recaptcha flex justify-center scale-[0.75] origin-center my-[-8px]" data-sitekey="6Lf1KHQUAAAAAFNKEX1hdSWCS3mRMv4FlFaNslaD"></div>
             <button
               type="submit"
               className="w-full bg-[#82a396] text-white text-[10px] tracking-[0.18em] uppercase font-medium font-[var(--font-mono)] px-5 py-2.5 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer shadow-sm hover:shadow"
@@ -161,25 +162,30 @@ export default function NewsletterSticky() {
                 method="post"
                 target="ml_sticky_iframe"
                 onSubmit={handleSubmit}
-                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-[#f5f2ed]/10 border border-white/15 rounded-2xl sm:rounded-full p-2 sm:p-1.5 sm:pl-5 w-full focus-within:border-[#82a396] transition-colors"
+                className="flex flex-col gap-3 w-full"
               >
                 <input type="hidden" name="ml-submit" value="1" />
                 <input type="hidden" name="anticsrf" value="true" />
-                <input
-                  type="email"
-                  name="fields[email]"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email..."
-                  required
-                  className="w-full bg-transparent border-none text-[#f5f2ed] placeholder-[#f5f2ed]/50 text-sm font-[var(--font-body)] px-3 py-2 sm:p-0 focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  className="bg-[#82a396] text-white text-xs font-medium font-[var(--font-body)] px-6 py-3 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
-                >
-                  Subscribe
-                </button>
+
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-[#f5f2ed]/10 border border-white/15 rounded-2xl sm:rounded-full p-2 sm:p-1.5 sm:pl-5 w-full focus-within:border-[#82a396] transition-colors">
+                  <input
+                    type="email"
+                    name="fields[email]"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email..."
+                    required
+                    className="w-full bg-transparent border-none text-[#f5f2ed] placeholder-[#f5f2ed]/50 text-sm font-[var(--font-body)] px-3 py-2 sm:p-0 focus:outline-none"
+                  />
+                  <button
+                    type="submit"
+                    className="bg-[#82a396] text-white text-xs font-medium font-[var(--font-body)] px-6 py-3 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
+                  >
+                    Subscribe
+                  </button>
+                </div>
+
+                <div className="g-recaptcha flex justify-center scale-90 origin-center" data-sitekey="6Lf1KHQUAAAAAFNKEX1hdSWCS3mRMv4FlFaNslaD"></div>
               </form>
             )}
           </div>

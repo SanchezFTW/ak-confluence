@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { X, EnvelopeSimple, ArrowsOutSimple } from '@phosphor-icons/react';
 
 const DISMISS_KEY = 'nl-sticky-dismissed';
@@ -7,8 +7,7 @@ const DISMISS_KEY = 'nl-sticky-dismissed';
 // ─────────────── STICKY MONTHLY NEWSLETTER SIGNUP ───────────────
 //
 // Small dismissible card in the bottom-right corner for the Monthly Newsletter.
-// Embeds MailerLite form UGY1bC directly in the sticky bubble or interactive modal.
-// Closing it hides it for the rest of the visit (sessionStorage).
+// Submits natively to MailerLite form 188567234692515097.
 //
 export default function NewsletterSticky() {
   const [visible, setVisible] = useState(() => {
@@ -16,16 +15,6 @@ export default function NewsletterSticky() {
     return sessionStorage.getItem(DISMISS_KEY) !== '1';
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    if (!visible) return;
-    const el = document.querySelectorAll('.ml-embedded[data-form="188567234692515097"]');
-    if (!el.length) return;
-    document.querySelectorAll('script[src*="forms/188567234692515097"]').forEach((s) => s.remove());
-    const script = document.createElement('script');
-    script.src = 'https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097?callback=ml.fn.renderEmbeddedForm';
-    document.head.appendChild(script);
-  }, [visible, isModalOpen]);
 
   function dismiss() {
     sessionStorage.setItem(DISMISS_KEY, '1');
@@ -38,7 +27,7 @@ export default function NewsletterSticky() {
   return (
     <>
       <div
-        className="nl-sticky fixed bottom-4 right-4 z-[50] w-[min(21rem,calc(100vw-2rem))] bg-white/95 backdrop-blur-md rounded-2xl border border-[#82a396]/30 shadow-[0_12px_40px_-12px_rgba(56,56,56,0.22)] p-5"
+        className="nl-sticky fixed bottom-4 right-4 z-[50] w-[min(22rem,calc(100vw-2rem))] bg-white/95 backdrop-blur-md rounded-2xl border border-[#82a396]/30 shadow-[0_12px_40px_-12px_rgba(56,56,56,0.22)] p-5"
         role="complementary"
         aria-label="Monthly Newsletter signup"
       >
@@ -82,7 +71,7 @@ export default function NewsletterSticky() {
         </div>
 
         {/* Content intro */}
-        <div className="flex items-start gap-3 mb-4">
+        <div className="flex items-start gap-3 mb-3">
           <div className="flex-shrink-0 w-9 h-9 rounded-full bg-[#82a396]/12 flex items-center justify-center text-[#82a396] mt-0.5">
             <EnvelopeSimple size={18} weight="light" />
           </div>
@@ -96,16 +85,32 @@ export default function NewsletterSticky() {
           </div>
         </div>
 
-        {/* Action Button to Open Clean Form Modal */}
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="w-full bg-[#82a396] text-white text-[10px] tracking-[0.2em] uppercase font-medium font-[var(--font-mono)] px-5 py-3 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer shadow-sm hover:shadow"
+        {/* Native Form Input in Sticky Card */}
+        <form
+          action="https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/subscribe"
+          method="post"
+          target="_blank"
+          className="flex flex-col gap-2 mt-2"
         >
-          Sign Up for Free
-        </button>
+          <input type="hidden" name="ml-submit" value="1" />
+          <input type="hidden" name="anticsrf" value="true" />
+          <input
+            type="email"
+            name="fields[email]"
+            placeholder="Enter your email..."
+            required
+            className="w-full bg-[#f5f2ed] border border-[#82a396]/30 text-[#383838] placeholder-[#a38d7a] text-xs font-[var(--font-body)] rounded-full px-4 py-2.5 focus:outline-none focus:border-[#82a396] transition-colors"
+          />
+          <button
+            type="submit"
+            className="w-full bg-[#82a396] text-white text-[10px] tracking-[0.18em] uppercase font-medium font-[var(--font-mono)] px-5 py-2.5 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer shadow-sm hover:shadow"
+          >
+            Subscribe Free
+          </button>
+        </form>
       </div>
 
-      {/* Expanded Modal Overlay with Clean Form */}
+      {/* Expanded Modal Overlay with Native Form */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
           <div className="bg-[#383838] text-[#f5f2ed] rounded-3xl p-6 sm:p-10 max-w-md w-full relative shadow-2xl border border-white/10">
@@ -126,7 +131,28 @@ export default function NewsletterSticky() {
               Straightforward mental health insights, boundary scripts, and anxiety tools sent once a month by our Anchorage therapy team.
             </p>
             
-            <div className="ml-embedded ml-embedded-pill w-full" data-form="188567234692515097"></div>
+            <form
+              action="https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/subscribe"
+              method="post"
+              target="_blank"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-[#f5f2ed]/10 border border-white/15 rounded-2xl sm:rounded-full p-2 sm:p-1.5 sm:pl-5 w-full focus-within:border-[#82a396] transition-colors"
+            >
+              <input type="hidden" name="ml-submit" value="1" />
+              <input type="hidden" name="anticsrf" value="true" />
+              <input
+                type="email"
+                name="fields[email]"
+                placeholder="Enter your email..."
+                required
+                className="w-full bg-transparent border-none text-[#f5f2ed] placeholder-[#f5f2ed]/50 text-sm font-[var(--font-body)] px-3 py-2 sm:p-0 focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="bg-[#82a396] text-white text-xs font-medium font-[var(--font-body)] px-6 py-3 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
+              >
+                Subscribe
+              </button>
+            </form>
           </div>
         </div>
       )}

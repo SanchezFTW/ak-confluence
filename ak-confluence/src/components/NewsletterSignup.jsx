@@ -7,33 +7,16 @@ import { CheckCircle } from '@phosphor-icons/react';
 export default function NewsletterSignup() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!email) return;
-    setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append('fields[email]', email);
-      formData.append('ml-submit', '1');
-      formData.append('anticsrf', 'true');
-      fetch('https://assets.mailerlite.com/jsonp/2382319/forms/193826477630817348/subscribe', {
-        method: 'POST',
-        body: formData,
-        mode: 'no-cors'
-      });
-      setSubmitted(true);
-    } catch (err) {
-      console.error(err);
-      setSubmitted(true);
-    } finally {
-      setLoading(false);
-    }
+  function handleSubmit() {
+    setSubmitted(true);
   }
 
   return (
     <div className="max-w-[1100px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+      {/* Hidden iframe for background form processing */}
+      <iframe name="ml_footer_iframe" id="ml_footer_iframe" style={{ display: 'none' }} title="MailerLite frame" />
+
       <div className="lg:order-1 text-center lg:text-left">
         <h2 className="font-[var(--font-display)] text-[clamp(1.75rem,3.5vw,2.5rem)] font-light leading-[1.05] mb-4 text-[#f5f2ed]">
           Get your free <em className="italic text-[#82a396]">Boundaries Blueprint</em>
@@ -52,11 +35,17 @@ export default function NewsletterSignup() {
           </div>
         ) : (
           <form
+            action="https://assets.mailerlite.com/jsonp/2382319/forms/193826477630817348/subscribe"
+            method="post"
+            target="ml_footer_iframe"
             onSubmit={handleSubmit}
             className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-[#f5f2ed]/10 border border-[#f5f2ed]/20 rounded-2xl sm:rounded-full p-2 sm:p-1.5 sm:pl-5 max-w-md w-full focus-within:border-[#82a396] transition-colors"
           >
+            <input type="hidden" name="ml-submit" value="1" />
+            <input type="hidden" name="anticsrf" value="true" />
             <input
               type="email"
+              name="fields[email]"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email..."
@@ -65,10 +54,9 @@ export default function NewsletterSignup() {
             />
             <button
               type="submit"
-              disabled={loading}
-              className="bg-[#82a396] text-white text-xs font-medium font-[var(--font-body)] px-6 py-3 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap disabled:opacity-50"
+              className="bg-[#82a396] text-white text-xs font-medium font-[var(--font-body)] px-6 py-3 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
             >
-              {loading ? 'Sending...' : 'Get Guide'}
+              Get Guide
             </button>
           </form>
         )}
@@ -76,5 +64,6 @@ export default function NewsletterSignup() {
     </div>
   );
 }
+
 
 

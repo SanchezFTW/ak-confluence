@@ -14,7 +14,6 @@ export default function NewsletterSticky() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   function dismiss() {
     sessionStorage.setItem(DISMISS_KEY, '1');
@@ -22,33 +21,17 @@ export default function NewsletterSticky() {
     setIsModalOpen(false);
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!email) return;
-    setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append('fields[email]', email);
-      formData.append('ml-submit', '1');
-      formData.append('anticsrf', 'true');
-      fetch('https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/subscribe', {
-        method: 'POST',
-        body: formData,
-        mode: 'no-cors'
-      });
-      setSubmitted(true);
-    } catch (err) {
-      console.error(err);
-      setSubmitted(true);
-    } finally {
-      setLoading(false);
-    }
+  function handleSubmit() {
+    setSubmitted(true);
   }
 
   if (!visible) return null;
 
   return (
     <>
+      {/* Hidden iframe for background form processing */}
+      <iframe name="ml_sticky_iframe" id="ml_sticky_iframe" style={{ display: 'none' }} title="MailerLite sticky frame" />
+
       <div
         className="nl-sticky fixed bottom-4 right-4 z-[50] w-[min(22rem,calc(100vw-2rem))] bg-white/95 backdrop-blur-md rounded-2xl border border-[#82a396]/30 shadow-[0_12px_40px_-12px_rgba(56,56,56,0.22)] p-5"
         role="complementary"
@@ -116,9 +99,18 @@ export default function NewsletterSticky() {
             </span>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col gap-2 mt-2">
+          <form
+            action="https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/subscribe"
+            method="post"
+            target="ml_sticky_iframe"
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-2 mt-2"
+          >
+            <input type="hidden" name="ml-submit" value="1" />
+            <input type="hidden" name="anticsrf" value="true" />
             <input
               type="email"
+              name="fields[email]"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email..."
@@ -127,10 +119,9 @@ export default function NewsletterSticky() {
             />
             <button
               type="submit"
-              disabled={loading}
-              className="w-full bg-[#82a396] text-white text-[10px] tracking-[0.18em] uppercase font-medium font-[var(--font-mono)] px-5 py-2.5 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer shadow-sm hover:shadow disabled:opacity-50"
+              className="w-full bg-[#82a396] text-white text-[10px] tracking-[0.18em] uppercase font-medium font-[var(--font-mono)] px-5 py-2.5 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer shadow-sm hover:shadow"
             >
-              {loading ? 'Subscribing...' : 'Subscribe Free'}
+              Subscribe Free
             </button>
           </form>
         )}
@@ -166,11 +157,17 @@ export default function NewsletterSticky() {
               </div>
             ) : (
               <form
+                action="https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/subscribe"
+                method="post"
+                target="ml_sticky_iframe"
                 onSubmit={handleSubmit}
                 className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-[#f5f2ed]/10 border border-white/15 rounded-2xl sm:rounded-full p-2 sm:p-1.5 sm:pl-5 w-full focus-within:border-[#82a396] transition-colors"
               >
+                <input type="hidden" name="ml-submit" value="1" />
+                <input type="hidden" name="anticsrf" value="true" />
                 <input
                   type="email"
+                  name="fields[email]"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email..."
@@ -179,10 +176,9 @@ export default function NewsletterSticky() {
                 />
                 <button
                   type="submit"
-                  disabled={loading}
-                  className="bg-[#82a396] text-white text-xs font-medium font-[var(--font-body)] px-6 py-3 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap disabled:opacity-50"
+                  className="bg-[#82a396] text-white text-xs font-medium font-[var(--font-body)] px-6 py-3 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
                 >
-                  {loading ? 'Subscribing...' : 'Subscribe'}
+                  Subscribe
                 </button>
               </form>
             )}
@@ -192,5 +188,6 @@ export default function NewsletterSticky() {
     </>
   );
 }
+
 
 

@@ -24,33 +24,16 @@ export default function BoundariesBlueprintPage() {
   const revealRef = usePageReveal();
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!email) return;
-    setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append('fields[email]', email);
-      formData.append('ml-submit', '1');
-      formData.append('anticsrf', 'true');
-      fetch('https://assets.mailerlite.com/jsonp/2382319/forms/193826477630817348/subscribe', {
-        method: 'POST',
-        body: formData,
-        mode: 'no-cors'
-      });
-      setSubmitted(true);
-    } catch (err) {
-      console.error(err);
-      setSubmitted(true);
-    } finally {
-      setLoading(false);
-    }
+  function handleSubmit() {
+    setSubmitted(true);
   }
 
   return (
     <div ref={revealRef} className="min-h-screen bg-[#f5f2ed]">
+      {/* Hidden iframe for background form processing */}
+      <iframe name="ml_blueprint_iframe" id="ml_blueprint_iframe" style={{ display: 'none' }} title="MailerLite blueprint frame" />
+
       {/* Hero */}
       <section className="pt-32 pb-14 lg:pt-40 lg:pb-20 px-6 lg:px-20 bg-[#e8e4dc]">
         <div className="max-w-3xl mx-auto text-center">
@@ -100,11 +83,17 @@ export default function BoundariesBlueprintPage() {
             </div>
           ) : (
             <form
+              action="https://assets.mailerlite.com/jsonp/2382319/forms/193826477630817348/subscribe"
+              method="post"
+              target="ml_blueprint_iframe"
               onSubmit={handleSubmit}
               className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-[#f5f2ed]/10 border border-white/15 rounded-2xl sm:rounded-full p-2 sm:p-1.5 sm:pl-5 w-full focus-within:border-[#82a396] transition-colors text-left"
             >
+              <input type="hidden" name="ml-submit" value="1" />
+              <input type="hidden" name="anticsrf" value="true" />
               <input
                 type="email"
+                name="fields[email]"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email..."
@@ -113,10 +102,9 @@ export default function BoundariesBlueprintPage() {
               />
               <button
                 type="submit"
-                disabled={loading}
-                className="bg-[#82a396] text-white text-xs font-medium font-[var(--font-body)] px-6 py-3 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap disabled:opacity-50"
+                className="bg-[#82a396] text-white text-xs font-medium font-[var(--font-body)] px-6 py-3 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
               >
-                {loading ? 'Sending...' : 'Get Guide'}
+                Get Guide
               </button>
             </form>
           )}

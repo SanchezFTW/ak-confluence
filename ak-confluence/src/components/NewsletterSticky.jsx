@@ -112,13 +112,13 @@ export default function NewsletterSticky() {
             <span className="font-[var(--font-body)] text-xs font-normal">
               You're subscribed! Thanks for joining.
             </span>
-          </div>handleSubmit
+          </div>
         ) : (
           <form
             action="https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/subscribe"
             method="post"
             target="ml_sticky_frame"
-            onSubmit={() => setSubmitted(true)}
+            onSubmit={handleSubmit}
             className="flex flex-col gap-2 mt-2"
           >
             <input type="hidden" name="ml-submit" value="1" />

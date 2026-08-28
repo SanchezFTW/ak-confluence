@@ -29,6 +29,12 @@ export default function BoundariesBlueprintPage() {
   const revealRef = usePageReveal();
   const [submitted, setSubmitted] = useState(false);
 
+  function handleSubmit() {
+    // Defer the success swap so the form isn't unmounted mid-submit — unmounting
+    // a form synchronously inside onSubmit can abort the iframe POST.
+    setTimeout(() => setSubmitted(true), 500);
+  }
+
   return (
     <div ref={revealRef} className="min-h-screen bg-[#f5f2ed]">
       {/* Hidden iframe absorbs MailerLite JSON response */}
@@ -96,7 +102,7 @@ export default function BoundariesBlueprintPage() {
               action="https://assets.mailerlite.com/jsonp/2382319/forms/193826477630817348/subscribe"
               method="post"
               target="ml_blueprint_frame"
-              onSubmit={() => setSubmitted(true)}
+              onSubmit={handleSubmit}
               className="flex flex-col gap-3 w-full"
             >
               <input type="hidden" name="ml-submit" value="1" />

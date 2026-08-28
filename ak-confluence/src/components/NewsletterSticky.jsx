@@ -22,6 +22,12 @@ export default function NewsletterSticky() {
     setIsModalOpen(false);
   }
 
+  function handleSubmit() {
+    // Defer the success swap so the form isn't unmounted mid-submit — unmounting
+    // a form synchronously inside onSubmit can abort the iframe POST.
+    setTimeout(() => setSubmitted(true), 500);
+  }
+
   if (!visible) return null;
 
   const ConsentCheckbox = ({ light = false }) => (
@@ -106,7 +112,7 @@ export default function NewsletterSticky() {
             <span className="font-[var(--font-body)] text-xs font-normal">
               You're subscribed! Thanks for joining.
             </span>
-          </div>
+          </div>handleSubmit
         ) : (
           <form
             action="https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/subscribe"
@@ -169,7 +175,7 @@ export default function NewsletterSticky() {
                 action="https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/subscribe"
                 method="post"
                 target="ml_sticky_frame"
-                onSubmit={() => setSubmitted(true)}
+                onSubmit={handleSubmit}
                 className="flex flex-col gap-3 w-full"
               >
                 <input type="hidden" name="ml-submit" value="1" />

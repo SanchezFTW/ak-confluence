@@ -1,41 +1,30 @@
 import { useEffect, useRef } from 'react';
 
+const ML_ACCOUNT_ID = '2382319';
+const ML_SCRIPT_SRC = 'https://assets.mailerlite.com/js/universal.js';
+
+function ensureMailerLiteScript() {
+  if (document.getElementById('mailerlite-universal-js')) return;
+
+  window.ml =
+    window.ml ||
+    function (...args) {
+      (window.ml.q = window.ml.q || []).push(args);
+    };
+
+  const script = document.createElement('script');
+  script.id = 'mailerlite-universal-js';
+  script.async = true;
+  script.src = ML_SCRIPT_SRC;
+  document.head.appendChild(script);
+}
+
 export default function NewsletterSignup() {
   const formContainerRef = useRef(null);
 
   useEffect(() => {
-    const initialiseMailerLite = () => {
-      if (!formContainerRef.current) return;
-
-      formContainerRef.current.innerHTML =
-        '<div class="ml-embedded" data-form="P5BeST"></div>';
-
-      if (typeof window.ml === 'function') {
-        window.ml('account', '2382319');
-      }
-    };
-
-    const existingScript = document.getElementById('mailerlite-universal-js');
-
-    if (existingScript) {
-      initialiseMailerLite();
-      return;
-    }
-
-    window.ml = window.ml || function (...args) {
-      (window.ml.q = window.ml.q || []).push(args);
-    };
-
-    window.ml('account', '2382319');
-
-    const script = document.createElement('script');
-    script.id = 'mailerlite-universal-js';
-    script.async = true;
-    script.src = 'https://assets.mailerlite.com/js/universal.js';
-
-    script.onload = initialiseMailerLite;
-
-    document.head.appendChild(script);
+    ensureMailerLiteScript();
+    window.ml('account', ML_ACCOUNT_ID);
   }, []);
 
   return (
@@ -45,19 +34,14 @@ export default function NewsletterSignup() {
           Get your free{' '}
           <em className="italic text-[#82a396]">Boundaries Blueprint</em>
         </h2>
-
         <p className="font-[var(--font-body)] font-light text-base leading-relaxed mb-6 lg:mb-0 text-[#f5f2ed]/70">
           A practical guide to setting limits calmly and confidently, written by
           our therapists in Anchorage. Enter your email below to get instant
           access.
         </p>
       </div>
-
-      <div className="lg:order-2 flex justify-center lg:justify-end">
-        <div
-          ref={formContainerRef}
-          className="max-w-md w-full"
-        />
+      <div ref={formContainerRef} className="lg:order-2 flex justify-center lg:justify-end">
+        <div className="ml-embedded" data-form="P5BeST" />
       </div>
     </div>
   );

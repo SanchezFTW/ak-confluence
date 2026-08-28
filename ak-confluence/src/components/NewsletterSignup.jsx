@@ -3,8 +3,16 @@ import { useEffect, useRef } from 'react';
 const ML_ACCOUNT_ID = '2382319';
 const ML_SCRIPT_SRC = 'https://assets.mailerlite.com/js/universal.js';
 
+// universal.js is already loaded once via index.html, so we must NOT append a
+// second copy. When the script loads again, MailerLite re-initializes and that
+// re-init race tears down the embedded form — which is why the footer signup
+// rendered on the first visit (loader delays the render) but was empty after a
+// refresh (loader is skipped via sessionStorage, changing the timing). This
+// guard checks for the existing script by URL instead of an element id
+// (index.html's <script> tag has no id), and only loads it ourselves as a
+// fallback if it's genuinely absent from the page.
 function ensureMailerLiteScript() {
-  if (document.getElementById('mailerlite-universal-js')) return;
+  if (document.querySelector('script[src*="assets.mailerlite.com/js/universal.js"]')) return;
 
   window.ml =
     window.ml ||
@@ -24,6 +32,9 @@ export default function NewsletterSignup() {
 
   useEffect(() => {
     ensureMailerLiteScript();
+    // Idempotent: re-asserting the account nudges universal.js to (re)scan the
+    // DOM for [data-form] embeds after React mounts the footer. Harmless when
+    // already initialized with the same account.
     window.ml('account', ML_ACCOUNT_ID);
   }, []);
 

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 
 const ML_ACCOUNT_ID = '2382319';
 const ML_SCRIPT_SRC = 'https://assets.mailerlite.com/js/universal.js';
+const ML_JSONP_BASE = 'https://assets.mailerlite.com/jsonp';
 
 // universal.js is already loaded once via index.html, so we must NOT append a
 // second copy. When the script loads again, MailerLite re-initializes and that
@@ -32,10 +33,46 @@ export default function NewsletterSignup() {
 
   useEffect(() => {
     ensureMailerLiteScript();
-    // Idempotent: re-asserting the account nudges universal.js to (re)scan the
-    // DOM for [data-form] embeds after React mounts the footer. Harmless when
-    // already initialized with the same account.
+    // Nudge universal.js to pick up [data-form] embeds after React mounts.
     window.ml('account', ML_ACCOUNT_ID);
+
+    // universal.js scans the DOM for embeds exactly ONCE, during its init. If it
+    // initialized before React mounted our container, the form is never injected —
+    // and re-asserting `ml('account', ...)` after init only sets the account id, it
+    // does NOT re-scan. So if the container is still empty once universal.js is
+    // ready, re-fetch the embed using the same JSONP call universal.js makes for
+    // `data-form` embeds (idempotent: renderEmbeddedForm no-ops on a filled container).
+    const container = formContainerRef.current;
+    let cancelled = false;
+    let attempts = 0;
+
+    const renderIfEmpty = () => {
+      if (cancelled) return;
+      if (!container || container.children.length > 0) return;
+
+      if (window.ml?.fn && typeof window.ml.fn.renderEmbeddedForm === 'function') {
+        // universal.js already initialized but missed us (it scanned before mount).
+        const formId = container.getAttribute('data-form');
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = `${ML_JSONP_BASE}/${ML_ACCOUNT_ID}/forms/${formId}?callback=ml.fn.renderEmbeddedForm`;
+        document.head.appendChild(script);
+        return;
+      }
+
+      // universal.js is still booting — its init scan will find the container
+      // (we're already mounted), so this retry is just a safety net.
+      if (attempts < 20) {
+        attempts += 1;
+        setTimeout(renderIfEmpty, 250);
+      }
+    };
+
+    const timer = setTimeout(renderIfEmpty, 100);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, []);
 
   return (

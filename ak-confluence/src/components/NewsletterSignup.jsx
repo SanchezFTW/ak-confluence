@@ -1,41 +1,41 @@
-import { useEffect, useState } from 'react';
-import { CheckCircle } from '@phosphor-icons/react';
+import { useEffect, useRef } from 'react';
 
 export default function NewsletterSignup() {
-  const [submitted, setSubmitted] = useState(false);
+  const formContainerRef = useRef(null);
 
   useEffect(() => {
+    const initialiseMailerLite = () => {
+      if (!formContainerRef.current) return;
+
+      formContainerRef.current.innerHTML =
+        '<div class="ml-embedded" data-form="P5BeST"></div>';
+
+      if (typeof window.ml === 'function') {
+        window.ml('account', '2382319');
+      }
+    };
+
+    const existingScript = document.getElementById('mailerlite-universal-js');
+
+    if (existingScript) {
+      initialiseMailerLite();
+      return;
+    }
+
     window.ml = window.ml || function (...args) {
       (window.ml.q = window.ml.q || []).push(args);
     };
 
     window.ml('account', '2382319');
 
-    if (!document.getElementById('mailerlite-universal-js')) {
-      const script = document.createElement('script');
-      script.id = 'mailerlite-universal-js';
-      script.async = true;
-      script.src = 'https://assets.mailerlite.com/js/universal.js';
-      document.head.appendChild(script);
-    }
+    const script = document.createElement('script');
+    script.id = 'mailerlite-universal-js';
+    script.async = true;
+    script.src = 'https://assets.mailerlite.com/js/universal.js';
 
-    const checkForSuccess = () => {
-      const successMessage = document.querySelector(
-        '.ml-form-successBody, .ml-form-successContent, .ml-form-success'
-      );
+    script.onload = initialiseMailerLite;
 
-      if (successMessage) {
-        setSubmitted(true);
-      }
-    };
-
-    const observer = new MutationObserver(checkForSuccess);
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
-
-    return () => observer.disconnect();
+    document.head.appendChild(script);
   }, []);
 
   return (
@@ -54,23 +54,10 @@ export default function NewsletterSignup() {
       </div>
 
       <div className="lg:order-2 flex justify-center lg:justify-end">
-        {submitted ? (
-          <div className="flex items-center gap-3 bg-[#82a396]/20 border border-[#82a396]/40 rounded-full px-6 py-3.5 text-[#f5f2ed] max-w-md w-full">
-            <CheckCircle
-              size={22}
-              weight="fill"
-              className="text-[#82a396] flex-shrink-0"
-            />
-
-            <span className="font-[var(--font-body)] text-sm font-light">
-              Your Boundaries Blueprint is on its way to your inbox!
-            </span>
-          </div>
-        ) : (
-          <div className="max-w-md w-full">
-            <div className="ml-embedded" data-form="P5BeST"></div>
-          </div>
-        )}
+        <div
+          ref={formContainerRef}
+          className="max-w-md w-full"
+        />
       </div>
     </div>
   );

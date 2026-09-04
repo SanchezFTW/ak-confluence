@@ -101,7 +101,7 @@ function Hero() {
             Finding your way
           </span>
           <span className="gsap-reveal-hero font-[var(--font-heading)] text-[clamp(2rem,8vw,6.5rem)] font-normal tracking-tight leading-[1.05] block">
-            back to <span className="font-[var(--font-display)] text-[#82a396] italic" style={{ display: 'inline-block' }} ref={wordRef}>{words[wordIndex % words.length]}</span>
+            to <span className="font-[var(--font-display)] text-[#82a396] italic" style={{ display: 'inline-block' }} ref={wordRef}>{words[wordIndex % words.length]}</span>
           </span>
         </h1>
 
@@ -124,7 +124,7 @@ function Hero() {
 const DEFAULT_SERVICES = [
   { id: 'd1', title: 'Individual Therapy', desc: 'One-on-one sessions tailored to your unique story.', type: 'wide', image: null },
   { id: 'd2', title: 'Couples Counseling', desc: 'Rebuilding connection together.', type: 'tall', image: null },
-  { id: 'd3', title: 'Trauma Recovery', desc: 'From surviving toward genuine healing.', type: 'dark', image: null },
+  { id: 'd3', title: 'Trauma Recovery', desc: "For experiences that are over, but don't always feel over.", type: 'dark', image: null },
   { id: 'd4', title: 'Workshops', desc: 'Learn, grow, and connect in a group setting.', type: 'light', image: null },
 ];
 
@@ -452,7 +452,7 @@ function Reviews() {
             What providers <em className="text-[#82a396] italic">are saying</em>
           </h2>
           <p className="rv-heading font-[var(--font-body)] text-[#a38d7a] font-light text-lg leading-relaxed">
-            Endorsements from fellow alaskan clinicians who refer their patients to our team.
+            Endorsements from fellow Alaskan providers who refer their patients to our team.
           </p>
         </div>
 

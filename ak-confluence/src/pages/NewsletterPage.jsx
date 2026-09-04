@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MagnifyingGlass } from '@phosphor-icons/react';
+import { MagnifyingGlass, CheckCircle } from '@phosphor-icons/react';
 import { getPosts } from '../lib/sanity';
 import { usePageReveal } from '../lib/usePageReveal';
 
@@ -56,7 +56,14 @@ export default function NewsletterPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeSubject, setActiveSubject] = useState('');
+  const [submitted, setSubmitted] = useState(false);
   const revealRef = usePageReveal();
+
+  function handleSubmit() {
+    // Defer the success swap so the form isn't unmounted mid-submit — unmounting
+    // a form synchronously inside onSubmit can abort the iframe POST.
+    setTimeout(() => setSubmitted(true), 500);
+  }
 
   useEffect(() => {
     let active = true;
@@ -82,18 +89,78 @@ export default function NewsletterPage() {
 
   return (
     <>
+      {/* Hidden iframe absorbs MailerLite JSON response for the hero signup */}
+      <iframe name="ml-newsletter-page-frame" title="" style={{ display: 'none' }} />
+
       {/* Hero */}
       <section ref={revealRef} className="pt-32 pb-12 lg:pt-40 lg:pb-16 px-6 lg:px-20 bg-[#e8e4dc]">
-        <div className="max-w-4xl mx-auto">
-          <p className="reveal-up text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> From the Confluence Couch
-          </p>
-          <h1 className="reveal-up font-[var(--font-display)] text-[clamp(1.8rem,5vw,4.5rem)] font-light text-[#383838] leading-[1.05] mb-6">
-            Real talk from <em className="text-[#82a396] italic">our counselors</em>
-          </h1>
-          <p className="reveal-up font-[var(--font-body)] text-[#a38d7a] font-light text-base lg:text-lg leading-relaxed max-w-2xl">
-            Straightforward advice, practical tips, and real-life strategies for everyday life, from the team at akConfluence.
-          </p>
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-start">
+          <div className="max-w-2xl">
+            <p className="reveal-up text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> From the Confluence Couch
+            </p>
+            <h1 className="reveal-up font-[var(--font-display)] text-[clamp(1.8rem,5vw,4.5rem)] font-light text-[#383838] leading-[1.05] mb-6">
+              Real talk from <em className="text-[#82a396] italic">our counselors</em>
+            </h1>
+            <p className="reveal-up font-[var(--font-body)] text-[#a38d7a] font-light text-base lg:text-lg leading-relaxed">
+              Straightforward advice, practical tips, and real-life strategies for everyday life, from the team at akConfluence.
+            </p>
+          </div>
+
+          {/* Newsletter signup card */}
+          <div className="reveal-up w-full lg:w-[340px] bg-white border border-[#82a396]/20 rounded-2xl p-6 shadow-[0_8px_30px_-12px_rgba(56,56,56,0.12)]">
+            <p className="font-[var(--font-mono)] text-[9px] tracking-[0.25em] uppercase text-[#82a396] font-medium mb-3 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Monthly Newsletter
+            </p>
+            <h2 className="font-[var(--font-heading)] text-[#383838] text-xl mb-1">Join our newsletter</h2>
+            <p className="font-[var(--font-body)] text-[#a38d7a] text-sm font-light leading-relaxed mb-5">
+              Notes on boundaries &amp; anxiety. 1 email a month.
+            </p>
+
+            {submitted ? (
+              <div className="flex items-center gap-2 bg-[#82a396]/15 border border-[#82a396]/30 rounded-xl p-3 text-[#383838]">
+                <CheckCircle size={20} weight="fill" className="text-[#82a396] flex-shrink-0" />
+                <span className="font-[var(--font-body)] text-xs font-normal">
+                  You're subscribed! Thanks for joining.
+                </span>
+              </div>
+            ) : (
+              <form
+                action="https://assets.mailerlite.com/jsonp/2382319/forms/188567234692515097/subscribe"
+                method="post"
+                target="ml-newsletter-page-frame"
+                onSubmit={handleSubmit}
+                className="flex flex-col gap-3"
+              >
+                <input type="hidden" name="ml-submit" value="1" />
+                <input type="hidden" name="anticsrf" value="true" />
+                <input
+                  type="email"
+                  name="fields[email]"
+                  placeholder="Enter your email..."
+                  autoComplete="email"
+                  required
+                  className="w-full bg-[#f5f2ed] border border-[#82a396]/30 text-[#383838] placeholder-[#a38d7a] text-sm font-[var(--font-body)] rounded-full px-4 py-2.5 focus:outline-none focus:border-[#82a396] transition-colors"
+                />
+                <label className="flex items-start gap-2.5 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    required
+                    className="mt-0.5 flex-shrink-0 w-4 h-4 rounded accent-[#82a396] cursor-pointer"
+                  />
+                  <span className="font-[var(--font-body)] text-xs text-[#a38d7a] leading-relaxed group-hover:text-[#383838] transition-colors">
+                    Opt in to receive news and updates.
+                  </span>
+                </label>
+                <button
+                  type="submit"
+                  className="w-full bg-[#82a396] text-white text-[10px] tracking-[0.18em] uppercase font-medium font-[var(--font-mono)] px-5 py-2.5 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer shadow-sm hover:shadow"
+                >
+                  Subscribe Free
+                </button>
+              </form>
+            )}
+          </div>
         </div>
       </section>
 

@@ -3,7 +3,7 @@ import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { List, X, FacebookLogo, InstagramLogo } from '@phosphor-icons/react';
+import { List, X, FacebookLogo, InstagramLogo, CaretDown } from '@phosphor-icons/react';
 import { AnimatedLogo } from './components/brand/AnimatedLogo';
 import NewsletterSignup from './components/NewsletterSignup';
 import NewsletterSticky from './components/NewsletterSticky';
@@ -12,6 +12,7 @@ import ContactPage from './pages/ContactPage';
 import NewsletterPage from './pages/NewsletterPage';
 import NewsletterPostPage from './pages/NewsletterPostPage';
 import BoundariesBlueprintPage from './pages/BoundariesBlueprintPage';
+import WhatTherapyPage from './pages/WhatTherapyPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -87,6 +88,7 @@ function MobileNav({ isOpen, onClose }) {
 
   const navLinks = [
     { label: 'Services', href: '/#services' },
+    { label: 'What therapy might I need', to: '/what-therapy-might-i-need' },
     { label: 'Counselors', href: '/#counselors' },
     { label: 'Newsletter', to: '/newsletter' },
     { label: 'Contact', to: '/contact' },
@@ -320,6 +322,7 @@ function App() {
 
   const desktopNavLinks = [
     { label: 'Services', href: '/#services' },
+    { label: 'What therapy might I need', to: '/what-therapy-might-i-need', caret: true },
     { label: 'Counselors', href: '/#counselors' },
     { label: 'Newsletter', to: '/newsletter' },
     { label: 'Contact', to: '/contact' },
@@ -350,17 +353,23 @@ function App() {
             </span>
           </Link>
           <div className="hidden md:flex md:gap-4 lg:gap-8 items-center">
-            {desktopNavLinks.map(t =>
-              t.to ? (
-                <Link key={t.label} to={t.to} className={`text-[12px] tracking-widest uppercase font-medium transition-colors font-[var(--font-heading)] ${
-                  navDark ? 'text-[#f5f2ed] hover:text-[#82a396]' : 'text-[#82a396] hover:text-[#dd9e6f]'
-                }`}>{t.label}</Link>
+            {desktopNavLinks.map((t) => {
+              const isLong = t.label === 'What therapy might I need';
+              const className = `inline-flex items-center gap-1 ${isLong ? 'text-[11px] tracking-[0.08em]' : 'text-[12px] tracking-widest'} uppercase font-medium transition-colors font-[var(--font-heading)] ${
+                navDark ? 'text-[#f5f2ed] hover:text-[#82a396]' : 'text-[#82a396] hover:text-[#dd9e6f]'
+              }`;
+              const content = (
+                <>
+                  {t.label}
+                  {t.caret && <CaretDown size={10} weight="bold" />}
+                </>
+              );
+              return t.to ? (
+                <Link key={t.label} to={t.to} className={className}>{content}</Link>
               ) : (
-                <a key={t.label} href={t.href} className={`text-[12px] tracking-widest uppercase font-medium transition-colors font-[var(--font-heading)] ${
-                  navDark ? 'text-[#f5f2ed] hover:text-[#82a396]' : 'text-[#82a396] hover:text-[#dd9e6f]'
-                }`}>{t.label}</a>
-              )
-            )}
+                <a key={t.label} href={t.href} className={className}>{content}</a>
+              );
+            })}
             <a href={INTAKE_URL} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ padding: '8px 24px' }}>Book now</a>
           </div>
 
@@ -376,6 +385,7 @@ function App() {
 
         <main id="main-content">
           <Routes>
+            <Route path="/what-therapy-might-i-need" element={<WhatTherapyPage />} />
             <Route path="/" element={<Home />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/newsletter" element={<NewsletterPage />} />

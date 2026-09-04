@@ -29,6 +29,7 @@ const staticRoutes = [
   { path: '/', priority: '1.0', changefreq: 'weekly' },
   { path: '/contact', priority: '0.8', changefreq: 'monthly' },
   { path: '/newsletter', priority: '0.8', changefreq: 'weekly' },
+  { path: '/what-therapy-might-i-need', priority: '0.8', changefreq: 'monthly' },
 ];
 
 const urls = [

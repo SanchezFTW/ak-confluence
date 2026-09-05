@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ThumbsUp } from '@phosphor-icons/react';
+import { ArrowRight, ThumbsUp } from '@phosphor-icons/react';
 import { AnimatedLogo } from '../components/brand/AnimatedLogo';
 import CounselorGrid from '../components/CounselorGrid';
 import { getServices, getSiteSettings, urlFor } from '../lib/sanity';
@@ -515,6 +516,47 @@ function Reviews() {
 }
 
 //
+// ─────────────── WHAT THERAPY BANNER ───────────────
+//
+function WhatTherapyBanner() {
+  const containerRef = useRef(null);
+
+  useGSAP(() => {
+    gsap.fromTo('.wti-banner',
+      { y: 40, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1.1,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: containerRef.current, start: 'top 80%' }
+      }
+    );
+  }, { scope: containerRef });
+
+  return (
+    <section ref={containerRef} className="px-6 lg:px-20 pb-16 lg:pb-24 bg-[#f5f2ed]">
+      <div className="max-w-[1100px] mx-auto">
+        <Link
+          to="/what-therapy-might-i-need"
+          className="wti-banner group block bg-[#82a396] rounded-3xl px-8 py-12 lg:px-16 lg:py-16 text-center shadow-[0_8px_30px_-12px_rgba(56,56,56,0.18)] transition-transform duration-300 hover:scale-[1.01]"
+        >
+          <p className="font-[var(--font-body)] text-[#f5f2ed] font-light text-base lg:text-lg leading-relaxed max-w-2xl mx-auto">
+            You do not need the perfect explanation for what's wrong before you come in. Sometimes the first thing we do together is simply figure out:
+          </p>
+          <p className="mt-6 font-[var(--font-display)] italic text-[#f5f2ed] text-[clamp(1.75rem,4vw,3rem)] leading-tight">
+            What are we working with?
+          </p>
+          <span className="mt-8 inline-flex items-center gap-2 bg-white text-[#383838] rounded-full px-7 py-3.5 text-[10px] tracking-[0.2em] uppercase font-medium font-[var(--font-mono)] shadow-sm transition-all duration-300 group-hover:gap-3">
+            Click me <ArrowRight size={14} weight="bold" />
+          </span>
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+//
 // ─────────────── HOME PAGE ───────────────
 //
 export default function Home() {
@@ -522,6 +564,7 @@ export default function Home() {
     <>
       <Hero />
       <Capabilities />
+      <WhatTherapyBanner />
       <CounselorGrid />
       <Reviews />
       <FAQ />

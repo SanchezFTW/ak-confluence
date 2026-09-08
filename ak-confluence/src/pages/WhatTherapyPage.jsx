@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ArrowRight } from '@phosphor-icons/react';
+import { ArrowRight } from '@phosphor-icons/react';
 import { usePageReveal } from '../lib/usePageReveal';
 
 //
@@ -85,27 +85,11 @@ export default function WhatTherapyPage() {
 
   return (
     <div ref={revealRef} className="min-h-screen bg-[#f5f2ed]">
-      {/* Minimal header */}
-      <section className="pt-28 pb-10 lg:pt-36 lg:pb-14 px-6 lg:px-20 bg-[#e8e4dc]">
-        <div className="max-w-[1100px] mx-auto">
-          <Link
-            to="/#counselors"
-            className="reveal-up inline-flex items-center gap-2 text-[#82a396] text-[11px] tracking-[0.2em] uppercase font-medium font-[var(--font-mono)] mb-6 hover:text-[#6b8f80] transition-colors"
-          >
-            <ArrowLeft size={14} weight="bold" /> Back to counselors
-          </Link>
-
-          <h1 className="reveal-up font-[var(--font-display)] text-[clamp(1.75rem,4.5vw,3.25rem)] font-light text-[#383838] leading-[1.05]">
-            What therapy <em className="text-[#82a396] italic">might I need</em>
-          </h1>
-        </div>
-      </section>
-
       {/* Find the words that fit */}
       <section className="py-14 lg:py-20 px-6 lg:px-20 bg-white">
         <div className="max-w-[1100px] mx-auto">
           <p className="reveal-up text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> What we work with
+            <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Back to counselors
           </p>
           <h2 className="reveal-up font-[var(--font-display)] text-[clamp(2rem,4.5vw,3.5rem)] font-light text-[#383838] leading-[1.05] mb-12 max-w-2xl">
             Find the words <em className="text-[#82a396] italic">that fit</em>

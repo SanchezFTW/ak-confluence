@@ -86,7 +86,7 @@ export default function WhatTherapyPage() {
   return (
     <div ref={revealRef} className="min-h-screen bg-[#f5f2ed]">
       {/* Find the words that fit */}
-      <section className="py-14 lg:py-20 px-6 lg:px-20 bg-white">
+      <section className="pt-32 lg:pt-40 pb-14 lg:pb-20 px-6 lg:px-20 bg-white">
         <div className="max-w-[1100px] mx-auto">
           <p className="reveal-up text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Back to counselors

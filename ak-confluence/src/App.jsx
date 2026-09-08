@@ -88,7 +88,6 @@ function MobileNav({ isOpen, onClose }) {
 
   const navLinks = [
     { label: 'Services', href: '/#services' },
-    { label: 'What therapy might I need', to: '/what-therapy-might-i-need' },
     { label: 'Counselors', href: '/#counselors' },
     { label: 'Newsletter', to: '/newsletter' },
     { label: 'Contact', to: '/contact' },
@@ -321,7 +320,6 @@ function App() {
   }, { dependencies: [loading] });
 
   const desktopNavLinks = [
-    { label: 'What therapy might I need', to: '/what-therapy-might-i-need', caret: true },
     { label: 'Services', href: '/#services' },
     { label: 'Counselors', href: '/#counselors' },
     { label: 'Newsletter', to: '/newsletter' },
@@ -355,8 +353,7 @@ function App() {
           <div className="hidden md:flex md:gap-4 lg:gap-8 items-center">
             {desktopNavLinks.map((t) => {
               const isLong = t.label === 'What therapy might I need';
-              const className = `inline-flex items-center gap-1 ${isLong ? 'text-[11px] tracking-[0.08em]' : 'text-[12px] tracking-widest'} uppercase font-medium transition-colors font-[var(--font-heading)] ${
-                navDark ? 'text-[#f5f2ed] hover:text-[#82a396]' : 'text-[#82a396] hover:text-[#dd9e6f]'
+              const className = `inline-flex items-center gap-1 text-[12px] tracking-widest
               }`;
               const content = (
                 <>

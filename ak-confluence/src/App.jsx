@@ -352,8 +352,8 @@ function App() {
           </Link>
           <div className="hidden md:flex md:gap-4 lg:gap-8 items-center">
             {desktopNavLinks.map((t) => {
-              const isLong = t.label === 'What therapy might I need';
-              const className = `inline-flex items-center gap-1 text-[12px] tracking-widest
+              const className = `inline-flex items-center gap-1 text-[12px] tracking-widest uppercase font-medium transition-colors font-[var(--font-heading)] ${
+                navDark ? 'text-[#f5f2ed] hover:text-[#82a396]' : 'text-[#82a396] hover:text-[#dd9e6f]'
               }`;
               const content = (
                 <>

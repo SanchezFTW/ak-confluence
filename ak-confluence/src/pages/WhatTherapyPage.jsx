@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight } from '@phosphor-icons/react';
+import { ArrowLeft, ArrowRight } from '@phosphor-icons/react';
 import { usePageReveal } from '../lib/usePageReveal';
 
 //
@@ -88,9 +88,12 @@ export default function WhatTherapyPage() {
       {/* Find the words that fit */}
       <section className="pt-32 lg:pt-40 pb-14 lg:pb-20 px-6 lg:px-20 bg-white">
         <div className="max-w-[1100px] mx-auto">
-          <p className="reveal-up text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Back to counselors
-          </p>
+          <Link
+            to="/#counselors"
+            className="reveal-up text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-6 inline-flex items-center gap-2 font-[var(--font-mono)] hover:opacity-70 transition-opacity duration-200"
+          >
+            <ArrowLeft size={14} weight="bold" /> Back to counselors
+          </Link>
           <h2 className="reveal-up font-[var(--font-display)] text-[clamp(2rem,4.5vw,3.5rem)] font-light text-[#383838] leading-[1.05] mb-12 max-w-2xl">
             Find the words <em className="text-[#82a396] italic">that fit</em>
           </h2>

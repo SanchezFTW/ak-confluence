@@ -129,16 +129,11 @@ const DEFAULT_SERVICES = [
   { id: 'd4', title: 'Workshops', desc: 'Learn, grow, and connect in a group setting.', type: 'light', image: null },
 ];
 
-// TEMP (local preview only): keep the hardcoded fallback above so the new
-// Trauma Recovery copy shows without touching Sanity. Remove before commit.
-const PREVIEW_LOCAL_SERVICES = true;
-
 function Capabilities() {
   const containerRef = useRef(null);
   const [services, setServices] = useState(DEFAULT_SERVICES);
 
   useEffect(() => {
-    if (PREVIEW_LOCAL_SERVICES) return;
     let active = true;
     getServices()
       .then((data) => {

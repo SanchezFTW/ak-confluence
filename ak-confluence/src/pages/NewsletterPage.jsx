@@ -114,7 +114,7 @@ export default function NewsletterPage() {
             </p>
             <h2 className="font-[var(--font-heading)] text-[#383838] text-xl mb-1">Join our newsletter</h2>
             <p className="font-[var(--font-body)] text-[#a38d7a] text-sm font-light leading-relaxed mb-5">
-              Notes on boundaries &amp; anxiety. 1 email a month.
+              Notes on boundaries, anxiety, and more.
             </p>
 
             {submitted ? (
@@ -156,7 +156,7 @@ export default function NewsletterPage() {
                   type="submit"
                   className="w-full bg-[#82a396] text-white text-[10px] tracking-[0.18em] uppercase font-medium font-[var(--font-mono)] px-5 py-2.5 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all cursor-pointer shadow-sm hover:shadow"
                 >
-                  Subscribe Free
+                  Sign Up
                 </button>
               </form>
             )}

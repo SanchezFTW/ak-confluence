@@ -183,7 +183,7 @@ function Footer() {
               <h4 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-4">Contact</h4>
               <div className="flex flex-col gap-2 font-[var(--font-body)] text-[#f5f2ed]/50 text-sm">
                 <a href="mailto:info@akconfluence.com" className="hover:text-[#f5f2ed] transition-colors">info@akconfluence.com</a>
-                <a href="tel:9073134433" className="hover:text-[#f5f2ed] transition-colors">907-313-4433</a>
+                <a href="tel:9073134433" className="hover:text-[#f5f2ed] transition-colors">Call or Text: (907) 313-4433</a>
               </div>
             </div>
 
@@ -191,7 +191,7 @@ function Footer() {
             <div className="md:col-span-2">
               <h4 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-4">Hours</h4>
               <div className="flex flex-col gap-2 font-[var(--font-body)] text-[#f5f2ed]/50 text-sm">
-                <span>Mon–Fri: 7am–7pm</span>
+                <span>Mon–Fri: 8am–6pm</span>
                 <span>Sat: 8am–3pm</span>
               </div>
             </div>

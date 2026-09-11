@@ -13,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger);
 const DEFAULT_WORDS = ['Clarity.', 'Connection.', 'Wholeness.'];
 const DEFAULT_HERO_IMAGE = 'https://picsum.photos/seed/confluence-forest/2560/1440';
 const DEFAULT_HERO_SUBTITLE =
-  'A collaborative, empowering practice that meets you where you are and guides you to where you want to be.';
+  'Down to earth, and collaborative - supportive enough to sit with you, honest enough to help you actually move forward.';
 
 //
 // ─────────────── HERO SECTION ───────────────

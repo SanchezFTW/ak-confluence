@@ -3,7 +3,7 @@ import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { List, X, FacebookLogo, InstagramLogo } from '@phosphor-icons/react';
+import { List, X, FacebookLogo, InstagramLogo, CaretDown } from '@phosphor-icons/react';
 import { AnimatedLogo } from './components/brand/AnimatedLogo';
 import NewsletterSignup from './components/NewsletterSignup';
 import NewsletterSticky from './components/NewsletterSticky';
@@ -12,6 +12,7 @@ import ContactPage from './pages/ContactPage';
 import NewsletterPage from './pages/NewsletterPage';
 import NewsletterPostPage from './pages/NewsletterPostPage';
 import BoundariesBlueprintPage from './pages/BoundariesBlueprintPage';
+import WhatTherapyPage from './pages/WhatTherapyPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -182,7 +183,7 @@ function Footer() {
               <h4 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-4">Contact</h4>
               <div className="flex flex-col gap-2 font-[var(--font-body)] text-[#f5f2ed]/50 text-sm">
                 <a href="mailto:info@akconfluence.com" className="hover:text-[#f5f2ed] transition-colors">info@akconfluence.com</a>
-                <a href="tel:9073134433" className="hover:text-[#f5f2ed] transition-colors">907-313-4433</a>
+                <a href="tel:9073134433" className="hover:text-[#f5f2ed] transition-colors">Call or Text: (907) 313-4433</a>
               </div>
             </div>
 
@@ -190,7 +191,7 @@ function Footer() {
             <div className="md:col-span-2">
               <h4 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-4">Hours</h4>
               <div className="flex flex-col gap-2 font-[var(--font-body)] text-[#f5f2ed]/50 text-sm">
-                <span>Mon–Fri: 7am–7pm</span>
+                <span>Mon–Fri: 8am–6pm</span>
                 <span>Sat: 8am–3pm</span>
               </div>
             </div>
@@ -350,17 +351,22 @@ function App() {
             </span>
           </Link>
           <div className="hidden md:flex md:gap-4 lg:gap-8 items-center">
-            {desktopNavLinks.map(t =>
-              t.to ? (
-                <Link key={t.label} to={t.to} className={`text-[12px] tracking-widest uppercase font-medium transition-colors font-[var(--font-heading)] ${
-                  navDark ? 'text-[#f5f2ed] hover:text-[#82a396]' : 'text-[#82a396] hover:text-[#dd9e6f]'
-                }`}>{t.label}</Link>
+            {desktopNavLinks.map((t) => {
+              const className = `inline-flex items-center gap-1 text-[12px] tracking-widest uppercase font-medium transition-colors font-[var(--font-heading)] ${
+                navDark ? 'text-[#f5f2ed] hover:text-[#82a396]' : 'text-[#82a396] hover:text-[#dd9e6f]'
+              }`;
+              const content = (
+                <>
+                  {t.label}
+                  {t.caret && <CaretDown size={10} weight="bold" />}
+                </>
+              );
+              return t.to ? (
+                <Link key={t.label} to={t.to} className={className}>{content}</Link>
               ) : (
-                <a key={t.label} href={t.href} className={`text-[12px] tracking-widest uppercase font-medium transition-colors font-[var(--font-heading)] ${
-                  navDark ? 'text-[#f5f2ed] hover:text-[#82a396]' : 'text-[#82a396] hover:text-[#dd9e6f]'
-                }`}>{t.label}</a>
-              )
-            )}
+                <a key={t.label} href={t.href} className={className}>{content}</a>
+              );
+            })}
             <a href={INTAKE_URL} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ padding: '8px 24px' }}>Book now</a>
           </div>
 
@@ -376,6 +382,7 @@ function App() {
 
         <main id="main-content">
           <Routes>
+            <Route path="/what-therapy-might-i-need" element={<WhatTherapyPage />} />
             <Route path="/" element={<Home />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/newsletter" element={<NewsletterPage />} />

@@ -149,13 +149,13 @@ export default function ContactPage() {
                 <h3 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-2">Contact</h3>
                 <div className="flex flex-col gap-1 font-[var(--font-body)] text-[#383838] text-sm">
                   <a href="mailto:info@akconfluence.com" className="hover:text-[#82a396] transition-colors">info@akconfluence.com</a>
-                  <a href="tel:9073134433" className="hover:text-[#82a396] transition-colors">907-313-4433</a>
+                  <a href="tel:9073134433" className="hover:text-[#82a396] transition-colors">Call or Text: (907) 313-4433</a>
                 </div>
               </div>
               <div>
                 <h3 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-2">Hours</h3>
                 <div className="flex flex-col gap-1 font-[var(--font-body)] text-[#a38d7a] text-sm font-light">
-                  <span>Mon–Fri: 7am–7pm</span>
+                  <span>Mon–Fri: 8am–6pm</span>
                   <span>Sat: 8am–3pm</span>
                 </div>
               </div>

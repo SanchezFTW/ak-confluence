@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { getCounselors, urlFor } from "../lib/sanity";
 
 const FILTER_SPECIALTIES = [
@@ -17,6 +17,7 @@ export default function CounselorGrid() {
   const [activeFilters, setActiveFilters] = useState([]);
   const [expandedId, setExpandedId] = useState(null);
   const [colCount, setColCount] = useState(() => window.innerWidth >= 768 ? 3 : 2);
+  const [searchParams] = useSearchParams();
   const detailRef = useRef(null);
 
   useEffect(() => {
@@ -34,6 +35,15 @@ export default function CounselorGrid() {
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
   }, []);
+
+  // Deep-link support: ?filter=Anxiety (from "What therapy might I need")
+  // pre-selects that filter pill when arriving at the counselors section.
+  useEffect(() => {
+    const filter = searchParams.get('filter');
+    if (filter && FILTER_SPECIALTIES.includes(filter)) {
+      setActiveFilters([filter]);
+    }
+  }, [searchParams]);
 
   function toggleFilter(specialty) {
     if (specialty === "All") {

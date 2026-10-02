@@ -156,7 +156,7 @@ export default function ContactPage() {
                 <h3 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-2">Hours</h3>
                 <div className="flex flex-col gap-1 font-[var(--font-body)] text-[#a38d7a] text-sm font-light">
                   <span>Mon–Fri: 8am–6pm</span>
-                  <span>Sat: 8am–3pm</span>
+                  <span>Sat: 8am–2pm</span>
                 </div>
               </div>
               <div>

@@ -93,7 +93,7 @@ CSS custom properties for fonts: `var(--font-heading)`, `var(--font-body)`, `var
 - Email: `info@akconfluence.com`
 - Phone: `907-313-4433` (render as `<a href="tel:9073134433">`)
 - Location: Anchorage, Alaska
-- Hours: Mon–Fri 8am–6pm, Sat 8am–3pm
+- Hours: Mon–Fri 8am–6pm, Sat 8am–2pm
 
 ## Counselors
 

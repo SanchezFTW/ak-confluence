@@ -192,7 +192,7 @@ function Footer() {
               <h4 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-4">Hours</h4>
               <div className="flex flex-col gap-2 font-[var(--font-body)] text-[#f5f2ed]/50 text-sm">
                 <span>Mon–Fri: 8am–6pm</span>
-                <span>Sat: 8am–3pm</span>
+                <span>Sat: 8am–2pm</span>
               </div>
             </div>
           </div>

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MagnifyingGlass, CheckCircle } from '@phosphor-icons/react';
-import { getPosts } from '../lib/sanity';
+import { getPosts, getSiteSettings, urlFor } from '../lib/sanity';
 import { usePageReveal } from '../lib/usePageReveal';
+import {usePageMetadata} from '../lib/usePageMetadata';
 
 const SUBJECT_FILTERS = [
   'Relationships',
@@ -23,15 +24,19 @@ function formatDate(dateStr) {
 }
 
 function PostCard({ post }) {
+  const coverImage = urlFor(post.coverImage)?.width(720).height(420).fit('crop').auto('format').url();
   return (
     <Link
       to={`/newsletter/${post.slug}`}
-      className="group flex flex-col bg-white border border-[#82a396]/15 rounded-2xl p-6 hover:border-[#82a396]/40 hover:shadow-[0_4px_24px_-8px_rgba(130,163,150,0.18)] transition-all duration-300"
+      className="group flex flex-col bg-white border border-[#82a396]/15 rounded-2xl overflow-hidden hover:border-[#82a396]/40 hover:shadow-[0_4px_24px_-8px_rgba(130,163,150,0.18)] transition-all duration-300"
     >
+      {coverImage && <img src={coverImage} alt={post.coverImage?.decorative ? '' : post.coverImage?.alt || post.title} className="w-full aspect-[12/7] object-cover" loading="lazy" />}
+      <div className="p-6 flex flex-col flex-1">
       <div className="flex items-center gap-2 mb-4">
         <span className="font-[var(--font-mono)] text-[9px] tracking-[0.3em] uppercase text-[#82a396]">
           {formatDate(post.date)}
         </span>
+        {post.featured && <span className="font-[var(--font-mono)] text-[9px] tracking-[0.2em] uppercase text-[#a38d7a]">Featured</span>}
       </div>
       <h2 className="font-[var(--font-display)] text-[1.25rem] font-light text-[#383838] leading-[1.2] mb-3 group-hover:text-[#82a396] transition-colors duration-200">
         {post.title}
@@ -47,6 +52,7 @@ function PostCard({ post }) {
           Read →
         </span>
       </div>
+      </div>
     </Link>
   );
 }
@@ -57,7 +63,9 @@ export default function NewsletterPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeSubject, setActiveSubject] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [settings, setSettings] = useState(null);
   const revealRef = usePageReveal();
+  usePageMetadata(null, 'Newsletter | AK Confluence', settings?.defaultSeo?.description);
 
   function handleSubmit() {
     // Defer the success swap so the form isn't unmounted mid-submit — unmounting
@@ -74,18 +82,26 @@ export default function NewsletterPage() {
     return () => { active = false; };
   }, []);
 
+  useEffect(() => {
+    let active = true;
+    getSiteSettings().then((data) => { if (active) setSettings(data); }).catch((error) => console.error('Failed to load site settings', error));
+    return () => { active = false; };
+  }, []);
+
   const sorted = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
 
   const filtered = sorted.filter((post) => {
-    const tags = post.tags ?? [];
+    const tags = [...(post.tags ?? []), ...(post.categories ?? [])];
     const matchesSubject = !activeSubject || tags.includes(activeSubject);
     const q = searchQuery.toLowerCase();
     const matchesSearch =
       !q ||
       post.title.toLowerCase().includes(q) ||
-      (post.excerpt ?? '').toLowerCase().includes(q);
+      (post.excerpt ?? '').toLowerCase().includes(q) ||
+      tags.some((tag) => tag.toLowerCase().includes(q));
     return matchesSubject && matchesSearch;
   });
+  const subjectFilters = [...new Set([...SUBJECT_FILTERS, ...posts.flatMap((post) => post.categories || [])])];
 
   return (
     <>
@@ -112,16 +128,16 @@ export default function NewsletterPage() {
             <p className="font-[var(--font-mono)] text-[9px] tracking-[0.25em] uppercase text-[#82a396] font-medium mb-3 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Monthly Newsletter
             </p>
-            <h2 className="font-[var(--font-heading)] text-[#383838] text-xl mb-1">Join our newsletter</h2>
+            <h2 className="font-[var(--font-heading)] text-[#383838] text-xl mb-1">{settings?.newsletterHeading || 'Join our newsletter'}</h2>
             <p className="font-[var(--font-body)] text-[#a38d7a] text-sm font-light leading-relaxed mb-5">
-              Notes on boundaries, anxiety, and more.
+              {settings?.newsletterCopy || 'Notes on boundaries, anxiety, and more.'}
             </p>
 
             {submitted ? (
               <div className="flex items-center gap-2 bg-[#82a396]/15 border border-[#82a396]/30 rounded-xl p-3 text-[#383838]">
                 <CheckCircle size={20} weight="fill" className="text-[#82a396] flex-shrink-0" />
                 <span className="font-[var(--font-body)] text-xs font-normal">
-                  You're subscribed! Thanks for joining.
+                  {settings?.newsletterConfirmation || "You're subscribed! Thanks for joining."}
                 </span>
               </div>
             ) : (
@@ -197,7 +213,7 @@ export default function NewsletterPage() {
               >
                 All topics
               </button>
-              {SUBJECT_FILTERS.map((subject) => (
+              {subjectFilters.map((subject) => (
                 <button
                   key={subject}
                   onClick={() => setActiveSubject(activeSubject === subject ? '' : subject)}

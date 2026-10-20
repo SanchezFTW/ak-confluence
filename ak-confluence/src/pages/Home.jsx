@@ -6,7 +6,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight, ThumbsUp } from '@phosphor-icons/react';
 import { AnimatedLogo } from '../components/brand/AnimatedLogo';
 import CounselorGrid from '../components/CounselorGrid';
-import { getServices, getSiteSettings, urlFor } from '../lib/sanity';
+import { getHomePage, getServices, getSiteSettings, urlFor } from '../lib/sanity';
+import PageSections from '../components/PageSections';
+import {getFaqs, getProviderEndorsements} from '../lib/sanity';
+import {PortableText} from '../lib/portableText';
+import {usePageMetadata} from '../lib/usePageMetadata';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -137,8 +141,8 @@ function Capabilities() {
     let active = true;
     getServices()
       .then((data) => {
-        if (active && data?.length) {
-          setServices(data.map((s) => ({ ...s, type: s.layout })));
+        if (active && data?.configured) {
+          setServices((data.items || []).map((s) => ({ ...s, type: s.layout })));
         }
       })
       .catch((err) => console.error('Failed to load services', err));
@@ -224,8 +228,10 @@ function Capabilities() {
             // With a photo, text sits on a dark overlay so it stays legible.
             const onPhoto = Boolean(imgUrl);
             const cardId = s.id || s.title;
+            const Card = s.slug ? Link : 'div';
             return (
-            <div
+            <Card
+              {...(s.slug ? {to: `/services/${s.slug}`} : {})}
               key={cardId}
               className={`bento-item group relative overflow-hidden rounded-2xl flex flex-col justify-between p-5 md:p-8 transition-transform duration-500 hover:scale-[1.02] ${bentoTypeStyles[s.type]}`}
             >
@@ -233,7 +239,7 @@ function Capabilities() {
                 <>
                   <img
                     src={imgUrl}
-                    alt={s.title}
+                    alt={s.image?.decorative ? '' : s.image?.alt || s.title}
                     className="absolute inset-0 w-full h-full object-cover"
                     loading="lazy"
                   />
@@ -245,7 +251,7 @@ function Capabilities() {
                 <h3 className={`font-[var(--font-heading)] text-2xl mb-1 ${onPhoto || s.type === 'dark' ? 'text-[#f5f2ed]' : 'text-[#383838]'}`}>{s.title}</h3>
                 <p className={`text-sm font-light font-[var(--font-body)] transition-all duration-500 ease-out overflow-hidden opacity-100 max-h-40 md:opacity-0 md:max-h-0 md:group-hover:opacity-100 md:group-hover:max-h-40 ${onPhoto ? 'text-[#f5f2ed]/80' : s.type === 'dark' ? 'text-[#f5f2ed]/60' : 'text-[#a38d7a]'}`}>{s.desc}</p>
               </div>
-            </div>
+            </Card>
             );
           })}
         </div>
@@ -323,9 +329,9 @@ function FaqItem({ item, isOpen, onToggle }) {
           opacity: isOpen ? 1 : 0,
         }}
       >
-        <p className="font-[var(--font-body)] text-[#a38d7a] font-light text-[15px] leading-relaxed pb-6 pr-12">
-          {item.answer}
-        </p>
+        <div className="font-[var(--font-body)] text-[#a38d7a] font-light text-[15px] leading-relaxed pb-6 pr-12">
+          {Array.isArray(item.answer) ? <PortableText value={item.answer} /> : item.answer}
+        </div>
       </div>
     </div>
   );
@@ -334,10 +340,19 @@ function FaqItem({ item, isOpen, onToggle }) {
 function FAQ() {
   const containerRef = useRef(null);
   const [openIndex, setOpenIndex] = useState(null);
+  const [items, setItems] = useState(FAQ_DATA);
 
-  const midpoint = Math.ceil(FAQ_DATA.length / 2);
-  const leftColumn = FAQ_DATA.slice(0, midpoint);
-  const rightColumn = FAQ_DATA.slice(midpoint);
+  useEffect(() => {
+    let active = true;
+    getFaqs()
+      .then((data) => { if (active && data?.configured) setItems(data.items || []); })
+      .catch((error) => console.error('Failed to load FAQs', error));
+    return () => { active = false; };
+  }, []);
+
+  const midpoint = Math.ceil(items.length / 2);
+  const leftColumn = items.slice(0, midpoint);
+  const rightColumn = items.slice(midpoint);
 
   useGSAP(() => {
     gsap.fromTo('.faq-heading',
@@ -371,7 +386,7 @@ function FAQ() {
           <div className="faq-col">
             {leftColumn.map((item, i) => (
               <FaqItem
-                key={i}
+                key={item._id || item.question}
                 item={item}
                 isOpen={openIndex === i}
                 onToggle={() => setOpenIndex(openIndex === i ? null : i)}
@@ -383,7 +398,7 @@ function FAQ() {
               const globalIndex = i + midpoint;
               return (
                 <FaqItem
-                  key={globalIndex}
+                  key={item._id || item.question}
                   item={item}
                   isOpen={openIndex === globalIndex}
                   onToggle={() => setOpenIndex(openIndex === globalIndex ? null : globalIndex)}
@@ -407,7 +422,7 @@ function FAQ() {
 //
 // ─────────────── REVIEWS + FOUNDER NOTE SECTION ───────────────
 //
-const REVIEWS = [
+const DEFAULT_ENDORSEMENTS = [
   {
     quote: "I have been a licensed psychologist in Anchorage for 22 years and can honestly say that Elly has been one of the highest caliber therapists it has been my pleasure to encounter. Her reassuring and thoughtful demeanor combined with her commitment to possibility of change for the better with each of her clients creates an ideal environment for effective therapy.",
     name: "Danelle R. Winn, PhD",
@@ -427,6 +442,15 @@ const REVIEWS = [
 
 function Reviews() {
   const containerRef = useRef(null);
+  const [endorsements, setEndorsements] = useState(DEFAULT_ENDORSEMENTS);
+
+  useEffect(() => {
+    let active = true;
+    getProviderEndorsements()
+      .then((data) => { if (active && data?.configured) setEndorsements((data.items || []).filter((item) => item.featured)); })
+      .catch((error) => console.error('Failed to load provider endorsements', error));
+    return () => { active = false; };
+  }, []);
 
   useGSAP(() => {
     gsap.fromTo('.rv-heading',
@@ -485,9 +509,9 @@ function Reviews() {
 
           {/* Reviews — right column */}
           <div className="rv-col lg:col-span-3">
-            {REVIEWS.map((r, i) => (
+            {endorsements.map((r, i) => (
               <div
-                key={r.name}
+                key={r.providerName || r.name}
                 className={`flex gap-4 items-start ${i === 0 ? '' : 'border-t border-[#383838]/10 pt-7 mt-7'}`}
               >
                 <div className="flex-shrink-0 w-9 h-9 rounded-full bg-[#82a396]/10 flex items-center justify-center mt-1">
@@ -498,11 +522,11 @@ function Reviews() {
                     {r.quote}
                   </blockquote>
                   <p className="font-[var(--font-display)] italic text-[#383838] text-base">
-                    ({r.name})
+                    ({r.providerName || r.name})
                   </p>
-                  {r.title && (
+                  {(r.credentials || r.title || r.organization) && (
                     <p className="mt-1 text-[#a38d7a] text-[10px] tracking-[0.3em] uppercase font-medium font-[var(--font-mono)]">
-                      {r.title}
+                      {[r.credentials, r.organization || r.title].filter(Boolean).join(' · ')}
                     </p>
                   )}
                 </div>
@@ -560,6 +584,27 @@ function WhatTherapyBanner() {
 // ─────────────── HOME PAGE ───────────────
 //
 export default function Home() {
+  const [homePage, setHomePage] = useState(null);
+  const [defaultSeo, setDefaultSeo] = useState(null);
+
+  usePageMetadata(homePage?.seo, 'AK Confluence | Therapy in Anchorage, Alaska', defaultSeo?.description);
+
+  useEffect(() => {
+    let active = true;
+    getHomePage()
+      .then((data) => { if (active) setHomePage(data); })
+      .catch((err) => console.error('Failed to load homepage sections', err));
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    getSiteSettings().then((settings) => { if (active) setDefaultSeo(settings?.defaultSeo || null); }).catch(() => {});
+    return () => { active = false; };
+  }, []);
+
+  if (homePage?.sections?.length) return <PageSections sections={homePage.sections} />;
+
   return (
     <>
       <Hero />

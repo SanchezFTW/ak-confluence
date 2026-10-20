@@ -4,6 +4,7 @@ import { ArrowLeft } from '@phosphor-icons/react';
 import { getPostBySlug, urlFor } from '../lib/sanity';
 import { PortableText } from '../lib/portableText';
 import { usePageReveal } from '../lib/usePageReveal';
+import {usePageMetadata} from '../lib/usePageMetadata';
 
 function formatDate(dateStr) {
   if (!dateStr) return '';
@@ -31,6 +32,7 @@ export default function NewsletterPostPage() {
 
   // Derived (not synchronous setState): true until this slug's fetch settles.
   const loading = loadedSlug !== slug;
+  usePageMetadata(post?.seo, post?.title, post?.excerpt);
 
   if (loading) {
     return (
@@ -76,6 +78,7 @@ export default function NewsletterPostPage() {
           <p className="reveal-up font-[var(--font-mono)] text-[10px] tracking-[0.25em] uppercase text-[#82a396]">
             {post.author}
           </p>
+          {(post.categories?.length || post.tags?.length) > 0 && <div className="reveal-up mt-5 flex flex-wrap gap-2">{[...(post.categories || []), ...(post.tags || [])].map((category) => <span key={category} className="text-[9px] uppercase tracking-wider text-[#a38d7a] bg-white px-2.5 py-1 rounded-full">{category}</span>)}</div>}
         </div>
       </section>
 
@@ -84,7 +87,7 @@ export default function NewsletterPostPage() {
         <div className="px-6 lg:px-20 pb-2">
           <img
             src={urlFor(post.coverImage)?.width(1400).fit('max').auto('format').url()}
-            alt={post.title}
+            alt={post.coverImage?.decorative ? '' : post.coverImage?.alt || post.title}
             className="max-w-2xl mx-auto w-full rounded-2xl"
           />
         </div>
@@ -101,6 +104,10 @@ export default function NewsletterPostPage() {
           <PortableText value={post.body} />
         </div>
       </section>
+
+      {post.relatedArticles?.length > 0 && <section className="px-6 lg:px-20 pb-14 bg-[#f5f2ed]"><div className="max-w-2xl mx-auto border-t border-[#82a396]/20 pt-8"><h2 className="font-[var(--font-heading)] text-2xl text-[#383838] mb-5">Related articles</h2><ul className="space-y-3">{post.relatedArticles.map((article) => <li key={article.slug}><Link to={`/newsletter/${article.slug}`} className="text-[#82a396] underline underline-offset-2">{article.title}</Link>{article.excerpt && <p className="text-sm text-[#a38d7a] mt-1">{article.excerpt}</p>}</li>)}</ul></div></section>}
+
+      {post.relatedServices?.length > 0 && <section className="px-6 lg:px-20 pb-14 bg-[#f5f2ed]"><div className="max-w-2xl mx-auto"><h2 className="font-[var(--font-heading)] text-2xl text-[#383838] mb-4">Related services</h2><ul className="flex flex-wrap gap-x-5 gap-y-2">{post.relatedServices.map((service) => <li key={service.slug}><Link to={service.slug ? `/services/${service.slug}` : '/contact'} className="text-sm text-[#82a396] underline underline-offset-2">{service.title}</Link></li>)}</ul></div></section>}
 
       {/* Back link */}
       <section className="pb-20 px-6 lg:px-20 bg-[#f5f2ed]">

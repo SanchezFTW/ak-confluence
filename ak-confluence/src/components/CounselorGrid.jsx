@@ -61,8 +61,8 @@ export default function CounselorGrid() {
   const filtered =
     activeFilters.length === 0
       ? counselors
-      : counselors.filter((c) =>
-          c.specialties.some((s) => activeFilters.includes(s))
+        : counselors.filter((c) =>
+          (c.specialties || []).some((s) => activeFilters.includes(s))
         );
 
   function handleExpand(id) {
@@ -138,6 +138,7 @@ export default function CounselorGrid() {
           <button
             className="cg-pill"
             onClick={() => toggleFilter("All")}
+            aria-pressed={activeFilters.length === 0}
           >
             <span className={`inline-block text-[10px] tracking-[0.15em] uppercase font-medium font-[var(--font-mono)] px-4 py-2 rounded-full transition-all ${
               activeFilters.length === 0
@@ -154,6 +155,7 @@ export default function CounselorGrid() {
                 key={s}
                 className="cg-pill"
                 onClick={() => toggleFilter(s)}
+                aria-pressed={isActive}
               >
                 <span className={`inline-block text-[10px] tracking-[0.15em] uppercase font-medium font-[var(--font-mono)] px-4 py-2 rounded-full transition-all ${
                   isActive
@@ -186,11 +188,16 @@ export default function CounselorGrid() {
 
               rows.push(
                 <React.Fragment key={`row-${rowIndex}`}>
-                  {rowItems.map((c, j) => (
-                    <div
+                  {rowItems.map((c, j) => {
+                    const photoUrl = urlFor(c.photo)?.width(600).height(600).fit('crop').auto('format').url();
+                    return (
+                    <button
+                      type="button"
                       key={c.id}
-                      className="cg-card cg-enter rounded-xl overflow-hidden bg-[#f5f2ed]/60 border border-[#383838]/5"
+                      className="cg-card cg-enter w-full rounded-xl overflow-hidden bg-[#f5f2ed]/60 border border-[#383838]/5 text-left"
                       onClick={() => handleExpand(c.id)}
+                      aria-label={`${expandedId === c.id ? 'Close' : 'View'} ${c.name}'s counselor details`}
+                      aria-expanded={expandedId === c.id}
                       style={{
                         animationDelay: `${(i + j) * 0.06}s`,
                         animationFillMode: "backwards",
@@ -198,14 +205,14 @@ export default function CounselorGrid() {
                         outlineOffset: '2px',
                       }}
                     >
-                      <div className="cg-photo relative overflow-hidden aspect-square">
-                        <img
-                          src={urlFor(c.photo)?.width(600).height(600).fit('crop').auto('format').url()}
-                          alt={`${c.name}, ${c.title}`}
+                      <div className="cg-photo relative overflow-hidden aspect-square bg-[#e8e4dc]">
+                        {photoUrl && <img
+                          src={photoUrl}
+                          alt={c.photo?.decorative ? '' : c.photo?.alt || `${c.name}${c.title ? `, ${c.title}` : ''}`}
                           className="w-full h-full object-cover transition-transform duration-700"
                           loading="lazy"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                        />}
+                        {photoUrl && <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />}
                         <div className="absolute top-2 right-2">
                           <span className="inline-flex items-center gap-1 bg-white/90 backdrop-blur-sm text-[9px] tracking-[0.1em] uppercase font-medium px-2 py-0.5 rounded-full">
                             <span className={`w-1.5 h-1.5 rounded-full ${c.status === 'open' ? 'bg-[#82a396]' : c.status === 'full' ? 'bg-[#dd9e6f]' : c.status === 'unavailable' ? 'bg-[#383838]/40' : 'bg-[#a38d7a]'}`} />
@@ -218,10 +225,10 @@ export default function CounselorGrid() {
                       <div className="p-3">
                         <p className="font-[var(--font-heading)] text-[#383838] text-sm mb-0.5">{c.name}</p>
                         <p className="text-[#a38d7a] text-xs font-[var(--font-body)] font-light leading-tight">
-                          {c.role ? `${c.role} · ` : ""}{c.title}
+                          {[c.role, c.title, c.pronouns].filter(Boolean).join(' · ')}
                         </p>
                       </div>
-                    </div>
+                    </button>
                   ))}
 
                   {/* Detail panel — appears right after the row containing the selected card */}
@@ -250,12 +257,10 @@ export default function CounselorGrid() {
                             </button>
                           </div>
 
-                          <p className="font-[var(--font-display)] italic text-[#82a396] text-sm mb-4 leading-relaxed">
-                            &ldquo;{expanded.quote}&rdquo;
-                          </p>
+                          {expanded.quote && <p className="font-[var(--font-display)] italic text-[#82a396] text-sm mb-4 leading-relaxed">&ldquo;{expanded.quote}&rdquo;</p>}
 
-                          <div className="flex flex-wrap gap-1.5 mb-4">
-                            {expanded.specialties.map((s) => (
+                          {(expanded.shortIntro || expanded.specialties?.length > 0 || expanded.populations?.length > 0 || expanded.therapyApproaches?.length > 0) && <div className="flex flex-wrap gap-1.5 mb-4">
+                            {(expanded.specialties || []).map((s) => (
                               <span
                                 key={s}
                                 className="text-[9px] font-[var(--font-mono)] uppercase tracking-wider text-[#383838]/60 bg-[#f5f2ed] px-2 py-0.5 rounded-full"
@@ -263,25 +268,34 @@ export default function CounselorGrid() {
                                 {s}
                               </span>
                             ))}
-                          </div>
+                            {(expanded.populations || []).map((item) => <span key={`population-${item}`} className="text-[9px] font-[var(--font-mono)] uppercase tracking-wider text-[#383838]/60 bg-[#f5f2ed] px-2 py-0.5 rounded-full">{item}</span>)}
+                            {(expanded.therapyApproaches || []).map((item) => <span key={`approach-${item}`} className="text-[9px] font-[var(--font-mono)] uppercase tracking-wider text-[#383838]/60 bg-[#f5f2ed] px-2 py-0.5 rounded-full">{item}</span>)}
+                          </div>}
 
-                          <p className="font-[var(--font-body)] text-[#a38d7a] text-[15px] font-light leading-relaxed mb-5">
-                            {expanded.bio}
-                          </p>
+                          {(expanded.shortIntro || expanded.bio) && <p className="font-[var(--font-body)] text-[#a38d7a] text-[15px] font-light leading-relaxed mb-5">{expanded.shortIntro || expanded.bio}</p>}
+                          {expanded.shortIntro && expanded.bio && <p className="font-[var(--font-body)] text-[#a38d7a] text-sm font-light leading-relaxed mb-5">{expanded.bio}</p>}
+                          {(expanded.inPersonAvailable || expanded.telehealthAvailable) && <p className="text-xs text-[#a38d7a] mb-4">{[expanded.inPersonAvailable && 'In person', expanded.telehealthAvailable && 'Telehealth'].filter(Boolean).join(' · ')}</p>}
+                          {expanded.services?.length > 0 && <ul className="flex flex-wrap gap-2 mb-5">{expanded.services.map((service) => <li key={service.id} className="text-xs text-[#6b8f80]">{service.title}</li>)}</ul>}
+                          {expanded.slug && <Link to={`/counselors/${expanded.slug}`} className="mb-4 inline-flex text-sm text-[#82a396] underline underline-offset-2" onClick={(e) => e.stopPropagation()}>View full profile</Link>}
 
                           {expanded.status === "unavailable" ? (
                             <p className="font-[var(--font-mono)] text-[10px] tracking-[0.15em] uppercase text-[#a38d7a]">
                               Not currently accepting new clients
                             </p>
-                          ) : (
+                          ) : expanded.consultationUrl ? (
+                            <a href={expanded.consultationUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#82a396] text-white text-[10px] tracking-[0.15em] uppercase font-medium px-5 py-2.5 rounded-full hover:bg-[#6b8f80] transition-all" onClick={(e) => e.stopPropagation()}>
+                              {expanded.status === 'open' ? 'Request a consultation' : 'Join waitlist'}
+                            </a>
+                          ) : expanded.publicEmail || expanded.status !== 'unavailable' ? (
                             <a
-                              href={`mailto:info@akconfluence.com?subject=Inquiry for ${expanded.name}`}
+                              href={`mailto:${expanded.publicEmail || 'info@akconfluence.com'}?subject=${encodeURIComponent(`Inquiry for ${expanded.name}`)}`}
                               className="inline-flex items-center gap-2 bg-[#82a396] text-white text-[10px] tracking-[0.15em] uppercase font-medium px-5 py-2.5 rounded-full hover:bg-[#6b8f80] active:scale-[0.98] transition-all"
                               onClick={(e) => e.stopPropagation()}
                             >
                               {expanded.status === "open" ? "Send a message" : "Join waitlist"}
                             </a>
-                          )}
+                          ) : null}
+                          {expanded.publicPhone && <a className="mt-3 block text-sm text-[#82a396]" href={`tel:${expanded.publicPhone.replace(/[^+\d]/g, '')}`}>{expanded.publicPhone}</a>}
                         </div>
                       </div>
                     </div>

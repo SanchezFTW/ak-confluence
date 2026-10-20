@@ -1,18 +1,20 @@
 import { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import {usePageMetadata} from '../lib/usePageMetadata';
 
 const INTAKE_URL = 'https://elly.clientsecure.me/contact-widget';
 
 const inputClass =
   'w-full px-4 py-3 rounded-xl bg-white border border-[#82a396]/20 text-[#383838] text-sm font-[var(--font-body)] placeholder:text-[#a38d7a]/50 focus:outline-none focus:border-[#82a396]/60 transition-colors';
 
-export default function ContactPage() {
+export default function ContactPage({ settings }) {
   const containerRef = useRef(null);
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [form, setForm] = useState({ name: '', email: '', message: '' });
+  usePageMetadata(null, 'Contact | AK Confluence', settings?.contactIntroduction);
 
   useGSAP(() => {
     gsap.fromTo('.cp-reveal',
@@ -59,7 +61,7 @@ export default function ContactPage() {
             The first step is simply <em className="text-[#82a396] italic">reaching out</em>
           </h1>
           <p className="cp-reveal font-[var(--font-body)] text-[#a38d7a] font-light text-base lg:text-lg leading-relaxed max-w-2xl">
-            Sessions are available in-person in Anchorage and virtually across Alaska, most private health plans accepted.
+            {settings?.contactIntroduction || 'Sessions are available in-person in Anchorage and virtually across Alaska, most private health plans accepted.'}
           </p>
         </div>
       </section>
@@ -148,21 +150,20 @@ export default function ContactPage() {
               <div>
                 <h3 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-2">Contact</h3>
                 <div className="flex flex-col gap-1 font-[var(--font-body)] text-[#383838] text-sm">
-                  <a href="mailto:info@akconfluence.com" className="hover:text-[#82a396] transition-colors">info@akconfluence.com</a>
-                  <a href="tel:9073134433" className="hover:text-[#82a396] transition-colors">Call or Text: (907) 313-4433</a>
+                  <a href={`mailto:${settings?.publicEmail || 'info@akconfluence.com'}`} className="hover:text-[#82a396] transition-colors">{settings?.publicEmail || 'info@akconfluence.com'}</a>
+                  <a href={`tel:${(settings?.publicPhone || '907-313-4433').replace(/[^+\d]/g, '')}`} className="hover:text-[#82a396] transition-colors">Call or Text: {settings?.publicPhone || '(907) 313-4433'}</a>
                 </div>
               </div>
               <div>
                 <h3 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-2">Hours</h3>
                 <div className="flex flex-col gap-1 font-[var(--font-body)] text-[#a38d7a] text-sm font-light">
-                  <span>Mon–Fri: 8am–6pm</span>
-                  <span>Sat: 8am–2pm</span>
+                  {(settings?.officeHours?.length ? settings.officeHours.map((hours) => `${hours.days}: ${hours.opens}–${hours.closes}`) : ['Mon–Fri: 8am–6pm', 'Sat: 8am–2pm']).map((hours) => <span key={hours}>{hours}</span>)}
                 </div>
               </div>
               <div>
                 <h3 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-2">Location</h3>
                 <div className="flex flex-col gap-1 font-[var(--font-body)] text-[#a38d7a] text-sm font-light">
-                  <span>Anchorage, Alaska</span>
+                  <span>{[settings?.officeAddress?.street, settings?.officeAddress?.city, settings?.officeAddress?.region, settings?.officeAddress?.postalCode].filter(Boolean).join(', ') || 'Anchorage, Alaska'}</span>
                   <span>Virtual across AK</span>
                 </div>
               </div>

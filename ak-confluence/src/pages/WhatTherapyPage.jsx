@@ -1,6 +1,10 @@
+import {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight } from '@phosphor-icons/react';
 import { usePageReveal } from '../lib/usePageReveal';
+import {getPageBySlug} from '../lib/sanity';
+import PageSections from '../components/PageSections';
+import {usePageMetadata} from '../lib/usePageMetadata';
 
 //
 // ─────────────── WHAT THERAPY MIGHT I NEED ───────────────
@@ -81,6 +85,23 @@ function counselorsLink(filter) {
 }
 
 export default function WhatTherapyPage() {
+  const [page, setPage] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    getPageBySlug('what-therapy-might-i-need')
+      .then((data) => { if (active) setPage(data || null); })
+      .catch((error) => console.error('Failed to load page content', error));
+    return () => { active = false; };
+  }, []);
+
+  usePageMetadata(page?.seo, page?.title || 'What therapy might I need? | AK Confluence');
+
+  if (page?.sections?.length) return <PageSections sections={page.sections} />;
+  return <LegacyWhatTherapyPage />;
+}
+
+function LegacyWhatTherapyPage() {
   const revealRef = usePageReveal();
 
   return (

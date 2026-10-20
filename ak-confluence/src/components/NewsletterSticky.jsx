@@ -8,7 +8,7 @@ const DISMISS_KEY = 'nl-sticky-dismissed';
 // Form ID: 41815299  |  Group: Monthly Newsletter
 // Posts to MailerLite via hidden iframe so the page never navigates away.
 //
-export default function NewsletterSticky() {
+export default function NewsletterSticky({settings}) {
   const [visible, setVisible] = useState(() => {
     if (typeof window === 'undefined') return false;
     return sessionStorage.getItem(DISMISS_KEY) !== '1';
@@ -98,10 +98,10 @@ export default function NewsletterSticky() {
           </div>
           <div>
             <h3 className="font-[var(--font-heading)] text-[#383838] text-base leading-snug font-normal">
-              Join our newsletter
+              {settings?.newsletterHeading || 'Join our newsletter'}
             </h3>
             <p className="font-[var(--font-body)] text-[#a38d7a] text-xs font-light leading-relaxed">
-              Notes on boundaries, anxiety, and more.
+              {settings?.newsletterCopy || 'Notes on boundaries, anxiety, and more.'}
             </p>
           </div>
         </div>
@@ -110,7 +110,7 @@ export default function NewsletterSticky() {
           <div className="flex items-center gap-2 bg-[#82a396]/15 border border-[#82a396]/30 rounded-xl p-3 text-[#383838] mt-2">
             <CheckCircle size={20} weight="fill" className="text-[#82a396] flex-shrink-0" />
             <span className="font-[var(--font-body)] text-xs font-normal">
-              You're subscribed! Thanks for joining.
+              {settings?.newsletterConfirmation || "You're subscribed! Thanks for joining."}
             </span>
           </div>
         ) : (
@@ -157,17 +157,17 @@ export default function NewsletterSticky() {
               Monthly Newsletter
             </p>
             <h3 className="font-[var(--font-display)] text-2xl sm:text-3xl font-light leading-tight mb-3 text-[#f5f2ed]">
-              Join the Confluence Newsletter
+              {settings?.newsletterHeading || 'Join the Confluence Newsletter'}
             </h3>
             <p className="font-[var(--font-body)] text-[#f5f2ed]/70 text-sm font-light leading-relaxed mb-6">
-              Straightforward mental health insights, boundary scripts, and anxiety tools sent once a month by our Anchorage therapy team.
+              {settings?.newsletterCopy || 'Straightforward mental health insights, boundary scripts, and anxiety tools sent once a month by our Anchorage therapy team.'}
             </p>
 
             {submitted ? (
               <div className="flex items-center gap-3 bg-[#82a396]/20 border border-[#82a396]/40 rounded-full px-6 py-4 text-[#f5f2ed] w-full">
                 <CheckCircle size={22} weight="fill" className="text-[#82a396] flex-shrink-0" />
                 <span className="font-[var(--font-body)] text-sm font-light">
-                  You're on the list! Thank you for subscribing.
+                  {settings?.newsletterConfirmation || "You're on the list! Thank you for subscribing."}
                 </span>
               </div>
             ) : (

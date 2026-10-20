@@ -13,7 +13,14 @@ import NewsletterPage from './pages/NewsletterPage';
 import NewsletterPostPage from './pages/NewsletterPostPage';
 import BoundariesBlueprintPage from './pages/BoundariesBlueprintPage';
 import WhatTherapyPage from './pages/WhatTherapyPage';
+import EventsPage from './pages/EventsPage';
+import CmsPage from './pages/CmsPage';
+import ServicePage from './pages/ServicePage';
+import WorkshopPage from './pages/WorkshopPage';
+import CounselorPage from './pages/CounselorPage';
 import NotFoundPage from './pages/NotFoundPage';
+import { getSiteSettings, resolveSiteLink } from './lib/sanity';
+import {PageMetadataContext} from './lib/usePageMetadata';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -67,7 +74,7 @@ function Loader({ onComplete }) {
 //
 // ─────────────── MOBILE NAV ───────────────
 //
-function MobileNav({ isOpen, onClose }) {
+function MobileNav({ isOpen, onClose, links, primaryCta }) {
   const navRef = useRef(null);
   const linksRef = useRef(null);
 
@@ -86,13 +93,6 @@ function MobileNav({ isOpen, onClose }) {
 
   if (!isOpen) return null;
 
-  const navLinks = [
-    { label: 'Services', href: '/#services' },
-    { label: 'Counselors', href: '/#counselors' },
-    { label: 'Newsletter', to: '/newsletter' },
-    { label: 'Contact', to: '/contact' },
-  ];
-
   return (
     <div ref={navRef} className="fixed inset-0 z-[60] bg-[#0a0a0a]/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8">
       <button
@@ -103,11 +103,11 @@ function MobileNav({ isOpen, onClose }) {
         <X size={28} weight="light" />
       </button>
       <nav ref={linksRef} className="flex flex-col items-center gap-6">
-        {navLinks.map((link) =>
-          link.to ? (
+        {links.map((link) =>
+          link.href.startsWith('/') && !link.openInNewTab ? (
             <Link
               key={link.label}
-              to={link.to}
+              to={link.href}
               onClick={onClose}
               className="mobile-nav-link font-[var(--font-heading)] text-[#f5f2ed] text-4xl hover:text-[#82a396] transition-colors"
             >
@@ -117,6 +117,8 @@ function MobileNav({ isOpen, onClose }) {
             <a
               key={link.label}
               href={link.href}
+              target={link.openInNewTab ? '_blank' : undefined}
+              rel={link.openInNewTab ? 'noopener noreferrer' : undefined}
               onClick={onClose}
               className="mobile-nav-link font-[var(--font-heading)] text-[#f5f2ed] text-4xl hover:text-[#82a396] transition-colors"
             >
@@ -124,15 +126,15 @@ function MobileNav({ isOpen, onClose }) {
             </a>
           )
         )}
-        <a
-          href={INTAKE_URL}
-          target="_blank"
-          rel="noopener noreferrer"
+        {primaryCta.href && <a
+          href={primaryCta.href}
+          target={primaryCta.openInNewTab ? '_blank' : undefined}
+          rel={primaryCta.openInNewTab ? 'noopener noreferrer' : undefined}
           onClick={onClose}
           className="mobile-nav-link mt-4 bg-[#82a396] text-[#0a0a0a] px-8 py-3 text-[10px] tracking-[0.2em] uppercase font-medium font-[var(--font-mono)] hover:bg-[#90b8a0] transition-colors"
         >
-          Book Now
-        </a>
+          {primaryCta.label}
+        </a>}
       </nav>
     </div>
   );
@@ -141,7 +143,7 @@ function MobileNav({ isOpen, onClose }) {
 //
 // ─────────────── FOOTER ───────────────
 //
-function Footer() {
+function Footer({settings}) {
   const location = useLocation();
   // Skip the duplicate embed on the dedicated lead-magnet page — it has its own MailerLite form.
   const hideNewsletter = location.pathname === '/boundaries-blueprint';
@@ -151,7 +153,7 @@ function Footer() {
       {/* Newsletter signup */}
       {!hideNewsletter && (
         <div id="newsletter" className="bg-[#383838] py-14 lg:py-16 px-6 lg:px-20 scroll-mt-24">
-          <NewsletterSignup />
+          <NewsletterSignup heading={settings?.newsletterHeading} copy={settings?.newsletterCopy} confirmation={settings?.newsletterConfirmation} />
         </div>
       )}
 
@@ -165,7 +167,7 @@ function Footer() {
                 <AnimatedLogo animation="flow" variant="horizontal" size={140} colorMode="dark" />
               </div>
               <p className="font-[var(--font-body)] text-[#f5f2ed]/40 text-sm font-light leading-relaxed">
-                Together. Making a plan for intentional change.
+                {settings?.footerTagline || 'Together. Making a plan for intentional change.'}
               </p>
             </div>
 
@@ -173,7 +175,7 @@ function Footer() {
             <div className="md:col-span-2 md:col-start-6">
               <h4 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-4">Location</h4>
               <div className="flex flex-col gap-2 font-[var(--font-body)] text-[#f5f2ed]/50 text-sm">
-                <span>Anchorage, Alaska</span>
+                <span>{[settings?.officeAddress?.street, settings?.officeAddress?.city, settings?.officeAddress?.region, settings?.officeAddress?.postalCode].filter(Boolean).join(', ') || 'Anchorage, Alaska'}</span>
                 <span>Virtual across AK</span>
               </div>
             </div>
@@ -182,8 +184,8 @@ function Footer() {
             <div className="md:col-span-3">
               <h4 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-4">Contact</h4>
               <div className="flex flex-col gap-2 font-[var(--font-body)] text-[#f5f2ed]/50 text-sm">
-                <a href="mailto:info@akconfluence.com" className="hover:text-[#f5f2ed] transition-colors">info@akconfluence.com</a>
-                <a href="tel:9073134433" className="hover:text-[#f5f2ed] transition-colors">Call or Text: (907) 313-4433</a>
+                <a href={`mailto:${settings?.publicEmail || 'info@akconfluence.com'}`} className="hover:text-[#f5f2ed] transition-colors">{settings?.publicEmail || 'info@akconfluence.com'}</a>
+                <a href={`tel:${(settings?.publicPhone || '907-313-4433').replace(/[^+\d]/g, '')}`} className="hover:text-[#f5f2ed] transition-colors">Call or Text: {settings?.publicPhone || '(907) 313-4433'}</a>
               </div>
             </div>
 
@@ -191,11 +193,16 @@ function Footer() {
             <div className="md:col-span-2">
               <h4 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-4">Hours</h4>
               <div className="flex flex-col gap-2 font-[var(--font-body)] text-[#f5f2ed]/50 text-sm">
-                <span>Mon–Fri: 8am–6pm</span>
-                <span>Sat: 8am–2pm</span>
+                {(settings?.officeHours?.length ? settings.officeHours.map((hours) => `${hours.days}: ${hours.opens}–${hours.closes}`) : ['Mon–Fri: 8am–6pm', 'Sat: 8am–2pm']).map((hours) => <span key={hours}>{hours}</span>)}
               </div>
             </div>
           </div>
+          {settings?.footerLinkGroups?.length > 0 && <nav aria-label="Footer links" className="mt-10 border-t border-white/10 pt-8 grid grid-cols-2 md:grid-cols-4 gap-6">
+            {settings.footerLinkGroups.map((group) => <div key={group.title}><h4 className="font-[var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[#82a396] mb-3">{group.title}</h4><ul className="space-y-2">{group.links?.map((link) => {
+              const href = resolveSiteLink(link)
+              return href ? <li key={`${link.label}-${href}`}>{href.startsWith('/') && !link.openInNewTab ? <Link to={href} className="text-sm text-[#f5f2ed]/50 hover:text-[#f5f2ed]">{link.label}</Link> : <a href={href} target={link.openInNewTab ? '_blank' : undefined} rel={link.openInNewTab ? 'noopener noreferrer' : undefined} className="text-sm text-[#f5f2ed]/50 hover:text-[#f5f2ed]">{link.label}</a>}</li> : null
+            })}</ul></div>)}
+          </nav>}
         </div>
       </div>
 
@@ -204,7 +211,7 @@ function Footer() {
         <div className="max-w-[1100px] mx-auto flex flex-col-reverse md:flex-row justify-center md:justify-between items-center gap-3 text-[#f5f2ed]/20 text-xs font-[var(--font-body)]">
           <span>&copy; {new Date().getFullYear()} Confluence LLC. All rights reserved.</span>
           <div className="flex items-center gap-4">
-            {SOCIAL_LINKS.map(({ label, href, Icon }) => (
+            {(settings?.socialLinks?.length ? settings.socialLinks.map((link) => ({label: link.platform, href: link.url, Icon: link.platform === 'Facebook' ? FacebookLogo : link.platform === 'Instagram' ? InstagramLogo : null})).filter((link) => link.href) : SOCIAL_LINKS).map(({ label, href, Icon }) => (
               <a
                 key={label}
                 href={href}
@@ -213,7 +220,7 @@ function Footer() {
                 aria-label={label}
                 className="text-[#f5f2ed]/40 hover:text-[#82a396] transition-colors"
               >
-                <Icon size={18} weight="light" />
+                {Icon ? <Icon size={18} weight="light" /> : <span className="text-xs">{label}</span>}
               </a>
             ))}
           </div>
@@ -247,6 +254,42 @@ function ScrollToHash() {
   return null;
 }
 
+function useAnnouncementActive(announcement) {
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    const nextChange = [announcement?.startsAt, announcement?.endsAt]
+      .map((value) => value ? new Date(value).getTime() : null)
+      .filter((value) => value && value > Date.now())
+      .sort((a, b) => a - b)[0];
+    if (!nextChange) return undefined;
+    const timer = window.setTimeout(() => setNow(Date.now()), Math.min(nextChange - Date.now() + 20, 2147483647));
+    return () => window.clearTimeout(timer);
+  }, [announcement?.startsAt, announcement?.endsAt, now]);
+
+  return Boolean(announcement?.enabled && announcement.message
+    && (!announcement.startsAt || new Date(announcement.startsAt).getTime() <= now)
+    && (!announcement.endsAt || new Date(announcement.endsAt).getTime() > now));
+}
+
+function AnnouncementBar({announcement}) {
+  const active = useAnnouncementActive(announcement);
+  const href = resolveSiteLink(announcement?.link);
+  if (!active) return null;
+
+  return (
+    <div role="status" aria-live="polite" className="fixed top-0 inset-x-0 z-[35] bg-[#e8e4dc] text-[#383838] text-center px-14 py-3 text-sm">
+      {href && announcement.link.openInNewTab
+        ? <a href={href} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">{announcement.message}</a>
+        : href?.startsWith('/')
+          ? <Link to={href} className="underline underline-offset-2">{announcement.message}</Link>
+          : href
+            ? <a href={href} className="underline underline-offset-2">{announcement.message}</a>
+            : announcement.message}
+    </div>
+  )
+}
+
 //
 // ─────────────── MAIN APP ───────────────
 //
@@ -256,6 +299,15 @@ function App() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [navDark, setNavDark] = useState(false);
   const location = useLocation();
+  const [siteSettings, setSiteSettings] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    getSiteSettings()
+      .then((data) => { if (active) setSiteSettings(data); })
+      .catch((error) => console.error('Failed to load site settings', error));
+    return () => { active = false; };
+  }, []);
 
   // Only show loader on the home page, first load of the session
   const isHome = location.pathname === '/';
@@ -319,25 +371,33 @@ function App() {
     });
   }, { dependencies: [loading] });
 
-  const desktopNavLinks = [
-    { label: 'Services', href: '/#services' },
-    { label: 'Counselors', href: '/#counselors' },
-    { label: 'Newsletter', to: '/newsletter' },
-    { label: 'Contact', to: '/contact' },
+  const fallbackNavLinks = [
+    {label: 'Services', href: '/#services'},
+    {label: 'Counselors', href: '/#counselors'},
+    {label: 'Newsletter', href: '/newsletter'},
+    {label: 'Contact', href: '/contact'},
   ];
+  const desktopNavLinks = siteSettings?.headerNavigation?.length
+    ? siteSettings.headerNavigation.map((link) => ({label: link.label, href: resolveSiteLink(link), openInNewTab: link.openInNewTab})).filter((link) => link.href)
+    : fallbackNavLinks;
+  const primaryCta = siteSettings?.primaryConsultationLink
+    ? {label: siteSettings.primaryConsultationLink.label, href: resolveSiteLink(siteSettings.primaryConsultationLink), openInNewTab: siteSettings.primaryConsultationLink.openInNewTab}
+    : {label: 'Book now', href: INTAKE_URL, openInNewTab: true};
+  const announcementVisible = useAnnouncementActive(siteSettings?.announcement);
 
   return (
     <div className={`noise-overlay-container ${showLoader && loading ? 'min-h-[100dvh] overflow-hidden' : ''}`}>
       {showLoader && loading && <Loader onComplete={handleLoaderComplete} />}
       <div className="noise-overlay" />
 
-      <MobileNav isOpen={mobileNavOpen} onClose={() => setMobileNavOpen(false)} />
+      <MobileNav isOpen={mobileNavOpen} onClose={() => setMobileNavOpen(false)} links={desktopNavLinks} primaryCta={primaryCta} />
       <ScrollToHash />
-      {!(showLoader && loading) && location.pathname !== '/boundaries-blueprint' && <NewsletterSticky />}
+      <AnnouncementBar announcement={siteSettings?.announcement} />
+      {!(showLoader && loading) && location.pathname !== '/boundaries-blueprint' && <NewsletterSticky settings={siteSettings} />}
 
       <div className={showLoader && loading ? 'opacity-0' : 'opacity-100 transition-opacity duration-1000'}>
         {/* Fixed Pill Navigation */}
-        <nav className={`nav-pill fixed top-4 left-1/2 -translate-x-1/2 z-[40] w-[calc(100%-2rem)] max-w-6xl flex items-center justify-between backdrop-blur-xl border rounded-full px-4 md:px-8 py-3 transition-all duration-500 ${
+        <nav className={`nav-pill fixed ${announcementVisible ? 'top-[4.5rem]' : 'top-4'} left-1/2 -translate-x-1/2 z-[40] w-[calc(100%-2rem)] max-w-6xl flex items-center justify-between backdrop-blur-xl border rounded-full px-4 md:px-8 py-3 transition-all duration-500 ${
           navDark
             ? 'bg-[#383838]/80 border-[#f5f2ed]/10 shadow-[0_4px_20px_-6px_rgba(0,0,0,0.3)]'
             : 'bg-white/70 border-[#82a396]/20 shadow-[0_4px_20px_-6px_rgba(130,163,150,0.12)]'
@@ -361,13 +421,11 @@ function App() {
                   {t.caret && <CaretDown size={10} weight="bold" />}
                 </>
               );
-              return t.to ? (
-                <Link key={t.label} to={t.to} className={className}>{content}</Link>
-              ) : (
-                <a key={t.label} href={t.href} className={className}>{content}</a>
-              );
+              return t.href.startsWith('/') && !t.openInNewTab
+                ? <Link key={t.label} to={t.href} className={className}>{content}</Link>
+                : <a key={t.label} href={t.href} target={t.openInNewTab ? '_blank' : undefined} rel={t.openInNewTab ? 'noopener noreferrer' : undefined} className={className}>{content}</a>;
             })}
-            <a href={INTAKE_URL} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ padding: '8px 24px' }}>Book now</a>
+            {primaryCta.href && <a href={primaryCta.href} target={primaryCta.openInNewTab ? '_blank' : undefined} rel={primaryCta.openInNewTab ? 'noopener noreferrer' : undefined} className="btn-primary" style={{ padding: '8px 24px' }}>{primaryCta.label}</a>}
           </div>
 
           {/* Mobile hamburger */}
@@ -381,18 +439,25 @@ function App() {
         </nav>
 
         <main id="main-content">
+          <PageMetadataContext.Provider value={siteSettings?.defaultSeo}>
           <Routes>
             <Route path="/what-therapy-might-i-need" element={<WhatTherapyPage />} />
             <Route path="/" element={<Home />} />
-            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/contact" element={<ContactPage settings={siteSettings} />} />
             <Route path="/newsletter" element={<NewsletterPage />} />
             <Route path="/newsletter/:slug" element={<NewsletterPostPage />} />
             <Route path="/boundaries-blueprint" element={<BoundariesBlueprintPage />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/services/:slug" element={<ServicePage />} />
+            <Route path="/workshops/:slug" element={<WorkshopPage />} />
+            <Route path="/counselors/:slug" element={<CounselorPage />} />
+            <Route path="/:slug" element={<CmsPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
+          </PageMetadataContext.Provider>
         </main>
 
-        <Footer />
+        <Footer settings={siteSettings} />
       </div>
     </div>
   );

@@ -69,6 +69,7 @@ export default defineType({
     // 6. FAQ section
     defineField({name: 'faqIntro', title: 'Section heading', type: 'sectionIntro', group: 'faq', description: 'e.g. "Frequently asked".'}),
     defineField({name: 'faqSubtitle', title: 'Subtitle', type: 'text', rows: 2, group: 'faq'}),
+    defineField({name: 'faqBottomNote', title: 'Closing note text', type: 'string', group: 'faq', description: 'Shown before the link, e.g. "Still have questions?".'}),
     defineField({name: 'faqLinkText', title: '"Still have questions?" link text', type: 'string', group: 'faq'}),
     defineField({name: 'faqLinkUrl', title: '"Still have questions?" link destination', type: 'string', group: 'faq', description: 'e.g. mailto:info@akconfluence.com?subject=Question'}),
   ],

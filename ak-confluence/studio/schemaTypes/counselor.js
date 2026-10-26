@@ -32,6 +32,14 @@ export default defineType({
       description: 'e.g. "Founder". Leave blank for most counselors.',
     }),
     defineField({
+      name: 'isFounder',
+      title: 'Founder',
+      type: 'boolean',
+      group: 'profile',
+      initialValue: false,
+      description: 'Shows "Founder ·" at the start of the role line on their counselor card.',
+    }),
+    defineField({
       name: 'pronouns',
       title: 'Pronouns (optional)',
       type: 'string',
@@ -71,12 +79,20 @@ export default defineType({
     }),
     defineField({
       name: 'specialties',
-      title: 'Specialties',
+      title: 'Specialties (legacy)',
       type: 'array',
       of: [{type: 'string'}],
       options: {layout: 'tags'},
       group: 'practice',
-      description: 'e.g. Anxiety, Depression, Grief & Loss, Relationship & Family, EMDR & Brainspotting, Major Life Changes',
+      description: 'Legacy free-text list. Use "Concerns they work with" instead; kept so existing data is not lost.',
+    }),
+    defineField({
+      name: 'concerns',
+      title: 'Concerns they work with',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'concern'}]}],
+      group: 'practice',
+      description: 'Pick from the Concerns list. These power the counselor filter chips and their "Focus areas".',
     }),
     defineField({
       name: 'populations',

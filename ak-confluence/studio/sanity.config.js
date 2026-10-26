@@ -12,10 +12,24 @@ import {
   DocumentTextIcon,
   BlockElementIcon,
   ComposeIcon,
+  LinkIcon,
+  PinIcon,
+  EnvelopeIcon,
+  ShareIcon,
+  SearchIcon,
+  TagIcon,
 } from '@sanity/icons'
 import {schemaTypes} from './schemaTypes'
 
-const SINGLETONS = ['siteSettings', 'homePage']
+const SINGLETONS = [
+  'siteSettings',
+  'homePage',
+  'navigation',
+  'contactOffice',
+  'newsletter',
+  'announcement',
+  'seoDefaults',
+]
 
 // A list item that opens a document-type list (used for all non-singletons).
 // `ordering` sets the default sort editors see in the list view.
@@ -48,9 +62,11 @@ const structure = (S) =>
       S.listItem().title('Home & Site Info').icon(HomeIcon).child(
         S.list().title('Home & Site Info').items([
           singleton(S, 'homePage', 'Homepage', ComposeIcon, 'homePage'),
-          // Navigation & Footer, Contact & Office, Newsletter & Free Guide,
-          // Announcement Banner, and SEO & Social Defaults are added here once
-          // their singleton document types exist (schema-cleanup phase).
+          singleton(S, 'navigation', 'Navigation & Footer', LinkIcon, 'navigation'),
+          singleton(S, 'contactOffice', 'Contact & Office', PinIcon, 'contactOffice'),
+          singleton(S, 'newsletter', 'Newsletter & Free Guide', EnvelopeIcon, 'newsletter'),
+          singleton(S, 'announcement', 'Announcement Banner', ShareIcon, 'announcement'),
+          singleton(S, 'seoDefaults', 'SEO & Social Defaults', SearchIcon, 'seoDefaults'),
         ]),
       ),
       S.divider(),
@@ -63,8 +79,7 @@ const structure = (S) =>
       S.listItem().title('What We Offer').icon(SparklesIcon).child(
         S.list().title('What We Offer').items([
           documentList(S, 'service', 'Services', CaseIcon, byDisplayOrder),
-          // Concerns ("Find the words that fit" cards) is added here in the
-          // schema-cleanup phase.
+          documentList(S, 'concern', 'Concerns', TagIcon, byDisplayOrder),
           documentList(S, 'faq', 'FAQs', HelpCircleIcon, byDisplayOrder),
         ]),
       ),

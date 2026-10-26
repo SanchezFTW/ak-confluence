@@ -1,0 +1,77 @@
+import {defineType, defineField} from 'sanity'
+
+export default defineType({
+  name: 'concern',
+  title: 'Concern',
+  type: 'document',
+  description: 'A card on the "Find the words that fit" page, and optionally a filter chip on the Counselors page.',
+  groups: [
+    {name: 'content', title: 'Card content', default: true},
+    {name: 'website', title: 'Website'},
+  ],
+  fields: [
+    defineField({
+      name: 'name',
+      title: 'Name',
+      type: 'string',
+      group: 'content',
+      validation: (rule) => rule.required(),
+      description: 'Short title shown on the card (for example "Anxiety").',
+    }),
+    defineField({
+      name: 'quote',
+      title: 'First-person quote',
+      type: 'string',
+      group: 'content',
+      description: 'The quote shown in italics at the top of the card.',
+    }),
+    defineField({
+      name: 'body',
+      title: 'What it feels like',
+      type: 'text',
+      rows: 4,
+      group: 'content',
+      description: 'The paragraph describing the experience.',
+    }),
+    defineField({
+      name: 'help',
+      title: '"We help you…" paragraph',
+      type: 'text',
+      rows: 4,
+      group: 'content',
+      description: 'The second paragraph, beginning "We help you…".',
+    }),
+    defineField({
+      name: 'relatedService',
+      title: 'Related service (optional)',
+      type: 'reference',
+      to: [{type: 'service'}],
+      group: 'content',
+    }),
+    defineField({
+      name: 'showAsFilter',
+      title: 'Show as a filter on the Counselors page',
+      type: 'boolean',
+      initialValue: false,
+      group: 'website',
+      description: 'When on, this concern appears as a filter chip above the counselors.',
+    }),
+    defineField({
+      name: 'websiteVisible',
+      title: 'Show on website',
+      type: 'boolean',
+      initialValue: true,
+      group: 'website',
+    }),
+    defineField({
+      name: 'order',
+      title: 'Display order',
+      type: 'number',
+      group: 'website',
+      validation: (rule) => rule.required(),
+      description: 'Lower numbers appear first.',
+    }),
+  ],
+  orderings: [{title: 'Display order', name: 'orderAsc', by: [{field: 'order', direction: 'asc'}]}],
+  preview: {select: {title: 'name', subtitle: 'quote'}},
+})

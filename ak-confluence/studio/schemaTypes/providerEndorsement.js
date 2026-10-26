@@ -9,6 +9,7 @@ export default defineType({
     defineField({name: 'providerName', title: 'Provider name', type: 'string', validation: (rule) => rule.required()}),
     defineField({name: 'credentials', title: 'Credentials (optional)', type: 'string'}),
     defineField({name: 'organization', title: 'Organization (optional)', type: 'string'}),
+    defineField({name: 'counselor', title: 'About which counselor (optional)', type: 'reference', to: [{type: 'counselor'}]}),
     defineField({
       name: 'photo',
       title: 'Photo (optional)',

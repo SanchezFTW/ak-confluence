@@ -1,24 +1,21 @@
 // Migrates the homepage hero fields that currently live in the legacy
 // `siteSettings` singleton into the new `homePage` document.
 //
-// - Reads use the public dataset (no token required).
-// - Writes require a token: set SANITY_WRITE_TOKEN (see .env.example).
+// Uses the Sanity CLI session from `npx sanity login` (no API key needed).
 //
-// Run:
+// Run from the studio directory:
 //   node scripts/migrate-homepage.mjs            # dry run (default)
 //   node scripts/migrate-homepage.mjs --apply    # create/update the Homepage draft
-import {createClient} from '@sanity/client'
+import {getCliClient} from 'sanity/cli'
 
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID || '3gzdej0i'
-const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
 const apiVersion = '2024-01-01'
 const applyChanges = process.argv.includes('--apply')
 
-const readClient = createClient({projectId, dataset, apiVersion, perspective: 'published', useCdn: false})
+const client = getCliClient({apiVersion}).withConfig({perspective: 'published', useCdn: false})
 
 const [siteSettings, homePage] = await Promise.all([
-  readClient.fetch('*[_type == "siteSettings"][0]'),
-  readClient.fetch('*[_type == "homePage"][0]'),
+  client.fetch('*[_type == "siteSettings"][0]'),
+  client.fetch('*[_type == "homePage"][0]'),
 ])
 
 // Legacy siteSettings field → new homePage field. Only empty homePage fields are
@@ -56,21 +53,11 @@ for (const [field, value] of Object.entries(patches)) {
 }
 
 if (!applyChanges) {
-  console.log('\nDry run only. Re-run with --apply (and SANITY_WRITE_TOKEN set) to create/update the Homepage draft.')
-} else if (!process.env.SANITY_WRITE_TOKEN) {
-  console.error('\nSANITY_WRITE_TOKEN is not set. No changes were made.')
-  process.exitCode = 1
+  console.log('\nDry run only. Re-run with --apply (after `npx sanity login`) to create/update the Homepage draft.')
 } else {
-  const writeClient = createClient({
-    projectId,
-    dataset,
-    apiVersion,
-    perspective: 'raw',
-    useCdn: false,
-    token: process.env.SANITY_WRITE_TOKEN,
-  })
-  const draft = await writeClient.fetch('*[_type == "homePage"][0]', {}, {perspective: 'raw'})
-  const transaction = writeClient.transaction()
+  const rawClient = getCliClient({apiVersion}).withConfig({perspective: 'raw', useCdn: false})
+  const draft = await rawClient.fetch('*[_type == "homePage"][0]', {}, {perspective: 'raw'})
+  const transaction = rawClient.transaction()
   if (draft) {
     transaction.patch(draft._id, (patch) => patch.setIfMissing(patches))
   } else {

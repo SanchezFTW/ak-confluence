@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { getCounselors, urlFor } from "../lib/sanity";
+import { getCounselors, getConcerns, urlFor } from "../lib/sanity";
 
 const FILTER_SPECIALTIES = [
   'Grief & Loss',
@@ -11,14 +11,17 @@ const FILTER_SPECIALTIES = [
   'EMDR & Brainspotting',
 ];
 
-export default function CounselorGrid() {
+export default function CounselorGrid({homePage}) {
   const [counselors, setCounselors] = useState([]);
+  const [concerns, setConcerns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeFilters, setActiveFilters] = useState([]);
   const [expandedId, setExpandedId] = useState(null);
   const [colCount, setColCount] = useState(() => window.innerWidth >= 768 ? 3 : 2);
   const [searchParams] = useSearchParams();
   const detailRef = useRef(null);
+  const intro = homePage?.counselorsIntro || {};
+  const supporting = homePage?.counselorsSupporting || 'Every path is different. Filter by what matters to you and find the right fit for your journey.';
 
   useEffect(() => {
     let active = true;
@@ -28,6 +31,19 @@ export default function CounselorGrid() {
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, []);
+
+  useEffect(() => {
+    let active = true;
+    getConcerns()
+      .then((data) => { if (active && data?.configured) setConcerns(data.items || []); })
+      .catch(() => {});
+    return () => { active = false; };
+  }, []);
+
+  const filterSpecialties = useMemo(
+    () => concerns.length ? concerns.filter((c) => c.showAsFilter).map((c) => c.name) : FILTER_SPECIALTIES,
+    [concerns],
+  );
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 768px)');
@@ -40,10 +56,10 @@ export default function CounselorGrid() {
   // pre-selects that filter pill when arriving at the counselors section.
   useEffect(() => {
     const filter = searchParams.get('filter');
-    if (filter && FILTER_SPECIALTIES.includes(filter)) {
+    if (filter && filterSpecialties.includes(filter)) {
       setActiveFilters([filter]);
     }
-  }, [searchParams]);
+  }, [searchParams, filterSpecialties]);
 
   function toggleFilter(specialty) {
     if (specialty === "All") {
@@ -61,9 +77,10 @@ export default function CounselorGrid() {
   const filtered =
     activeFilters.length === 0
       ? counselors
-        : counselors.filter((c) =>
-          (c.specialties || []).some((s) => activeFilters.includes(s))
-        );
+      : counselors.filter((c) => {
+          const names = c.concernNames?.length ? c.concernNames : (c.specialties || []);
+          return names.some((s) => activeFilters.includes(s));
+        });
 
   function handleExpand(id) {
     if (expandedId === id) {
@@ -123,13 +140,13 @@ export default function CounselorGrid() {
         {/* Section header */}
         <div className="mb-14 max-w-2xl">
           <p className="text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Our counselors
+            <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> {intro.eyebrow || 'Our counselors'}
           </p>
           <h2 className="font-[var(--font-display)] text-[clamp(2.5rem,5vw,4rem)] font-light text-[#383838] leading-[1.05] mb-6">
-            Find your <em className="text-[#82a396] italic">counselor</em>
+            {intro.heading || 'Find your'} <em className="text-[#82a396] italic">{intro.accent || 'counselor'}</em>
           </h2>
           <p className="font-[var(--font-body)] text-[#a38d7a] font-light text-lg leading-relaxed">
-            Every path is different. Filter by what matters to you and find the right fit for your journey.
+            {supporting}
           </p>
         </div>
 
@@ -148,7 +165,7 @@ export default function CounselorGrid() {
               All
             </span>
           </button>
-          {FILTER_SPECIALTIES.map((s) => {
+          {filterSpecialties.map((s) => {
             const isActive = activeFilters.includes(s);
             return (
               <button
@@ -225,7 +242,7 @@ export default function CounselorGrid() {
                       <div className="p-3">
                         <p className="font-[var(--font-heading)] text-[#383838] text-sm mb-0.5">{c.name}</p>
                         <p className="text-[#a38d7a] text-xs font-[var(--font-body)] font-light leading-tight">
-                          {[c.role, c.title, c.pronouns].filter(Boolean).join(' · ')}
+                          {[c.isFounder ? 'Founder' : null, c.role, c.title, c.pronouns].filter(Boolean).join(' · ')}
                         </p>
                       </div>
                     </button>
@@ -245,7 +262,7 @@ export default function CounselorGrid() {
                             <div>
                               <p className="font-[var(--font-display)] text-[#383838] text-xl mb-1">{expanded.name}</p>
                               <p className="text-[#a38d7a] text-sm font-[var(--font-body)] font-light">
-                                {expanded.role ? `${expanded.role} · ` : ""}{expanded.title}
+                                {[expanded.isFounder ? 'Founder' : null, expanded.role, expanded.title].filter(Boolean).join(' · ')}
                               </p>
                             </div>
                             <button
@@ -259,8 +276,8 @@ export default function CounselorGrid() {
 
                           {expanded.quote && <p className="font-[var(--font-display)] italic text-[#82a396] text-sm mb-4 leading-relaxed">&ldquo;{expanded.quote}&rdquo;</p>}
 
-                          {(expanded.shortIntro || expanded.specialties?.length > 0 || expanded.populations?.length > 0 || expanded.therapyApproaches?.length > 0) && <div className="flex flex-wrap gap-1.5 mb-4">
-                            {(expanded.specialties || []).map((s) => (
+                          {(expanded.shortIntro || expanded.concernNames?.length > 0 || expanded.specialties?.length > 0 || expanded.populations?.length > 0 || expanded.therapyApproaches?.length > 0) && <div className="flex flex-wrap gap-1.5 mb-4">
+                            {(expanded.concernNames?.length ? expanded.concernNames : (expanded.specialties || [])).map((s) => (
                               <span
                                 key={s}
                                 className="text-[9px] font-[var(--font-mono)] uppercase tracking-wider text-[#383838]/60 bg-[#f5f2ed] px-2 py-0.5 rounded-full"

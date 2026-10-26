@@ -2,8 +2,7 @@ import {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight } from '@phosphor-icons/react';
 import { usePageReveal } from '../lib/usePageReveal';
-import {getPageBySlug} from '../lib/sanity';
-import PageSections from '../components/PageSections';
+import {getConcerns} from '../lib/sanity';
 import {usePageMetadata} from '../lib/usePageMetadata';
 
 //
@@ -85,24 +84,28 @@ function counselorsLink(filter) {
 }
 
 export default function WhatTherapyPage() {
-  const [page, setPage] = useState(null);
+  const revealRef = usePageReveal();
+  const [concerns, setConcerns] = useState(null);
+
+  usePageMetadata(null, 'What therapy might I need? | AK Confluence');
 
   useEffect(() => {
     let active = true;
-    getPageBySlug('what-therapy-might-i-need')
-      .then((data) => { if (active) setPage(data || null); })
-      .catch((error) => console.error('Failed to load page content', error));
+    getConcerns()
+      .then((data) => { if (active && data?.configured) setConcerns(data.items || []); })
+      .catch(() => {});
     return () => { active = false; };
   }, []);
 
-  usePageMetadata(page?.seo, page?.title || 'What therapy might I need? | AK Confluence');
-
-  if (page?.sections?.length) return <PageSections sections={page.sections} />;
-  return <LegacyWhatTherapyPage />;
-}
-
-function LegacyWhatTherapyPage() {
-  const revealRef = usePageReveal();
+  const boxes = concerns?.length
+    ? concerns.map((c) => ({
+        title: c.name,
+        quote: c.quote,
+        body: c.body,
+        help: c.help,
+        filter: c.showAsFilter ? c.name : null,
+      }))
+    : THERAPY_BOXES;
 
   return (
     <div ref={revealRef} className="min-h-screen bg-[#f5f2ed]">
@@ -120,7 +123,7 @@ function LegacyWhatTherapyPage() {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {THERAPY_BOXES.map((box) => (
+            {boxes.map((box) => (
               <Link
                 key={box.title}
                 to={counselorsLink(box.filter)}

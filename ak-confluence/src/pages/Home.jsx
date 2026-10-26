@@ -6,9 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight, ThumbsUp } from '@phosphor-icons/react';
 import { AnimatedLogo } from '../components/brand/AnimatedLogo';
 import CounselorGrid from '../components/CounselorGrid';
-import { getHomePage, getServices, getSiteSettings, urlFor } from '../lib/sanity';
-import PageSections from '../components/PageSections';
-import {getFaqs, getProviderEndorsements} from '../lib/sanity';
+import { getHomePage, getServices, getFaqs, getProviderEndorsements, urlFor } from '../lib/sanity';
 import {PortableText} from '../lib/portableText';
 import {usePageMetadata} from '../lib/usePageMetadata';
 
@@ -22,26 +20,24 @@ const DEFAULT_HERO_SUBTITLE =
 //
 // ─────────────── HERO SECTION ───────────────
 //
-function Hero() {
+function Hero({homePage, settings}) {
   const containerRef = useRef(null);
   const wordRef = useRef(null);
   const [wordIndex, setWordIndex] = useState(0);
   const isFirstRender = useRef(true);
-  const [settings, setSettings] = useState(null);
 
-  useEffect(() => {
-    let active = true;
-    getSiteSettings()
-      .then((data) => { if (active && data) setSettings(data); })
-      .catch((err) => console.error('Failed to load site settings', err));
-    return () => { active = false; };
-  }, []);
-
-  const words = settings?.heroWords?.length ? settings.heroWords : DEFAULT_WORDS;
-  const heroImage = settings?.heroImage
-    ? urlFor(settings.heroImage)?.width(2560).height(1440).fit('crop').auto('format').url()
-    : DEFAULT_HERO_IMAGE;
-  const subtitle = settings?.heroSubtitle || DEFAULT_HERO_SUBTITLE;
+  const words = homePage?.heroAccentWords?.length ? homePage.heroAccentWords : settings?.heroWords?.length ? settings.heroWords : DEFAULT_WORDS;
+  const heroImage = homePage?.heroImage
+    ? urlFor(homePage.heroImage)?.width(2560).height(1440).fit('crop').auto('format').url()
+    : settings?.heroImage
+      ? urlFor(settings.heroImage)?.width(2560).height(1440).fit('crop').auto('format').url()
+      : DEFAULT_HERO_IMAGE;
+  const subtitle = homePage?.heroIntro || settings?.heroSubtitle || DEFAULT_HERO_SUBTITLE;
+  const eyebrow = homePage?.heroEyebrow || 'Therapy & Counseling, Anchorage, AK';
+  const headingLead = homePage?.heroHeadingLead || 'Finding your way';
+  const headingPrefix = homePage?.heroHeadingSecondPrefix || 'to';
+  const ctaLabel = homePage?.heroButtonLabel || 'Meet our counselors';
+  const ctaHref = homePage?.heroButtonLink?.url || '#counselors';
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -98,15 +94,15 @@ function Hero() {
 
         <p className="gsap-reveal-hero text-[#82a396] text-[10px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
           <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" />
-          Therapy & Counseling, Anchorage, AK
+          {eyebrow}
         </p>
 
         <h1 className="flex flex-col text-[#383838] mb-8">
           <span className="gsap-reveal-hero font-[var(--font-heading)] text-[clamp(2rem,8vw,6.5rem)] font-normal tracking-tight leading-[1.05] block">
-            Finding your way
+            {headingLead}
           </span>
           <span className="gsap-reveal-hero font-[var(--font-heading)] text-[clamp(2rem,8vw,6.5rem)] font-normal tracking-tight leading-[1.05] block">
-            to <span className="font-[var(--font-display)] text-[#82a396] italic" style={{ display: 'inline-block' }} ref={wordRef}>{words[wordIndex % words.length]}</span>
+            {headingPrefix} <span className="font-[var(--font-display)] text-[#82a396] italic" style={{ display: 'inline-block' }} ref={wordRef}>{words[wordIndex % words.length]}</span>
           </span>
         </h1>
 
@@ -115,7 +111,7 @@ function Hero() {
         </p>
 
         <div className="gsap-reveal-hero mt-8">
-          <a href="#counselors" className="btn-primary uppercase text-[10px] tracking-[0.2em] px-8 py-4">Meet our counselors</a>
+          <a href={ctaHref} className="btn-primary uppercase text-[10px] tracking-[0.2em] px-8 py-4">{ctaLabel}</a>
         </div>
       </div>
     </section>
@@ -133,21 +129,26 @@ const DEFAULT_SERVICES = [
   { id: 'd4', title: 'Workshops', desc: 'Learn, grow, and connect in a group setting.', type: 'light', image: null },
 ];
 
-function Capabilities() {
+function Capabilities({homePage}) {
   const containerRef = useRef(null);
-  const [services, setServices] = useState(DEFAULT_SERVICES);
+  const [fetchedServices, setFetchedServices] = useState(DEFAULT_SERVICES);
+  const intro = homePage?.servicesIntro || {};
+  const services = homePage?.services?.length
+    ? homePage.services.map((s) => ({ ...s, type: s.layout }))
+    : fetchedServices;
 
   useEffect(() => {
+    if (homePage?.services?.length) return;
     let active = true;
     getServices()
       .then((data) => {
         if (active && data?.configured) {
-          setServices((data.items || []).map((s) => ({ ...s, type: s.layout })));
+          setFetchedServices((data.items || []).map((s) => ({ ...s, type: s.layout })));
         }
       })
       .catch((err) => console.error('Failed to load services', err));
     return () => { active = false; };
-  }, []);
+  }, [homePage?.services]);
 
   useGSAP(() => {
     gsap.fromTo('.bento-item',
@@ -213,10 +214,10 @@ function Capabilities() {
         <div id="approach" className="scroll-mt-24 mb-8 md:mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div>
             <p className="text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-4 flex items-center gap-2 font-[var(--font-mono)]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Services
+              <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> {intro.eyebrow || 'Services'}
             </p>
             <h2 className="font-[var(--font-display)] text-[clamp(2.5rem,5vw,4rem)] font-light text-[#383838] leading-[1.05]">
-              How we work<br/><em className="text-[#82a396] italic">together</em>
+              {intro.heading || 'How we work'}<br/><em className="text-[#82a396] italic">{intro.accent || 'together'}</em>
             </h2>
           </div>
         </div>
@@ -337,10 +338,15 @@ function FaqItem({ item, isOpen, onToggle }) {
   );
 }
 
-function FAQ() {
+function FAQ({homePage}) {
   const containerRef = useRef(null);
   const [openIndex, setOpenIndex] = useState(null);
   const [items, setItems] = useState(FAQ_DATA);
+  const intro = homePage?.faqIntro || {};
+  const faqSubtitle = homePage?.faqSubtitle || 'We know starting therapy can bring up questions. Here are some answers to help you feel more at ease.';
+  const faqBottomNote = homePage?.faqBottomNote || 'Still have questions?';
+  const faqLinkText = homePage?.faqLinkText || "We're happy to help";
+  const faqLinkUrl = homePage?.faqLinkUrl || 'mailto:info@akconfluence.com?subject=Question';
 
   useEffect(() => {
     let active = true;
@@ -371,13 +377,13 @@ function FAQ() {
         {/* Header */}
         <div className="mb-14 max-w-2xl">
           <p className="faq-heading text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Common Questions
+            <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> {intro.eyebrow || 'Common Questions'}
           </p>
           <h2 className="faq-heading font-[var(--font-display)] text-[clamp(2.5rem,5vw,4rem)] font-light text-[#383838] leading-[1.05] mb-6">
-            Frequently <em className="text-[#82a396] italic">asked</em>
+            {intro.heading || 'Frequently'} <em className="text-[#82a396] italic">{intro.accent || 'asked'}</em>
           </h2>
           <p className="faq-heading font-[var(--font-body)] text-[#a38d7a] font-light text-lg leading-relaxed">
-            We know starting therapy can bring up questions. Here are some answers to help you feel more at ease.
+            {faqSubtitle}
           </p>
         </div>
 
@@ -411,7 +417,7 @@ function FAQ() {
         {/* Bottom CTA */}
         <div className="mt-14 text-center">
           <p className="text-[#a38d7a]/60 text-sm font-light font-[var(--font-body)] max-w-lg mx-auto leading-relaxed">
-            Still have questions? <a href="mailto:info@akconfluence.com?subject=Question" className="text-[#82a396] underline underline-offset-2 hover:text-[#6b8f80] transition-colors">We're happy to help</a>
+            {faqBottomNote} <a href={faqLinkUrl} className="text-[#82a396] underline underline-offset-2 hover:text-[#6b8f80] transition-colors">{faqLinkText}</a>
           </p>
         </div>
       </div>
@@ -440,9 +446,18 @@ const DEFAULT_ENDORSEMENTS = [
   },
 ];
 
-function Reviews() {
+function Reviews({homePage}) {
   const containerRef = useRef(null);
   const [endorsements, setEndorsements] = useState(DEFAULT_ENDORSEMENTS);
+  const intro = homePage?.endorsementsIntro || {};
+  const subtitle = homePage?.endorsementsSubtitle || 'Endorsements from fellow Alaskan providers who refer their patients to our team.';
+  const founderLabel = homePage?.founderNoteLabel || 'A Note From Our Founder';
+  const founderParagraphs = homePage?.founderNoteParagraphs?.length ? homePage.founderNoteParagraphs : [
+    "You’ll notice our reviews are all from fellow healthcare providers, the people who trust us with their patients. We’re honored by that.",
+    "You might wonder where the patient reviews are. Most of our new clients come through personal referrals from friends and family, but patient privacy laws mean we can’t ethically share those stories, even with permission.",
+    "So if you’d like a patient’s perspective, ask around. Chances are someone in your circle has heard of us, and if not, that just means we have room to grow.",
+  ];
+  const founderName = homePage?.founderName || 'Elly Sanchez, Founder';
 
   useEffect(() => {
     let active = true;
@@ -471,13 +486,13 @@ function Reviews() {
         {/* Header */}
         <div className="mb-12 max-w-2xl">
           <p className="rv-heading text-[#82a396] text-[9px] tracking-[0.4em] uppercase font-medium mb-6 flex items-center gap-2 font-[var(--font-mono)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> Trusted By Providers
+            <span className="w-1.5 h-1.5 rounded-full bg-[#82a396] inline-block" /> {intro.eyebrow || 'Trusted By Providers'}
           </p>
           <h2 className="rv-heading font-[var(--font-display)] text-[clamp(1.8rem,5vw,4rem)] font-light text-[#383838] leading-[1.05] mb-5">
-            What providers <em className="text-[#82a396] italic">are saying</em>
+            {intro.heading || 'What providers'} <em className="text-[#82a396] italic">{intro.accent || 'are saying'}</em>
           </h2>
           <p className="rv-heading font-[var(--font-body)] text-[#a38d7a] font-light text-lg leading-relaxed">
-            Endorsements from fellow Alaskan providers who refer their patients to our team.
+            {subtitle}
           </p>
         </div>
 
@@ -488,21 +503,13 @@ function Reviews() {
           <aside className="rv-col lg:col-span-2 lg:sticky lg:top-28">
             <div className="rounded-2xl bg-white/60 border border-[#82a396]/15 p-7 lg:p-8">
               <p className="text-[#dd9e6f] text-[9px] tracking-[0.4em] uppercase font-medium mb-4 font-[var(--font-mono)]">
-                A Note From Our Founder
+                {founderLabel}
               </p>
               <div className="font-[var(--font-body)] text-[#383838] font-light text-[15px] leading-relaxed space-y-4">
-                <p>
-                  You&rsquo;ll notice our reviews are all from fellow healthcare providers, the people who trust us with their patients. We&rsquo;re honored by that.
-                </p>
-                <p>
-                  You might wonder where the patient reviews are. Most of our new clients come through personal referrals from friends and family, but patient privacy laws mean we can&rsquo;t ethically share those stories, even with permission.
-                </p>
-                <p>
-                  So if you&rsquo;d like a patient&rsquo;s perspective, ask around. Chances are someone in your circle has heard of us, and if not, that just means we have room to grow.
-                </p>
+                {founderParagraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
               </div>
               <p className="mt-6 font-[var(--font-display)] italic text-[#82a396] text-lg">
-                (Elly Sanchez, Founder)
+                ({founderName})
               </p>
             </div>
           </aside>
@@ -542,8 +549,13 @@ function Reviews() {
 //
 // ─────────────── WHAT THERAPY BANNER ───────────────
 //
-function WhatTherapyBanner() {
+function WhatTherapyBanner({homePage}) {
   const containerRef = useRef(null);
+  const bannerIntro = homePage?.concernsBandIntro || "You do not need the perfect explanation for what's wrong before you come in. Sometimes the first thing we do together is simply figure out:";
+  const bannerAccent = homePage?.concernsBandAccent || 'What are we working with?';
+  const bannerLabel = homePage?.concernsBandButtonLabel || 'Click me';
+  const bannerHref = homePage?.concernsBandButtonLink?.url || '/what-therapy-might-i-need';
+  const bannerIsInternal = bannerHref.startsWith('/');
 
   useGSAP(() => {
     gsap.fromTo('.wti-banner',
@@ -558,23 +570,29 @@ function WhatTherapyBanner() {
     );
   }, { scope: containerRef });
 
+  const bannerClassName = 'wti-banner group block bg-[#82a396] rounded-3xl px-8 py-12 lg:px-16 lg:py-16 text-center shadow-[0_8px_30px_-12px_rgba(56,56,56,0.18)] transition-transform duration-300 hover:scale-[1.01]';
+  const bannerContent = (
+    <>
+      <p className="font-[var(--font-body)] text-[#f5f2ed] font-light text-base lg:text-lg leading-relaxed max-w-2xl mx-auto">
+        {bannerIntro}
+      </p>
+      <p className="mt-6 font-[var(--font-display)] italic text-[#f5f2ed] text-[clamp(1.75rem,4vw,3rem)] leading-tight">
+        {bannerAccent}
+      </p>
+      <span className="mt-8 inline-flex items-center gap-2 bg-white text-[#383838] rounded-full px-7 py-3.5 text-[10px] tracking-[0.2em] uppercase font-medium font-[var(--font-mono)] shadow-sm transition-all duration-300 group-hover:gap-3">
+        {bannerLabel} <ArrowRight size={14} weight="bold" />
+      </span>
+    </>
+  );
+
   return (
     <section ref={containerRef} className="px-6 lg:px-20 pb-16 lg:pb-24 bg-[#f5f2ed]">
       <div className="max-w-[1100px] mx-auto">
-        <Link
-          to="/what-therapy-might-i-need"
-          className="wti-banner group block bg-[#82a396] rounded-3xl px-8 py-12 lg:px-16 lg:py-16 text-center shadow-[0_8px_30px_-12px_rgba(56,56,56,0.18)] transition-transform duration-300 hover:scale-[1.01]"
-        >
-          <p className="font-[var(--font-body)] text-[#f5f2ed] font-light text-base lg:text-lg leading-relaxed max-w-2xl mx-auto">
-            You do not need the perfect explanation for what's wrong before you come in. Sometimes the first thing we do together is simply figure out:
-          </p>
-          <p className="mt-6 font-[var(--font-display)] italic text-[#f5f2ed] text-[clamp(1.75rem,4vw,3rem)] leading-tight">
-            What are we working with?
-          </p>
-          <span className="mt-8 inline-flex items-center gap-2 bg-white text-[#383838] rounded-full px-7 py-3.5 text-[10px] tracking-[0.2em] uppercase font-medium font-[var(--font-mono)] shadow-sm transition-all duration-300 group-hover:gap-3">
-            Click me <ArrowRight size={14} weight="bold" />
-          </span>
-        </Link>
+        {bannerIsInternal ? (
+          <Link to={bannerHref} className={bannerClassName}>{bannerContent}</Link>
+        ) : (
+          <a href={bannerHref} className={bannerClassName} target="_blank" rel="noopener noreferrer">{bannerContent}</a>
+        )}
       </div>
     </section>
   );
@@ -583,11 +601,10 @@ function WhatTherapyBanner() {
 //
 // ─────────────── HOME PAGE ───────────────
 //
-export default function Home() {
+export default function Home({settings}) {
   const [homePage, setHomePage] = useState(null);
-  const [defaultSeo, setDefaultSeo] = useState(null);
 
-  usePageMetadata(homePage?.seo, 'AK Confluence | Therapy in Anchorage, Alaska', defaultSeo?.description);
+  usePageMetadata(settings?.pageSeo?.home || null, 'AK Confluence | Therapy in Anchorage, Alaska', settings?.defaultSeo?.description);
 
   useEffect(() => {
     let active = true;
@@ -597,22 +614,14 @@ export default function Home() {
     return () => { active = false; };
   }, []);
 
-  useEffect(() => {
-    let active = true;
-    getSiteSettings().then((settings) => { if (active) setDefaultSeo(settings?.defaultSeo || null); }).catch(() => {});
-    return () => { active = false; };
-  }, []);
-
-  if (homePage?.sections?.length) return <PageSections sections={homePage.sections} />;
-
   return (
     <>
-      <Hero />
-      <Capabilities />
-      <WhatTherapyBanner />
-      <CounselorGrid />
-      <Reviews />
-      <FAQ />
+      <Hero homePage={homePage} settings={settings} />
+      <Capabilities homePage={homePage} />
+      <WhatTherapyBanner homePage={homePage} />
+      <CounselorGrid homePage={homePage} />
+      <Reviews homePage={homePage} />
+      <FAQ homePage={homePage} />
     </>
   );
 }

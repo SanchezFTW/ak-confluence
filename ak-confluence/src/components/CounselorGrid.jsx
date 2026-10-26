@@ -11,6 +11,11 @@ const FILTER_SPECIALTIES = [
   'EMDR & Brainspotting',
 ];
 
+const roleLine = (c) => {
+  const role = c.isFounder && (c.role || '').toLowerCase() === 'founder' ? null : c.role;
+  return [c.isFounder ? 'Founder' : null, role, c.title, c.pronouns].filter(Boolean).join(' · ');
+};
+
 export default function CounselorGrid({homePage}) {
   const [counselors, setCounselors] = useState([]);
   const [concerns, setConcerns] = useState([]);
@@ -242,7 +247,7 @@ export default function CounselorGrid({homePage}) {
                       <div className="p-3">
                         <p className="font-[var(--font-heading)] text-[#383838] text-sm mb-0.5">{c.name}</p>
                         <p className="text-[#a38d7a] text-xs font-[var(--font-body)] font-light leading-tight">
-                          {[c.isFounder ? 'Founder' : null, c.role, c.title, c.pronouns].filter(Boolean).join(' · ')}
+                          {roleLine(c)}
                         </p>
                       </div>
                     </button>
@@ -262,7 +267,7 @@ export default function CounselorGrid({homePage}) {
                             <div>
                               <p className="font-[var(--font-display)] text-[#383838] text-xl mb-1">{expanded.name}</p>
                               <p className="text-[#a38d7a] text-sm font-[var(--font-body)] font-light">
-                                {[expanded.isFounder ? 'Founder' : null, expanded.role, expanded.title].filter(Boolean).join(' · ')}
+                                {roleLine(expanded)}
                               </p>
                             </div>
                             <button

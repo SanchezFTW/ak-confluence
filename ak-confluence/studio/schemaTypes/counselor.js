@@ -218,6 +218,11 @@ export default defineType({
     },
   ],
   preview: {
-    select: {title: 'name', subtitle: 'title', media: 'photo'},
+    select: {title: 'name', role: 'role', credentials: 'title', media: 'photo'},
+    prepare: ({title, role, credentials, media}) => ({
+      title,
+      subtitle: [role, credentials].filter(Boolean).join(' · '),
+      media,
+    }),
   },
 })

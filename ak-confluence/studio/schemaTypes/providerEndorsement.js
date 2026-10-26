@@ -30,5 +30,12 @@ export default defineType({
     defineField({name: 'order', title: 'Display order', type: 'number', initialValue: 100, validation: (rule) => rule.required()}),
   ],
   orderings: [{title: 'Display order', name: 'orderAsc', by: [{field: 'order', direction: 'asc'}]}],
-  preview: {select: {title: 'providerName', subtitle: 'organization', media: 'photo'}},
+  preview: {
+    select: {title: 'providerName', quote: 'quote', media: 'photo'},
+    prepare: ({title, quote, media}) => ({
+      title,
+      subtitle: quote ? (quote.length > 90 ? `${quote.slice(0, 90)}…` : quote) : undefined,
+      media,
+    }),
+  },
 })

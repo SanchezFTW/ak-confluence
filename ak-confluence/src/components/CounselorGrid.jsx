@@ -229,7 +229,7 @@ export default function CounselorGrid() {
                         </p>
                       </div>
                     </button>
-                  ))}
+                    )})}
 
                   {/* Detail panel — appears right after the row containing the selected card */}
                   {rowHasExpanded && expanded && (

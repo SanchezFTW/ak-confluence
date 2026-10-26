@@ -6,12 +6,22 @@
 // Run from the studio directory:
 //   node scripts/migrate-homepage.mjs            # dry run (default)
 //   node scripts/migrate-homepage.mjs --apply    # create/update the Homepage draft
-import {getCliClient} from 'sanity/cli'
+import {createClient} from '@sanity/client'
 
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID || '3gzdej0i'
+const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
 const apiVersion = '2024-01-01'
 const applyChanges = process.argv.includes('--apply')
+const token = process.env.SANITY_AUTH_TOKEN
 
-const client = getCliClient({apiVersion}).withConfig({perspective: 'published', useCdn: false})
+const client = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  perspective: 'published',
+  useCdn: false,
+  ...(token ? {token} : {}),
+})
 
 const [siteSettings, homePage] = await Promise.all([
   client.fetch('*[_type == "siteSettings"][0]'),
@@ -53,9 +63,12 @@ for (const [field, value] of Object.entries(patches)) {
 }
 
 if (!applyChanges) {
-  console.log('\nDry run only. Re-run with --apply (after `npx sanity login`) to create/update the Homepage draft.')
+  console.log('\nDry run only. Re-run with --apply (and SANITY_AUTH_TOKEN set) to create/update the Homepage draft.')
+} else if (!token) {
+  console.error('\nSANITY_AUTH_TOKEN is not set. No changes were made.')
+  process.exitCode = 1
 } else {
-  const rawClient = getCliClient({apiVersion}).withConfig({perspective: 'raw', useCdn: false})
+  const rawClient = createClient({projectId, dataset, apiVersion, perspective: 'raw', useCdn: false, token})
   const draft = await rawClient.fetch('*[_type == "homePage"][0]', {}, {perspective: 'raw'})
   const transaction = rawClient.transaction()
   if (draft) {

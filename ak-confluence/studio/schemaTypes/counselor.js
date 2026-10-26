@@ -90,7 +90,7 @@ export default defineType({
       name: 'concerns',
       title: 'Concerns they work with',
       type: 'array',
-      of: [{type: 'reference', to: [{type: 'concern'}]}],
+      of: [{type: 'reference', to: [{type: 'concern'}], weak: true}],
       group: 'practice',
       description: 'Pick from the Concerns list. These power the counselor filter chips and their "Focus areas".',
     }),

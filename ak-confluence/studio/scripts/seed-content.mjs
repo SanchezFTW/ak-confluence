@@ -2,17 +2,27 @@
 // site (sourced from the front-end fallback copy). Everything is created as a
 // DRAFT so the live site does not change until you publish.
 //
-// Uses the Sanity CLI session from `npx sanity login` (no API key needed).
+// Uses SANITY_AUTH_TOKEN (a project write token) for --apply; reads are public.
 //
 // Run from the studio directory:
 //   node scripts/seed-content.mjs            # dry run (default)
 //   node scripts/seed-content.mjs --apply    # create/update drafts
-import {getCliClient} from 'sanity/cli'
+import {createClient} from '@sanity/client'
 
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID || '3gzdej0i'
+const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
 const apiVersion = '2024-01-01'
 const applyChanges = process.argv.includes('--apply')
+const token = process.env.SANITY_AUTH_TOKEN
 
-const client = getCliClient({apiVersion}).withConfig({perspective: 'published', useCdn: false})
+const client = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  perspective: 'published',
+  useCdn: false,
+  ...(token ? {token} : {}),
+})
 
 // --- helpers ---------------------------------------------------------------
 
@@ -28,7 +38,7 @@ function portableText(text) {
   ]
 }
 
-const refs = (ids) => ids.map((ref, i) => ({_key: `ref-${i + 1}`, _type: 'reference', _ref: ref}))
+const refs = (ids, weak = false) => ids.map((ref, i) => ({_key: `ref-${i + 1}`, _type: 'reference', _ref: ref, ...(weak ? {_weak: true} : {})}))
 
 // --- Concerns (9 cards from the "Find the words that fit" page) --------------
 
@@ -223,7 +233,7 @@ const existing = await client.fetch(`{
   "newsletter": *[_type == "newsletter"][0]._id,
   "announcement": *[_type == "announcement"][0]._id,
   "seoDefaults": *[_type == "seoDefaults"][0]._id,
-  "counselors": *[_type == "counselor"]{_id, name, "slug": slug.current, "concernCount": count(concerns)},
+  "counselors": *[_type == "counselor"],
   "posts": *[_type == "post"]._id
 }`)
 
@@ -247,17 +257,20 @@ for (const doc of [...concerns, ...faqs, ...endorsements, homePage, navigation, 
   else console.log(`- Already exists (left unchanged): ${doc._id}`)
 }
 
-const counselorPatches = []
+const counselorDrafts = []
 for (const update of counselorUpdates) {
-  const doc = (existing.counselors || []).find((c) => c._id === update._id)
-  if (!doc) { console.log(`- Counselor not found: ${update._id}`); continue }
-  const patch = {}
-  if (!doc.slug) patch.slug = {_type: 'slug', current: update.slug}
-  if (doc.isFounder == null) patch.isFounder = update.isFounder
-  if (!doc.concernCount) patch.concerns = refs(update.concerns)
-  if (doc.featureOnHomepage == null) patch.featureOnHomepage = true
-  if (doc.websiteVisible == null) patch.websiteVisible = true
-  if (Object.keys(patch).length) counselorPatches.push({_id: update._id, name: doc.name, patch})
+  const published = (existing.counselors || []).find((c) => c._id === update._id)
+  if (!published) { console.log(`- Counselor not found: ${update._id}`); continue }
+  const {_id, _rev, _createdAt, _updatedAt, ...rest} = published
+  counselorDrafts.push({
+    _id: `drafts.${update._id}`,
+    ...rest,
+    slug: {_type: 'slug', current: update.slug},
+    isFounder: update.isFounder,
+    concerns: refs(update.concerns, true),
+    featureOnHomepage: true,
+    websiteVisible: true,
+  })
 }
 
 const willDelete = existing.posts?.includes(duplicatePostId) ? duplicatePostId : null
@@ -265,17 +278,20 @@ const willDelete = existing.posts?.includes(duplicatePostId) ? duplicatePostId :
 console.log('=== Seed content (all drafts) ===')
 console.log(`New documents to create: ${toCreate.length}`)
 toCreate.forEach((d) => console.log(`- ${d._type}: ${d._id}`))
-console.log(`Counselors to update (fill empty fields only): ${counselorPatches.length}`)
-counselorPatches.forEach((c) => console.log(`- ${c.name} (${c._id}): ${Object.keys(c.patch).join(', ')}`))
+console.log(`Counselors to create drafts for: ${counselorDrafts.length}`)
+counselorDrafts.forEach((c) => console.log(`- ${c._id}: slug, isFounder, concerns, featureOnHomepage, websiteVisible`))
 console.log(`Duplicate post to delete: ${willDelete ? `${willDelete} (Self-Care for Relationship Growth, 2023-06-01)` : 'none (not found)'}`)
 
 if (!applyChanges) {
-  console.log('\nDry run only. Re-run with --apply (after `npx sanity login`) to create/update drafts.')
+  console.log('\nDry run only. Re-run with --apply (and SANITY_AUTH_TOKEN set) to create/update drafts.')
+} else if (!token) {
+  console.error('\nSANITY_AUTH_TOKEN is not set. No changes were made.')
+  process.exitCode = 1
 } else {
   const transaction = client.transaction()
-  toCreate.forEach((doc) => transaction.createIfNotExists(doc))
-  counselorPatches.forEach((c) => transaction.patch(c._id, (p) => p.set(c.patch)))
+  toCreate.forEach((doc) => transaction.createIfNotExists({...doc, _id: `drafts.${doc._id}`}))
+  counselorDrafts.forEach((d) => transaction.createIfNotExists(d))
   if (willDelete) transaction.delete(willDelete)
   const result = await transaction.commit()
-  console.log(`\nApplied: created ${result.results.filter((r) => r.operation === 'create').length} documents, patched ${counselorPatches.length} counselors, ${willDelete ? 'deleted 1 duplicate post' : 'no deletion'} (all as drafts).`)
+  console.log(`\nApplied: created ${result.results.filter((r) => r.operation === 'create').length} documents (including counselor drafts), ${willDelete ? 'deleted 1 duplicate post' : 'no deletion'} (all as drafts).`)
 }
